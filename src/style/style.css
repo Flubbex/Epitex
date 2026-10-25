@@ -34,7 +34,7 @@ body {
 }
 #backdrop_3 {
   opacity: 0.2;
-  background-image: url("img/spikes.webp");
+  background-image: url("/img/spikes.webp");
   size:25%;
 }
 
