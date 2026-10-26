@@ -51,7 +51,7 @@ class StoreModule {
         window.dbg("StoreModule","Loading")
 
         this.byId = {}
-        
+
         const worldData = {...saveData.world}
         worldData.room = worldData.room.map((room) => this.create(room))
 
@@ -83,10 +83,10 @@ class StoreModule {
         window.dbg("StoreModule","Patching load data")
         const patchedId = {}
         const prePatchedRoom = data.room.map((room) => {
-            const newId = unid()
-            patchedId[room.id] = newId
-            console.log("Stored room id #" + room.id + " as room id #" + newId)
-            return Object.assign({}, room, { id: newId })
+            const id = this.factory.unid()
+            patchedId[room.id] = id
+            console.log(`Stored room id #${room.id} as room id #${id}`)
+            return {...room, ...{ id}}
         })
         console.log("pre",prePatchedRoom)
 
@@ -94,17 +94,16 @@ class StoreModule {
             const patchedContent = room.content.map((exit) => {
                 if (exit.type !== "exit")
                     return exit
-                console.log("Patching exit '"+exit.name+"'with target #" + exit.target + " to #" + patchedId[exit.target])
-                return Object.assign({}, exit, { target: patchedId[exit.target] })
+                console.log(`Patching exit "${exit.name}" with target #${exit.target} to #${patchedId[exit.target]}`)
+                return {...exit, ...{ target: patchedId[exit.target] }}
             }
             )
-            return Object.assign({}, room, { content: patchedContent })
+            return {...room, ...{ content: patchedContent }}
         })
         console.log("patched:",patchedRoom)
-        const instancedRoom = patchedRoom.map((r) => this.instance(r) )
-        this.add(instancedRoom)
-        console.log("Done, patched in " + patchedRoom.length + " rooms:")
-        patchedRoom.map((room) => console.log("#" + room.id + " : " + room.name))
+        const instancedRoom = patchedRoom.map((r) => this.create(r) )
+        console.log(`Done, patched in ${patchedRoom.length} rooms:`)
+        patchedRoom.map((room) => console.log(`#${room.id}:${room.name}`))
         return instancedRoom
     }
 

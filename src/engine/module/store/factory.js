@@ -23,7 +23,16 @@ const typeTable = {
     "key":Key
 }
 
-const unid = () => {
+class Factory {
+
+    instance(stateOrType,state={}){
+        if (typeof(stateOrType) === "string" )
+            return this.doInstance(stateOrType,state)
+        else 
+            return this.doInstance(stateOrType.type,stateOrType)
+    }
+
+    unid(){
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let result = '';
     
@@ -34,20 +43,10 @@ const unid = () => {
     
     return result
 }
-
-class Factory {
-
-    instance(stateOrType,state={}){
-        if (typeof(stateOrType) === "string" )
-            return this.doInstance(stateOrType,state)
-        else 
-            return this.doInstance(stateOrType.type,stateOrType)
-    }
-
     validate(state){
         const out = {...state}
         if (!out.id)
-            out.id = unid()
+            out.id = this.unid()
         return out
     }
 

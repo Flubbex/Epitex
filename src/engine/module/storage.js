@@ -1,6 +1,6 @@
 export default class StorageService {
     saveName = "savedGame"
-    disableSaving = true 
+    disableSaving = false 
     storedSave = null 
 
 
