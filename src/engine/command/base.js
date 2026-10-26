@@ -160,11 +160,11 @@ const commandConstructor = (API) => {
      API.quit()
     }
 
-    const playmusic = ([src]) => {
-     if (!src)
+    const playmusic = ([videoId,startSeconds=0]) => {
+     if (!videoId)
           return "Play what?"
-     API.playMusic(src)
-     return "Bang your head m8"
+     API.playMusic(videoId,startSeconds,()=>{ API.print("Playing!") })
+     return "Loading music.."
     }
     
      return {

@@ -82,6 +82,7 @@ body {
   white-space:pre-wrap;
   line-break:strict;
   font-family: monospace;
+  --animate-duration: 0.5s;
 }
 
 #inputarea::placeholder  {

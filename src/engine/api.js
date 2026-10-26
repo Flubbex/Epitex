@@ -289,10 +289,8 @@ const apiConstructor = (engine) => {
     /**
      * Play a song
      */
-    const playMusic = (v) => {
-        const autoplay = v.endsWith("&autoplay=1") ? v : v+"&autoplay=1"
-        engine.store.ui.setMusic(null)
-        window.setTimeout(() => engine.store.ui.setMusic(autoplay),0)
+    const playMusic = (videoId,startSeconds=0,callBack=null) => {
+        engine.store.ui.setMusic({videoId,startSeconds,callBack})
     }
 
     return {

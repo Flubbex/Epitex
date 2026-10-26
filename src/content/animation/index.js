@@ -9,18 +9,16 @@ const lyrics = ["        See, it started in my section",
 
 const eventConstructor = (API) => {
     const delay = API.util.delay
-    return {
-        animation:async ()=>{
+     const animation = async ()=>{
             API.clear()
             const lines = girl.split("\n")
-            API.playMusic("https://www.youtube.com/embed/jkPYTohcLNU?si=vZTd6Rwz1ZPk5gLL&amp;start=163")
             await delay(800)
 
             for (var y=0;y<lyrics.length;y++){
                 API.print(`<span class='animate__animated animate__pulse animate__slow h4 d-block' style='margin-left:25%;'>${lyrics[y]}</span>`)
                 await delay(y%2===0 ? 1500 : 2200)
                 if (y===lyrics.length-2)
-                    await delay(1900)
+                    await delay(1500)
             }
 
             await delay(800)
@@ -44,11 +42,15 @@ const eventConstructor = (API) => {
                         b = Math.random()*100+100
                         
                     const randomColor = `rgba(${r},${g},${b})`
-                    API.print(`<span class="bold animate__animated animate__shakeX animate__slow d-block h5" style="color:${randomColor};">${line}</span>`)
+                    API.print(`<span class="bold animate__animated animate__zoomIn animate__faster d-block h5" style="color:${randomColor};">${line}</span>`)
                     if (c < lines.length-1)
                         await delay(30)
                 }
             }
+    }
+    return {
+        loadAnimation:()=>{
+            API.playMusic("jkPYTohcLNU",163,animation)
         }
     }
 }
@@ -59,10 +61,10 @@ export default (API) => {
             {
                 id:"AnimationTest",
                 name:"Animation Test",
-                type:"room",
-                description:"Animation test",
+                type:"menu",
+                description:"Loading..",
                 event:{
-                    "playerEntered":["animation"]
+                    "playerEntered":["loadAnimation"]
                 }
             }
         ],

@@ -7,7 +7,7 @@ class UIModel extends Emitter {
     notepad = localStorage.getItem("notepad") ?? ""
     output = []
     input = ""
-    music = null 
+    music = {videoId:null,callBack:null,startSeconds:0} 
 
     constructor(state={}){
         super()
@@ -20,7 +20,7 @@ class UIModel extends Emitter {
         this.input = state.input ?? this.input
         this.music = state.music ?? this.music
     }
-    
+
     setMusic(v){
         this.music = v
         this.emit("updatedMusic",this.music)

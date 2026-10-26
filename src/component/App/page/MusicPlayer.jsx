@@ -1,26 +1,49 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState,useRef } from "react"
 
-const Player = ({src}) => (
-    <iframe width="100%" height="100%" 
-        src={src} 
-        title="YouTube video player" 
-        frameborder="0" 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-        referrerpolicy="strict-origin-when-cross-origin" 
-        allowfullscreen>
-    </iframe>
-)
+const Player = ({ videoId, startSeconds = 0,callBack }) => {
+    const containerRef = useRef(null)
+    const playerRef = useRef(null)
 
+    useEffect(() => {
+        if (!window.YT || !window.YT.Player) return
+
+        playerRef.current = new YT.Player(containerRef.current, {
+            videoId,
+            playerVars: {
+                autoplay: 1,
+                start: Math.floor(startSeconds),   // seconds
+                controls: 0,
+                disablekb: 1,
+                modestbranding: 1
+            },
+            events: {
+                onReady: (e) => {
+                    // extra safety if autoplay is blocked
+                    e.target.seekTo(startSeconds, true)
+                    e.target.playVideo()
+                    callBack()
+                }
+            }
+        })
+
+        return () => {
+            playerRef.current?.destroy()
+            playerRef.current = null
+        }
+    }, [videoId, startSeconds])
+
+    return <div ref={containerRef} />
+}
 const MusicPlayer = ({game}) =>{
-    const [src,setSrc] = useState(game.store.ui.music)
+    const [music,setMusic] = useState(game.store.ui.music)
 
-    const applySrc = (v) => {
-        setSrc(v)
+    const applyMusic = (v) => {
+        setMusic(v)
     }
     useEffect(()=>{
-        game.store.ui.on("updatedMusic",applySrc)
+        game.store.ui.on("updatedMusic",applyMusic)
         return ()=>{
-            game.store.ui.off("updatedMusic",applySrc)
+            game.store.ui.off("updatedMusic",applyMusic)
         }
     },[game])
 
@@ -28,7 +51,7 @@ const MusicPlayer = ({game}) =>{
     <div className="container p-0 bg-dark" style={{height:"75vh"}}>
         <div className="row h-100">
             <div className="col h-100">
-                <Player src={src}  />
+                {music.videoId && <Player videoId={music.videoId} startSeconds={music.startSeconds} callBack={music.callBack} />}
             </div>
         </div>
     </div>)
