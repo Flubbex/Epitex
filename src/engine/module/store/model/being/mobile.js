@@ -25,7 +25,7 @@ class Mobile extends NPC {
         if (this.locked)
             return
         if (Math.random()<this.moveChance)
-            this.moveRandom(game,room)
+            this.moveRandom(API,room)
 
     }
     randomExit(list){
@@ -33,7 +33,7 @@ class Mobile extends NPC {
         return list[randomInt]
     }
 
-    moveRandom({store:{world}},room){
+    moveRandom(API,room){
         let attemptLeft = 3
         let next = null
         const exitOrList = room.get("exit")
@@ -43,7 +43,7 @@ class Mobile extends NPC {
         
         while (attemptLeft > 0) {
             next = exitOrList.length ? this.randomExit(exitOrList) : exitOrList
-            if (world.byId[next.target].area!==this.area)
+            if (API.get(next.target).area!==this.area)
                 next = null
             else 
                 break
@@ -54,9 +54,9 @@ class Mobile extends NPC {
             return
 
         room.echo(this.name+" moves towards the "+next.name.toLowerCase())
-        world.get(next.target).echo(this.name+" walks in")
+        API.get(next.target).echo(this.name+" walks in")
         
-        this.move(world.get(next.target),room)
+        this.move(API.get(next.target),room)
         
         this.room = next.target
     }

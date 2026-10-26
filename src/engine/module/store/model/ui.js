@@ -1,9 +1,10 @@
-import Emitter from "../class/emitter"
+import Emitter from "../../../class/emitter.js"
+
 /**
  * Storage model for managing input,output, notepad and modals
  */
 class UIModel extends Emitter {
-    notepad = localStorage.getItem("notepad")
+    notepad = localStorage.getItem("notepad") ?? ""
     output = []
     input = ""
     music = null 

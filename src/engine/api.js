@@ -42,7 +42,7 @@ const apiConstructor = (engine) => {
      * Create an object
      */
     const create = (state) => {
-        return engine.store.world.instance(state)
+        return engine.store.create(state)
     }
 
     /**
@@ -56,14 +56,14 @@ const apiConstructor = (engine) => {
      * Get any object in the world by its id
      */
     const get = (id) => {
-        return engine.store.world.byId[id]
+        return engine.store.get(id)
     }
 
     /**
      * Create a room
      */
     const addRoom = (room) => {
-        return engine.store.world.add(room)
+        return engine.store.create(room)
     }
 
     /**
@@ -182,7 +182,7 @@ const apiConstructor = (engine) => {
             return "Malformed JSON string"
         }
 
-        const room = engine.store.world.patch(data)
+        const room = engine.store.patch(data)
 
         return `Patched in ${room.length} rooms, don't forget to dig an exit to #${room[0].id} somewhere`
     }

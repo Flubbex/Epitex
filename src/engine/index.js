@@ -5,15 +5,14 @@ import ActionModule     from "./module/interaction"
 import EventModule      from "./module/event"
 import CombatModule     from "./module/combat"
 import ContentModule    from "./module/content"
-
-import Store from "./store"
+import StoreModule      from "./module/store"
 
 import baseContentConstructor from "./content"
 import commandConstructor     from "./command"
 
 import APIConstructor from "./api"
 
-import util             from "../util"
+import util           from "../util"
 
 /**
  * Main engine, needs a store,content and commands.
@@ -29,14 +28,13 @@ class Engine extends Emitter {
 
         this.util = util 
 
-        this.store = new Store()
+        this.store = new StoreModule()
 
         this.API        = APIConstructor(this)
 
         this.action     = new ActionModule(this.API)
         this.combat     = new CombatModule(this.API)
         this.event      = new EventModule(this.API)
-        
         this.storage    = new StorageModule(this.store)
 
         this.content    = new ContentModule(contentPackList.map((packConstructor) => packConstructor(this.API) ))
@@ -77,16 +75,16 @@ class Engine extends Emitter {
         }
 
         //Listen to any event passed to the master room
-        this.store.world.get("NULLED").on("event", this.event.createHandler(this) )
+        this.store.get("NULLED").on("event", this.event.createHandler(this) )
 
         //Listen to any echoes in the current room
         this.echo = this.echo.bind(this)
-        this.store.world.get(this.store.player.room).on("echo", this.echo)
+        this.store.get(this.store.player.room).on("echo", this.echo)
 
         //Listen to any echoes in any further room explored
         this.store.player.on("moved", (next, prev) => {
-            this.store.world.get(prev.id).off("echo", this.echo)
-            this.store.world.get(next.id).on("echo", this.echo)
+            this.store.get(prev.id).off("echo", this.echo)
+            this.store.get(next.id).on("echo", this.echo)
         })
 
         this.handle("look", true)
@@ -98,7 +96,7 @@ class Engine extends Emitter {
         this.API.player().on("died",()=>this.combat.endFight())
 
          //Trigger any missed "player entered room" events
-        const plyRoom = this.store.world.get(this.store.player.room)
+        const plyRoom = this.store.get(this.store.player.room)
         if (plyRoom.event["playerEntered"])
             plyRoom.emit("event", plyRoom.event["playerEntered"], plyRoom, this.store.player)
         
