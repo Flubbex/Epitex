@@ -5,10 +5,7 @@ class World {
 
     constructor(state={}){
         window.dbg("Store/world","Constructor")
-        if (state.room)
-            this.room = state.room
-        else 
-            console.warn("World constructed without any rooms",state)
+        this.room = state.room ? [...state.room] : this.room
     }
 }
 

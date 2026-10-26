@@ -17,10 +17,10 @@ class StoreModule {
 
     byId = {}
 
-    constructor(){
+    constructor(API){
         window.dbg("StoreModule","Constructing")
 
-        this.factory = new Factory()
+        this.factory = new Factory(API)
 
         this.ui = new UI()
     }
@@ -44,6 +44,9 @@ class StoreModule {
         if (newObject.id !== "NULLED") 
             newObject.on("*",(...e)=>this.get("NULLED").emit(...e))
 
+        if (newObject.type === "room")
+            this.world.room.push(newObject)
+
         return newObject
     }
 
@@ -52,23 +55,21 @@ class StoreModule {
 
         this.byId = {}
 
-        const worldData = {...saveData.world}
-        worldData.room = worldData.room.map((room) => this.create(room))
+        
+        this.world = new World()
+        saveData.world.room.map((room) => this.create(room))
+        //saveData.world.zone.map((zone) => this.create(zone))
 
-        this.world = new World(worldData)
         this.battle =new Battle(saveData.battle) 
         this.player = new Player(saveData.player)
         
-        this.player.content = this.player.content.map((obj) => this.factory.instance(obj) )
+        this.ui.load(saveData.ui)
+        
+        this.player.content = this.player.content.map((obj) => this.create(obj) )
         
         this.new = "new" in saveData ? false : true
 
         this.gamePackInfo = saveData.gamePackInfo
-
-
-        //TODO: UI is connected to the react state so this is.. ugly. Fix it.
-        for (var prop in saveData.ui)
-            this.ui[prop] = saveData.ui[prop]
          
         if (this.new) 
             if (this.gamePackInfo?.startRoom)

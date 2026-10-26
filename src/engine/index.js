@@ -28,10 +28,9 @@ class Engine extends Emitter {
 
         this.util = util 
 
-        this.store = new StoreModule()
-
         this.API        = APIConstructor(this)
-
+        
+        this.store      = new StoreModule(this.API)
         this.action     = new ActionModule(this.API)
         this.combat     = new CombatModule(this.API)
         this.event      = new EventModule(this.API)

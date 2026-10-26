@@ -11,12 +11,16 @@ class UIModel extends Emitter {
 
     constructor(state={}){
         super()
+        this.load(state)
+    }
+
+    load(state={}){
         this.notepad = state.notepad ?? this.notepad
         this.output = state.output ?? this.output
         this.input = state.input ?? this.input
         this.music = state.music ?? this.music
     }
-
+    
     setMusic(v){
         this.music = v
         this.emit("updatedMusic",this.music)

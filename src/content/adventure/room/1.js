@@ -339,7 +339,7 @@ const room = [
               maxHealth: 2,
               attSpeed: 2500
             },
-            idleMessage: "scratches his butt",
+            idleMessage: ["flaps around the room"],
             idleChance: 0.8,
             moveChance: 0.7
           }

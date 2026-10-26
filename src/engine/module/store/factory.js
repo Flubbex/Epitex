@@ -25,13 +25,11 @@ const typeTable = {
 
 class Factory {
 
-    instance(stateOrType,state={}){
-        if (typeof(stateOrType) === "string" )
-            return this.doInstance(stateOrType,state)
-        else 
-            return this.doInstance(stateOrType.type,stateOrType)
-    }
+    API = null 
 
+    constructor(API){
+        this.API = API
+    }
     unid(){
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let result = '';
@@ -62,13 +60,21 @@ class Factory {
         const out = new typeTable[type](validatedState)
 
         if (out.content)
-            out.content = out.content.map((i)=> this.instance(i) )
+            out.content = out.content.map((i)=> this.API.create(i) )
 
         if (!out.parent)
             out.parent = "NULLED"
         
         return out
     }
+
+        instance(stateOrType,state={}){
+        if (typeof(stateOrType) === "string" )
+            return this.doInstance(stateOrType,state)
+        else 
+            return this.doInstance(stateOrType.type,stateOrType)
+    }
+
 }
 
 export default Factory
