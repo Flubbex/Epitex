@@ -1,3 +1,5 @@
+import Emitter from "../../class/emitter.js"
+
 import Room from "./model/room/index.js"
 import Exit from "./model/room/exit.js"
 import Menu from "./model/room/menu.js"
@@ -23,24 +25,19 @@ const typeTable = {
     "key":Key
 }
 
-class Factory {
+class Factory extends Emitter {
 
-    API = null 
-
-    constructor(API){
-        this.API = API
-    }
     unid(){
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let result = '';
-    
-    for (let i = 0; i < 6; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length)
-        result += characters[randomIndex]
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let result = '';
+        
+        for (let i = 0; i < 6; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length)
+            result += characters[randomIndex]
+        }
+        
+        return result
     }
-    
-    return result
-}
     validate(state){
         const out = {...state}
         if (!out.id)
@@ -59,8 +56,10 @@ class Factory {
         const validatedState = this.validate(state)
         const out = new typeTable[type](validatedState)
 
+        //Warning: If something is nested recursively, this will cause a loop
+        //Realistically this should never happen, but be aware
         if (out.content)
-            out.content = out.content.map((i)=> this.API.create(i) )
+            out.content = out.content.map((object)=> this.instance(object))
 
         if (!out.parent)
             out.parent = "NULLED"
@@ -69,10 +68,14 @@ class Factory {
     }
 
         instance(stateOrType,state={}){
-        if (typeof(stateOrType) === "string" )
-            return this.doInstance(stateOrType,state)
-        else 
-            return this.doInstance(stateOrType.type,stateOrType)
+            let result = null
+            if (typeof(stateOrType) === "string" )
+                result = this.doInstance(stateOrType,state)
+            else 
+                result =  this.doInstance(stateOrType.type,stateOrType)
+
+            this.emit("objectInstantiated",result)
+            return result
     }
 
 }

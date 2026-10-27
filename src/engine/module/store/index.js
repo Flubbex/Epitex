@@ -17,10 +17,12 @@ class StoreModule {
 
     byId = {}
 
-    constructor(API){
+    constructor(){
         window.dbg("StoreModule","Constructing")
 
-        this.factory = new Factory(API)
+        this.factory = new Factory()
+
+        this.factory.on("objectInstantiated",this.register.bind(this))
 
         this.ui = new UI()
     }
@@ -33,19 +35,22 @@ class StoreModule {
        return foundObject
     }
 
+    register(object){
+        //window.dbg("StoreModule",`Registering ${object.name}`)
+        this.byId[object.id] = object
+
+        if (object.id !== "NULLED") 
+            object.on("*",(...e)=>this.get("NULLED").emit(...e))
+
+        if (object.type === "room")
+            this.world.room.push(object)
+    }
     create(objectState){
-        const newObject = this.factory.instance(objectState)
-        
-        if (newObject.id in this.byId) {
-            console.warn(`Collision warning: #${newObject.id} already exists as ${this.get(newObject.id).name}, overriding`)
+        if (objectState.id in this.byId) {
+            console.warn(`Collision warning: #${newObject.id} already exists as ${this.get(newObject.id).name}, this will cause an override`)
         }
-        this.byId[newObject.id] = newObject
 
-        if (newObject.id !== "NULLED") 
-            newObject.on("*",(...e)=>this.get("NULLED").emit(...e))
-
-        if (newObject.type === "room")
-            this.world.room.push(newObject)
+        const newObject = this.factory.instance(objectState)
 
         return newObject
     }

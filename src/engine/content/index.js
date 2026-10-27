@@ -1,5 +1,7 @@
 //Bomb-ass logo generated using https://patorjk.com/software/taag/
 
+import commandConstructor from "./command"
+
 const banana = `<img src='img/banana.gif' onClick="game.handle('bananaclicked',true)" width="64" height="64" style="display:inline;hover:cursor;"/>`
 const epiTextLogo = 
 `                                        
@@ -68,6 +70,7 @@ const engineContentConstructor = (API) => {
         API.player().add(item)
     }
 
+    const command = {...commandConstructor(API),...{loadgame:loadGame,bananaclicked:bananaClicked}}
     return {
         info:{
             name:"Base content pack",
@@ -81,7 +84,7 @@ const engineContentConstructor = (API) => {
 
         quest:{},
         event:{loadMenu,returnToPlayer},
-        command:{loadgame:loadGame,bananaclicked:bananaClicked},
+        command,
         action:{}
     }
 }

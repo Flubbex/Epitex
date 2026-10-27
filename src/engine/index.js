@@ -1,14 +1,13 @@
 import Emitter from "./class/emitter"
 
-import StorageModule    from "./module/storage"
-import ActionModule     from "./module/interaction"
-import EventModule      from "./module/event"
-import CombatModule     from "./module/combat"
-import ContentModule    from "./module/content"
-import StoreModule      from "./module/store"
+import StorageModule        from "./module/storage"
+import InteractionModule    from "./module/interaction"
+import EventModule          from "./module/event"
+import CombatModule         from "./module/combat"
+import ContentModule        from "./module/content"
+import StoreModule          from "./module/store"
 
 import baseContentConstructor from "./content"
-import commandConstructor     from "./command"
 
 import APIConstructor from "./api"
 
@@ -30,8 +29,8 @@ class Engine extends Emitter {
 
         this.API        = APIConstructor(this)
         
-        this.store      = new StoreModule(this.API)
-        this.action     = new ActionModule(this.API)
+        this.store      = new StoreModule()
+        this.action     = new InteractionModule(this.API)
         this.combat     = new CombatModule(this.API)
         this.event      = new EventModule(this.API)
         this.storage    = new StorageModule(this.store)
@@ -51,8 +50,7 @@ class Engine extends Emitter {
 
         const baseContentPack = baseContentConstructor(this.API)
         this.content.load( baseContentPack )
-        this.action.load( commandConstructor(this.API) )
-
+        
         //If provided, load the game pack on top of the base content
         if (gamePackName) {
 
