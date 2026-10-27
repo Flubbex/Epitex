@@ -101,16 +101,14 @@ export default class InteractionModule extends Emitter {
 
     doHandle(input,silent){
         const arg = this.parseInput(input)
-        if (!arg.length)
-            return
         const name = arg.shift() 
         const clean = name.toString().toLowerCase()
 
         if (!silent)
-            this.emit("output","<span class='text-warning'>"+input+"</span>",true)
+            this.emit("output",`<span class='text-warning'>${input}</span>`,true)
         
         const wareResult = this.ware.map((ware)=>ware(clean,arg)).filter((e) => e)
-
+        
         if (wareResult.length)
             return wareResult
 
@@ -122,6 +120,6 @@ export default class InteractionModule extends Emitter {
     }
 
     handle(input,silent){
-        return input.split("\n").map( (p) => this.doHandle(p,silent) )
+        return input.split(";").map( (p) => this.doHandle(p,silent) )
     }
 }
