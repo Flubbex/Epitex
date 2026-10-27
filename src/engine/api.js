@@ -293,6 +293,15 @@ const apiConstructor = (engine) => {
         engine.store.ui.setMusic({videoId,startSeconds,callBack})
     }
 
+    /**
+     * Create a script
+     */
+    const createScript = (name,content) =>  engine.script.create(name,content)
+
+    const scriptExists = (name) => engine.script.exists(name)
+
+    const runScript = (name) => engine.script.run(name)
+
     return {
         util,
         startQuest,
@@ -326,7 +335,10 @@ const apiConstructor = (engine) => {
         getContentPackSet,
         loadGamePack,
         quit,
-        playMusic
+        playMusic,
+        createScript,
+        runScript,
+        scriptExists
     }
 }
 

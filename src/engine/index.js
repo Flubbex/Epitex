@@ -6,6 +6,7 @@ import EventModule          from "./module/event"
 import CombatModule         from "./module/combat"
 import ContentModule        from "./module/content"
 import StoreModule          from "./module/store"
+import ScriptModule         from "./module/script"
 
 import baseContentConstructor from "./content"
 
@@ -33,6 +34,8 @@ class Engine extends Emitter {
         this.action     = new InteractionModule(this.API)
         this.combat     = new CombatModule(this.API)
         this.event      = new EventModule(this.API)
+        this.script     = new ScriptModule(this.API)
+        
         this.storage    = new StorageModule(this.store)
 
         this.content    = new ContentModule(contentPackList.map((packConstructor) => packConstructor(this.API) ))

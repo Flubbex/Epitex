@@ -167,6 +167,23 @@ const commandConstructor = (API) => {
      return "Loading music.."
     }
     
+    const makescript = ([name,content]) => {
+          if (!name)
+               return "Create a script with what name?"
+          if (!content)
+               return "You failed to pass any content"
+
+          API.print(`Creating script "${name}"`)
+          return API.createScript(name,content)
+    }
+
+    const runscript = ([name]) => {
+          if (!name)
+               return "Run which script?"
+          if (!API.scriptExists(name))
+               return "No such script"
+          return API.runScript(name)
+    }
      return {
           clear,
           echo,
@@ -174,7 +191,9 @@ const commandConstructor = (API) => {
           give,
           map,
           quit,
-          playmusic
+          playmusic,
+          makescript,
+          runscript
      }
 }
 
