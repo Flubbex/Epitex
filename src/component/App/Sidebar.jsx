@@ -7,10 +7,10 @@ const sidebarSet = [
 ]
 
 export const Sidebar = ({ route, setRoute }) => (
-  <div className="col" id="sidebar">
+  <div className="col d-none d-lg-block" id="sidebar">
     <div className="btn-group d-flex">
       {sidebarSet.map((btn) => (
-        <button className={"btn btn-lg rounded-0 " + (route === btn.route ? "btn-dark" : "btn-secondary")}
+        <button className={"btn rounded-0 w-100 " + (route === btn.route ? "btn-dark" : "btn-secondary")}
           key={btn.route}
           aria-pressed="true"
           onClick={() => setRoute(btn.route)}>{btn.label}</button>

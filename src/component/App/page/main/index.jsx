@@ -41,7 +41,7 @@ const ControlPanel = ({ game }) => {
 */
 
 const MainPage = ({ game }) => (
-  <div className="container">
+  <div className="container-fluid p-0">
     <div className="row">
       <ScrollingView game={game} />
     </div>

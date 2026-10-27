@@ -12,8 +12,8 @@ const App = ({game}) => {
     <div className="backdrop" id="backdrop_2"></div>
     <div className="backdrop" id="backdrop_3"></div>
 
-    <div className="container" id="container">
-      <div className="d-flex flex-row">
+    <div className="container-fluid" id="container">
+      <div className="row">
       <Sidebar route={route} setRoute={setRoute} />
       </div>
       <div className="row" id="frame">
