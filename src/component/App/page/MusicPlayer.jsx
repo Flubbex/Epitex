@@ -30,7 +30,7 @@ const Player = ({ videoId, startSeconds = 0,callBack }) => {
             playerRef.current?.destroy()
             playerRef.current = null
         }
-    }, [videoId, startSeconds])
+    }, [videoId, startSeconds,callBack])
 
     return <div ref={containerRef} />
 }

@@ -2,27 +2,38 @@ class ScriptModule {
 
     API = null
     script = {}
-    call = {}
 
     constructor(API){
         this.API = API
     }
 
-    create(name,content){
+    registerScriptedObject(object){
+        const id = object.id 
+        for (const eventName in object.script)
+            this.create(`${id}_${eventName}`,object.script[eventName],object)
+
+        if ( this.exists(`${id}_init`) )
+            this.run(`${id}_init`)
+    }
+    create(name,content,owner=null){
         console.log("Creating script",name,content)
         if (name in this.script)
             console.warn("Overriding script",name)
 
-        this.script[name] = content
+        const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
 
-        this.call[name] = new Function("API","with (API) {"+content+"}")
+        const call = new AsyncFunction("API",`with (API) {${content}}`)
+
+        const newScript = {name,content,owner,call}
+        this.script[name] = newScript
+        return newScript
     }
 
     exists(name){
         return name in this.script
     }
     run(name){
-        return this.call[name](this.API)
+        this.script[name].call.apply(this.script[name].owner,[this.API])
     }
 
 }

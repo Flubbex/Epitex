@@ -32,6 +32,7 @@ class Entity extends Emitter {
     tag = []
     action = {}
     event = {}
+    script = null
 
     //TODO: Parent will be the exact same as room on Beings and up (NPC,Player,etc)
     // Move it to items and then check for typing before setting it (see container)
@@ -50,6 +51,8 @@ class Entity extends Emitter {
         this.action = state.action ? {...state.action} : this.action
         this.event = state.event ? {...state.event} : this.event
 
+        this.script = state.script ?? this.script
+        
         if (this.id === null)
             console.warn(`Object "${this.name}" was created with an invalid id`)
 

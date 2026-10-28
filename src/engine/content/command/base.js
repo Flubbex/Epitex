@@ -184,6 +184,30 @@ const commandConstructor = (API) => {
                return "No such script"
           return API.runScript(name)
     }
+
+    const use = ([targetName]) => {
+          if (!targetName)
+               return "Use what?"
+          const curRoom = API.room()
+          
+          const roomItem = curRoom.get("any",targetName)
+
+          if (roomItem) {
+               window.setTimeout( ()=> API.runScript(`${roomItem.id}_use`), 0)
+               return `You use the ${roomItem.name}`
+          }
+
+          const player = API.player()
+          const playerItem = player.get("any",targetName)
+
+          if (playerItem) {
+               window.setTimeout( ()=> API.runScript(`${playerItem.id}_use`), 0)
+               return `You use your ${playerItem.name}`
+          }
+
+          return "Can't find that"
+          
+    }
      return {
           clear,
           echo,
@@ -193,7 +217,8 @@ const commandConstructor = (API) => {
           quit,
           playmusic,
           makescript,
-          runscript
+          runscript,
+          use
      }
 }
 

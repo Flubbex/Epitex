@@ -1,3 +1,5 @@
+import Emitter from "../../class/emitter.js"
+
 import Player from "./model/player.js"
 import World from "./model/world.js"
 import UI from "./model/ui.js"
@@ -5,7 +7,8 @@ import Battle from "./model/battle.js"
 
 import Factory from "./factory.js"
 
-class StoreModule {
+
+class StoreModule extends Emitter{
     player = null
     world = null
     ui = null
@@ -18,6 +21,7 @@ class StoreModule {
     byId = {}
 
     constructor(){
+        super()
         window.dbg("StoreModule","Constructing")
 
         this.factory = new Factory()
@@ -44,6 +48,9 @@ class StoreModule {
 
         if (object.type === "room")
             this.world.room.push(object)
+
+        if (object.script)
+            this.emit("registerScriptedObject",object)
     }
     create(objectState){
         if (objectState.id in this.byId) {

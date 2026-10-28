@@ -43,6 +43,8 @@ class Engine extends Emitter {
         //Print output from the interaction module
         this.action.on("output", (...arg) => this.print(...arg))
 
+        this.store.on("registerScriptedObject", this.script.registerScriptedObject.bind(this.script))
+
     }
     start(gamePackName) {
 

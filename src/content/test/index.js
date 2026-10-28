@@ -2,49 +2,50 @@
 const constructContent = (API) => {
 
     const room = [
-        {
-            id:"MainMenu",
-            name:"Main Menu",
-            type:"room",
-            description:"Hi it's vince with slap chop",
-            parent:"NULLED",
-            event:{
-                playerEntered:["wow"]
+      {
+        id: "MainMenu",
+        name: "Main Menu",
+        type: "room",
+        description: "Hi it's vince with slap chop",
+        parent: "NULLED",
+        content: [
+          {
+            id: "Smoker",
+            name: "Start",
+            target: "1",
+            type: "exit",
+            tag: ["silent", "clear"],
+            locked: true,
+          },
+          {
+            name: "Gay Key",
+            type: "key",
+            target: "Smoker",
+            script: {
+              use: "this.name = `straight key`",
             },
-            content:[
-                {
-                    id:"Smoker",
-                    name:"Start",
-                    target:"1",
-                    type:"exit",
-                    tag:["silent","clear"],
-                    locked:true
-                },
-                {
-                    name:"Gay Key",
-                    type:"key",
-                    target:"Smoker"
-                }
-            ]
-        },
-        {
-            id:"1",
-            name:"Game",
-            type:"room",
-            description:"Wow",
-            parent:"NULLED",
-            content:[
-                { name:"Super Dildo",
-                    description:"Poop me!",
-                    type:"item",
-                    action:{"poop":"poop"},
-                    event:{
-                        playerViewed:["coolbeans"]
-                    }
-                }
-            ]
-        }
-    ]
+          },
+        ],
+      },
+      {
+        id: "1",
+        name: "Game",
+        type: "room",
+        description: "Wow",
+        parent: "NULLED",
+        content: [
+          {
+            name: "Super Dildo",
+            description: "Poop me!",
+            type: "item",
+            action: { poop: "poop" },
+            event: {
+              playerViewed: ["coolbeans"],
+            },
+          },
+        ],
+      },
+    ];
 
     const command = {
         test:([a])=>{
@@ -62,9 +63,6 @@ const constructContent = (API) => {
     const event = {
         coolbeans:()=>{
             API.print("Hottie")
-        },
-        wow:()=>{
-            API.playMusic("https://www.youtube.com/embed/GLGfQn8dsXQ?si=v4winlj15jQ7F8Dk&autoplay=1")
         }
     }
 

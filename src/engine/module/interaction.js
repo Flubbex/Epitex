@@ -56,7 +56,7 @@ export default class InteractionModule extends Emitter {
     }
     
     error(v){
-        return "Unknown command: '"+v+"'"
+        return `Unknown command "${v}" `
     }
 
     parseInput(inputString) {
@@ -108,7 +108,7 @@ export default class InteractionModule extends Emitter {
             this.emit("output",`<span class='text-warning'>${input}</span>`,true)
         
         const wareResult = this.ware.map((ware)=>ware(clean,arg)).filter((e) => e)
-        
+
         if (wareResult.length)
             return wareResult
 
