@@ -9,12 +9,10 @@ const apiConstructor = (engine) => {
      * Start a quest
      */
     const startQuest = async (name, room, ent) => {
-        console.log("SQ",name)
-        const quest = engine.content.get("quest", name)
-        if (quest)
-            quest(room, ent)
-        else 
-            console.warn(`Attempted to start missing quest ${name}`)
+        console.log('SQ', name)
+        const quest = engine.content.get('quest', name)
+        if (quest) quest(room, ent)
+        else console.warn(`Attempted to start missing quest ${name}`)
     }
 
     /**
@@ -23,7 +21,7 @@ const apiConstructor = (engine) => {
     const handle = (input, silent = false) => {
         return engine.handle(input, silent)
     }
-    
+
     /**
      * Print some text
      */
@@ -143,9 +141,10 @@ const apiConstructor = (engine) => {
      */
     const questFlag = (name, value) => {
         if (value === undefined)
-            return name ? (engine.store.player.quest[name] || null) : engine.store.player.quest
-        else
-            engine.store.player.quest[name] = value
+            return name
+                ? engine.store.player.quest[name] || null
+                : engine.store.player.quest
+        else engine.store.player.quest[name] = value
     }
 
     /**
@@ -176,10 +175,10 @@ const apiConstructor = (engine) => {
         let data = null
         console.log(jsonString)
         try {
-             data = JSON.parse(jsonString)
-        } catch(e){
+            data = JSON.parse(jsonString)
+        } catch (e) {
             console.warn(e)
-            return "Malformed JSON string"
+            return 'Malformed JSON string'
         }
 
         const room = engine.store.patch(data)
@@ -190,10 +189,10 @@ const apiConstructor = (engine) => {
     /**
      * Run an action
      */
-    const runAction = (name,...args) => {
-        const action = engine.content.get("action",name)
+    const runAction = (name, ...args) => {
+        const action = engine.content.get('action', name)
         if (!action)
-            return console.warn("Tried running an unimplemented action:",name)
+            return console.warn('Tried running an unimplemented action:', name)
 
         return action(...args)
     }
@@ -202,21 +201,17 @@ const apiConstructor = (engine) => {
      * Return the key if the player has a key that targets the id
      */
     const playerGetKey = (id) => {
-        const allKey = player().get("key")
-        
-        if (allKey === null)
-            return false 
+        const allKey = player().get('key')
 
-        if (!Array.isArray(allKey)){
-            if (allKey.target !== id)
-                return false
-            else
-                return allKey
+        if (allKey === null) return false
+
+        if (!Array.isArray(allKey)) {
+            if (allKey.target !== id) return false
+            else return allKey
         }
-        const correctKey = allKey.find((e)=>e && e.target === id)
+        const correctKey = allKey.find((e) => e && e.target === id)
 
-        if (!correctKey)
-            return false 
+        if (!correctKey) return false
 
         return correctKey
     }
@@ -224,29 +219,31 @@ const apiConstructor = (engine) => {
     /**
      * Generate a raw save state
      */
-    const generateSave = ()=>{
+    const generateSave = () => {
         return engine.store.save()
     }
 
     /**
      * Start a file download
      */
-    const createDownload = (data,type,filename) => {
-        const  a = document.createElement("a")
-        const file = new Blob([data], {type: type})
+    const createDownload = (data, type, filename) => {
+        const a = document.createElement('a')
+        const file = new Blob([data], { type: type })
 
-        if (window.navigator.msSaveOrOpenBlob) // IE10+
-            window.navigator.msSaveOrOpenBlob(file, filename);
-        else { // Others
+        if (window.navigator.msSaveOrOpenBlob)
+            // IE10+
+            window.navigator.msSaveOrOpenBlob(file, filename)
+        else {
+            // Others
             var url = URL.createObjectURL(file)
             a.href = url
             a.download = filename
             document.body.appendChild(a)
             a.click()
-            setTimeout(()=>{
-            document.body.removeChild(a)
-            window.URL.revokeObjectURL(url)  
-            }, 0); 
+            setTimeout(() => {
+                document.body.removeChild(a)
+                window.URL.revokeObjectURL(url)
+            }, 0)
         }
     }
 
@@ -254,7 +251,7 @@ const apiConstructor = (engine) => {
      * Get an event, either all or by name if passed
      */
     const getEvent = (name) => {
-        return engine.content.get("event",name)
+        return engine.content.get('event', name)
     }
 
     /**
@@ -268,7 +265,7 @@ const apiConstructor = (engine) => {
      * Load a game
      */
     const loadGamePack = async (name) => {
-        window.dbg("--------------","Loading Pack")
+        window.dbg('--------------', 'Loading Pack')
         engine.print(`Loading game ${name}..`)
         await engine.util.delay(0)
         engine.store.ui.clear()
@@ -278,8 +275,8 @@ const apiConstructor = (engine) => {
     /**
      * Drop back to the main menu (Unload any pack)
      */
-    const quit = async () =>{
-        window.dbg("--------------","Quitting")
+    const quit = async () => {
+        window.dbg('--------------', 'Quitting')
         engine.store.ui.clear()
         await engine.util.delay(0)
         engine.storage.removeSaveListener()
@@ -289,14 +286,14 @@ const apiConstructor = (engine) => {
     /**
      * Play a song
      */
-    const playMusic = (videoId,startSeconds=0,callBack=null) => {
-        engine.store.ui.setMusic({videoId,startSeconds,callBack})
+    const playMusic = (videoId, startSeconds = 0, callBack = null) => {
+        engine.store.ui.setMusic({ videoId, startSeconds, callBack })
     }
 
     /**
      * Create a script
      */
-    const createScript = (name,content) =>  engine.script.create(name,content)
+    const createScript = (name, content) => engine.script.create(name, content)
 
     const scriptExists = (name) => engine.script.exists(name)
 
@@ -338,7 +335,7 @@ const apiConstructor = (engine) => {
         playMusic,
         createScript,
         runScript,
-        scriptExists
+        scriptExists,
     }
 }
 

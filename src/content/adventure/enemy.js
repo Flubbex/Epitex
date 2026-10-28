@@ -1,11 +1,11 @@
 const rat = {
-    name:"Rat",
-    type:"mobile",
-    idleMessage:["scurries around"]
+    name: 'Rat',
+    type: 'mobile',
+    idleMessage: ['scurries around'],
 }
 
 const enemy = {
-    rat
+    rat,
 }
 
 export default enemy

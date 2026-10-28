@@ -1,31 +1,28 @@
 class ModalService {
-
     visible = false
-    title = "Empty Modal"
-    body = "Yo mama"
+    title = 'Empty Modal'
+    body = 'Yo mama'
     button = [
         {
-            label: "Okay?",
+            label: 'Okay?',
             action: (game) => {
                 game.modal = null
-                game.emit("modalChanged",game.modal)
-            }
-        }
+                game.emit('modalChanged', game.modal)
+            },
+        },
     ]
 
-    show(props)
-    {   
-        for(const v in props)
-            this[v] = props[v]
-        
-        this.visible = true 
+    show(props) {
+        for (const v in props) this[v] = props[v]
+
+        this.visible = true
     }
 
-    hide(){
-        this.visible = false 
+    hide() {
+        this.visible = false
     }
 
-    toggle(){
+    toggle() {
         this.visible != this.visible
     }
 }

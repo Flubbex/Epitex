@@ -1,11 +1,10 @@
-import Room from "." 
+import Room from '.'
 
 class Menu extends Room {
-
-    type = "menu"
-    constructor(state={}){
+    type = 'menu'
+    constructor(state = {}) {
         super(state)
-        this.event["objRemoved"] = ["clear"]
+        this.event['objRemoved'] = ['clear']
     }
 
     look() {
@@ -13,9 +12,14 @@ class Menu extends Room {
 
         this.content.map((obj) => {
             switch (obj.type) {
-                case "exit":
-                    exitList.push("<a href='#' onClick='game.handle(\"go " + 
-                        obj.name + "\",true)'>" + obj.name + "</a>")
+                case 'exit':
+                    exitList.push(
+                        "<a href='#' onClick='game.handle(\"go " +
+                            obj.name +
+                            '",true)\'>' +
+                            obj.name +
+                            '</a>'
+                    )
                     break
                 default:
                     break
@@ -25,7 +29,7 @@ class Menu extends Room {
 
         const output = [this.description].concat(exitList)
 
-        return output.join("\n")
+        return output.join('\n')
     }
 }
 

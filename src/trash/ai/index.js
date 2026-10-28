@@ -1,5 +1,5 @@
-import generic from "./generic"
+import generic from './generic'
 
-const aiContent = {generic}
+const aiContent = { generic }
 
 export default aiContent

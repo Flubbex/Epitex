@@ -1,610 +1,622 @@
 const room = [
-  {
-    id: "MainMenu",
-    name: "Main Menu",
-    description: "****************************************\n*  _____ _                        _    *\n* | ____| |_ ___ _ __ _ __   __ _| |   * \n* |  _| | __/ _ \\ '__| '_ \\ / _` | |   *\n* | |___| ||  __/ |  | | | | (_| | |   *\n* |_____|\\__\\___|_|  |_| |_|\\__,_|_|   *\n* |  _ \\  ___  ___  ___ ___ _ __ | |_  *\n* | | | |/ _ \\/ __|/ __/ _ \\ '_ \\| __| *\n* | |_| |  __/\\__ \\ (_|  __/ | | | |_  *\n* |____/ \\___||___/\\___\\___|_| |_|\\__| *\n****************************************\n*         Some goofy subtitle          *\n*         v0.3     by Flubber          *\n****************************************",
-    type: "menu",
-    tag: [
-      "noprompt"
-    ],
-    event: {
-      playerLeft: [
-        "clearStart"
-      ],
-      playerEntered:[
-        "setup"
-      ]
-    },
-    parent: "NULLED",
-    content: [
-      {
-        id: "2PFJ35",
-        name: "Start game",
-        description: "This exit has no description",
-        type: "exit",
-        tag: [
-          "silent"
+    {
+        id: 'MainMenu',
+        name: 'Main Menu',
+        description:
+            "****************************************\n*  _____ _                        _    *\n* | ____| |_ ___ _ __ _ __   __ _| |   * \n* |  _| | __/ _ \\ '__| '_ \\ / _` | |   *\n* | |___| ||  __/ |  | | | | (_| | |   *\n* |_____|\\__\\___|_|  |_| |_|\\__,_|_|   *\n* |  _ \\  ___  ___  ___ ___ _ __ | |_  *\n* | | | |/ _ \\/ __|/ __/ _ \\ '_ \\| __| *\n* | |_| |  __/\\__ \\ (_|  __/ | | | |_  *\n* |____/ \\___||___/\\___\\___|_| |_|\\__| *\n****************************************\n*         Some goofy subtitle          *\n*         v0.3     by Flubber          *\n****************************************",
+        type: 'menu',
+        tag: ['noprompt'],
+        event: {
+            playerLeft: ['clearStart'],
+            playerEntered: ['setup'],
+        },
+        parent: 'NULLED',
+        content: [
+            {
+                id: '2PFJ35',
+                name: 'Start game',
+                description: 'This exit has no description',
+                type: 'exit',
+                tag: ['silent'],
+                parent: 'MainMenu',
+                target: '8M9I3L', //"HYX9OP"
+            },
         ],
-        parent: "MainMenu",
-        target: "8M9I3L"//"HYX9OP"
-      }
-    ],
-    area: 0
-  },
-  {
-    id: "8M9I3L",
-    name: "In front of the cave",
-    description: "The entrance to the cave is a gaping hole roughly hewed into a wall of thick rock. Strewn about on the ground in front of it are the bones of several small critters, along with bits and pieces of fur and other debris. A path of dried mud leads north into the dungeon.",
-    type: "room",
-    parent: "NULLED",
-    content: [
-      {
-        id: "4R9TI8",
-        name: "North",
-        description: "This exit has no description",
-        type: "exit",
-        parent: "8M9I3L",
-        target: "U165DQ",
-        room: "8M9I3L"
-      },
-      {
-        id: "YFMIM6",
-        name: "South",
-        description: "This exit has no description",
-        type: "exit",
-        parent: "8M9I3L",
-        target: "PDQCTQ",
-        room: "8M9I3L"
-      }
-    ],
-    area: 0
-  },
-  {
-    id: "PDQCTQ",
-    name: "Through the forest",
-    description: "Along the canopy of the trees a variety of birds can be heard as the light of the sun beams down through the leaves. The thick grass seems to spread further around the area, only to thin towards the large mountainous wall to the north.",
-    type: "room",
-    parent: "NULLED",
-    content: [
-      {
-        id: "1SEJNE",
-        name: "North",
-        description: "This exit has no description",
-        type: "exit",
-        parent: "PDQCTQ",
-        target: "8M9I3L",
-        room: "PDQCTQ"
-      },
-      {
-        id: "5R289F",
-        name: "Southeast",
-        description: "This exit has no description",
-        type: "exit",
-        parent: "PDQCTQ",
-        target: "N01KBO",
-        room: "PDQCTQ"
-      }
-    ],
-    area: 0
-  },
-  {
-    id: "N01KBO",
-    name: "Through the forest",
-    description: "Tall trees surround a small, bendy path deeper into the forest. The sunlight cascades upon the thick canopy of leaves surrounding the forest ceiling. Among the sand on the side of the path are several rocks, casually kicked aside by passerby's. ",
-    type: "room",
-    parent: "NULLED",
-    content: [
-      {
-        id: "9O6D3S",
-        name: "Northwest",
-        description: "This exit has no description",
-        type: "exit",
-        parent: "N01KBO",
-        target: "PDQCTQ",
-        room: "N01KBO"
-      },
-      {
-        id: "PDOR0K",
-        name: "South",
-        description: "This exit has no description",
-        type: "exit",
-        parent: "N01KBO",
-        target: "OT2KZN",
-        room: "N01KBO"
-      },
-      {
-        id: "JLFXAV",
-        name: "West",
-        description: "This exit has no description",
-        type: "exit",
-        target: "YLKBVN",
-        room: "N01KBO"
-      },
-      {
-        id: "56H6QP",
-        name: "East",
-        description: "This exit has no description",
-        type: "exit",
-        target: "BIMY9P"
-      }
-    ],
-    area: 0
-  },
-  {
-    id: "OT2KZN",
-    name: "Outside the village",
-    description: "The path leads to the opening of a large forest adorned with lush, maple trees. The sounds of casual village activity eminate from the south whilst a plethora of birds can be heard from the forest to the north.",
-    type: "room",
-    parent: "NULLED",
-    content: [
-      {
-        id: "DAYNOT",
-        name: "North",
-        description: "This exit has no description",
-        type: "exit",
-        parent: "OT2KZN",
-        target: "N01KBO",
-        room: "OT2KZN"
-      },
-      {
-        id: "S7JS7E",
-        name: "South",
-        description: "This exit has no description",
-        type: "exit",
-        parent: "OT2KZN",
-        target: "3J64TI",
-        room: "OT2KZN"
-      }
-    ],
-    area: 0
-  },
-  {
-    id: "3J64TI",
-    name: "Village Center",
-    description: "The village center is adorned with a large bonfire, casting a warm light on the surrouding tents. Splayed around the bonfire are several cut logs meant to be sat on. To the east an especially large tent can be seen, adorned with dried skulls and bones.",
-    type: "room",
-    parent: "NULLED",
-    content: [
-      {
-        id: "RTSRS6",
-        name: "North",
-        description: "This exit has no description",
-        type: "exit",
-        parent: "3J64TI",
-        target: "OT2KZN",
-        room: "3J64TI"
-      },
-      {
-        id: "4SU4S8",
-        name: "East",
-        description: "This exit has no description",
-        type: "exit",
-        parent: "3J64TI",
-        target: "HJWH3N",
-        room: "3J64TI"
-      },
-      {
-        id: "FH3RAL",
-        name: "West",
-        description: "This exit has no description",
-        type: "exit",
-        parent: "3J64TI",
-        target: "82EOEA",
-        room: "3J64TI"
-      },
-      {
-        id: "HTC4LA",
-        name: "Bonfire",
-        description: "A cozy bonfire made out of several large logs, burning intensely with a satisfying crackle.",
-        type: "item",
-        parent: "3J64TI",
-        room: "3J64TI"
-      }
-    ],
-    area: 0
-  },
-  {
-    id: "HJWH3N",
-    name: "Village Elder's tent",
-    description: "This tent belongs to Makar. It is decorated with a variety of brightly dyed skulls hanging from from poles. In the back is a small dresser covered with a small collection of burning candles. A large mat with intricate patterns adorns the center of the room.",
-    type: "room",
-    event: {
-      playerEntered: [
-        "villageElderQuest"
-      ]
+        area: 0,
     },
-    parent: "NULLED",
-    content: [
-      {
-        id: "SI9Y5T",
-        name: "West",
-        description: "This exit has no description",
-        type: "exit",
-        parent: "HJWH3N",
-        target: "3J64TI",
-        room: "HJWH3N"
-      },
-      {
-        id: "4CYFTB",
-        name: "Makar, the village elder",
-        description: "This entity has no description",
-        type: "npc",
-        parent: "HJWH3N",
-        room: "HJWH3N",
-        health: 2,
-        attribute: {
-          strength: 1,
-          intelligence: 1,
-          dexterity: 1,
-          constitution: 1,
-          wisdom: 1,
-          charisma: 1,
-          luck: 1
-        },
-        statistic: {
-          damage: 1,
-          critChance: 1,
-          critDamage: 1.5,
-          maxWeight: 1,
-          maxHealth: 2,
-          attSpeed: 2500
-        },
-        idleChance: 0.8
-      }
-    ],
-    area: 0
-  },
-  {
-    id: "82EOEA",
-    name: "Path through a camp",
-    description: "A corner in the small village surrounded by tents. The dusty path is covered with pebbles and other debris.A few buckets and other leftover goods lay stranded aside the path.",
-    type: "room",
-    parent: "NULLED",
-    content: [
-      {
-        id: "BUDHN0",
-        name: "East",
-        description: "This exit has no description",
-        type: "exit",
-        parent: "82EOEA",
-        target: "3J64TI",
-        room: "82EOEA"
-      },
-      {
-        id: "TX70YS",
-        name: "South",
-        description: "This exit has no description",
-        type: "exit",
-        parent: "82EOEA",
-        target: "HYX9OP",
-        room: "82EOEA"
-      },
-      {
-        id: "0JF7BV",
-        name: "West",
-        description: "This exit has no description",
-        type: "exit",
-        target: "3N6DSO",
-        room: "82EOEA"
-      }
-    ],
-    area: 0
-  },
-  {
-    id: "HYX9OP",
-    name: "Your tent",
-    description: "Central to your tent is a cozy looking bedroll adorned with various types of furry animal hides. From the ceiling hangs a deer skull attached by thick twine. A makeshift table consisting of a tree stump stands in the back adorned with various mugs and plates.",
-    type: "room",
-    action: {
-      sleep: "playerTentSleep"
+    {
+        id: '8M9I3L',
+        name: 'In front of the cave',
+        description:
+            'The entrance to the cave is a gaping hole roughly hewed into a wall of thick rock. Strewn about on the ground in front of it are the bones of several small critters, along with bits and pieces of fur and other debris. A path of dried mud leads north into the dungeon.',
+        type: 'room',
+        parent: 'NULLED',
+        content: [
+            {
+                id: '4R9TI8',
+                name: 'North',
+                description: 'This exit has no description',
+                type: 'exit',
+                parent: '8M9I3L',
+                target: 'U165DQ',
+                room: '8M9I3L',
+            },
+            {
+                id: 'YFMIM6',
+                name: 'South',
+                description: 'This exit has no description',
+                type: 'exit',
+                parent: '8M9I3L',
+                target: 'PDQCTQ',
+                room: '8M9I3L',
+            },
+        ],
+        area: 0,
     },
-    event: {
-      playerEntered: [
-        "yourTentInit"
-      ]
+    {
+        id: 'PDQCTQ',
+        name: 'Through the forest',
+        description:
+            'Along the canopy of the trees a variety of birds can be heard as the light of the sun beams down through the leaves. The thick grass seems to spread further around the area, only to thin towards the large mountainous wall to the north.',
+        type: 'room',
+        parent: 'NULLED',
+        content: [
+            {
+                id: '1SEJNE',
+                name: 'North',
+                description: 'This exit has no description',
+                type: 'exit',
+                parent: 'PDQCTQ',
+                target: '8M9I3L',
+                room: 'PDQCTQ',
+            },
+            {
+                id: '5R289F',
+                name: 'Southeast',
+                description: 'This exit has no description',
+                type: 'exit',
+                parent: 'PDQCTQ',
+                target: 'N01KBO',
+                room: 'PDQCTQ',
+            },
+        ],
+        area: 0,
     },
-    parent: "NULLED",
-    content: [
-      {
-        id: "EYJRXP",
-        name: "North",
-        description: "Towards here is the rest of the village",
-        type: "exit",
-        parent: "HYX9OP",
-        target: "82EOEA",
-        room: "HYX9OP"
-      }
-    ],
-    area: 0
-  },
-  {
-    id: "3N6DSO",
-    name: "Western corner of a camp",
-    description: "The path through the camp ends here with more tents surrounding the area.To the south a small center can be seen with a bunch of wooden toys laying about the area, presumably from the kids living in the camp. ",
-    type: "room",
-    parent: "NULLED",
-    content: [
-      {
-        id: "XA95C4",
-        name: "East",
-        description: "This exit has no description",
-        type: "exit",
-        target: "82EOEA",
-        room: "3N6DSO"
-      },
-      {
-        id: "XHE1ER",
-        name: "North",
-        description: "This exit has no description",
-        type: "exit",
-        target: "VTXQ93",
-        room: "3N6DSO"
-      },
-      {
-        id: "VM2ZTZ",
-        name: "South",
-        description: "This exit has no description",
-        type: "exit",
-        target: "RD6KJE",
-        room: "3N6DSO"
-      }
-    ],
-    area: 0
-  },
-  {
-    id: "VTXQ93",
-    name: "Northwestern end of a camp",
-    description: "A quiet corner of the camp that is well kempt and looking rather new. To the north is a tent that is decorated with twigs and decorative leaves, sewed on rather boldly to the canvas. To the west is a comparatively bland tent with a small stack of dirty bowls piled next to it.",
-    type: "room",
-    parent: "NULLED",
-    content: [
-      {
-        id: "QQDWEY",
-        name: "South",
-        description: "This exit has no description",
-        type: "exit",
-        target: "3N6DSO",
-        room: "VTXQ93"
-      },
-      {
-        id: "7W1XCU",
-        name: "North",
-        description: "This exit has no description",
-        type: "exit",
-        target: "W0K521",
-        room: "VTXQ93"
-      },
-      {
-        id: "1JZGCX",
-        name: "West",
-        description: "This exit has no description",
-        type: "exit",
-        target: "9KXOVH",
-        room: "VTXQ93"
-      }
-    ],
-    area: 0
-  },
-  {
-    id: "W0K521",
-    name: "A tent in the camp",
-    description: "The inside of the canvas is about as well decorated as the outside, with decorated leaves sprewn about in a rather sporadic style. A large pot is brewing on a small fire in the middle of tent. A table with cooking utensils and a few bowls of spices is spread along the eastern side of the tent.",
-    type: "room",
-    parent: "NULLED",
-    content: [
-      {
-        id: "N8QEE9",
-        name: "South",
-        description: "This exit has no description",
-        type: "exit",
-        target: "VTXQ93",
-        room: "W0K521"
-      },
-      {
-        id: "TFA1HV",
-        name: "Camilla",
-        description: "A small humanoid woman, about middle-aged, with long dark hair bound tightly into a messy bun. She is wearing a large, dark apron, seemingly made from the hide of an animal, covered in dried splotches of food residue. Underneath the apron she wears a shagged-looking plaid dress with rough seams and a noticable nicks and cuts along the sleeves. On her feet she wears simple leather sandals.",
-        type: "npc",
-        parent: "QMR50F",
-        room: "W0K521",
-        health: 2,
-        attribute: {
-          strength: 1,
-          intelligence: 1,
-          dexterity: 1,
-          constitution: 1,
-          wisdom: 1,
-          charisma: 1,
-          luck: 1
+    {
+        id: 'N01KBO',
+        name: 'Through the forest',
+        description:
+            "Tall trees surround a small, bendy path deeper into the forest. The sunlight cascades upon the thick canopy of leaves surrounding the forest ceiling. Among the sand on the side of the path are several rocks, casually kicked aside by passerby's. ",
+        type: 'room',
+        parent: 'NULLED',
+        content: [
+            {
+                id: '9O6D3S',
+                name: 'Northwest',
+                description: 'This exit has no description',
+                type: 'exit',
+                parent: 'N01KBO',
+                target: 'PDQCTQ',
+                room: 'N01KBO',
+            },
+            {
+                id: 'PDOR0K',
+                name: 'South',
+                description: 'This exit has no description',
+                type: 'exit',
+                parent: 'N01KBO',
+                target: 'OT2KZN',
+                room: 'N01KBO',
+            },
+            {
+                id: 'JLFXAV',
+                name: 'West',
+                description: 'This exit has no description',
+                type: 'exit',
+                target: 'YLKBVN',
+                room: 'N01KBO',
+            },
+            {
+                id: '56H6QP',
+                name: 'East',
+                description: 'This exit has no description',
+                type: 'exit',
+                target: 'BIMY9P',
+            },
+        ],
+        area: 0,
+    },
+    {
+        id: 'OT2KZN',
+        name: 'Outside the village',
+        description:
+            'The path leads to the opening of a large forest adorned with lush, maple trees. The sounds of casual village activity eminate from the south whilst a plethora of birds can be heard from the forest to the north.',
+        type: 'room',
+        parent: 'NULLED',
+        content: [
+            {
+                id: 'DAYNOT',
+                name: 'North',
+                description: 'This exit has no description',
+                type: 'exit',
+                parent: 'OT2KZN',
+                target: 'N01KBO',
+                room: 'OT2KZN',
+            },
+            {
+                id: 'S7JS7E',
+                name: 'South',
+                description: 'This exit has no description',
+                type: 'exit',
+                parent: 'OT2KZN',
+                target: '3J64TI',
+                room: 'OT2KZN',
+            },
+        ],
+        area: 0,
+    },
+    {
+        id: '3J64TI',
+        name: 'Village Center',
+        description:
+            'The village center is adorned with a large bonfire, casting a warm light on the surrouding tents. Splayed around the bonfire are several cut logs meant to be sat on. To the east an especially large tent can be seen, adorned with dried skulls and bones.',
+        type: 'room',
+        parent: 'NULLED',
+        content: [
+            {
+                id: 'RTSRS6',
+                name: 'North',
+                description: 'This exit has no description',
+                type: 'exit',
+                parent: '3J64TI',
+                target: 'OT2KZN',
+                room: '3J64TI',
+            },
+            {
+                id: '4SU4S8',
+                name: 'East',
+                description: 'This exit has no description',
+                type: 'exit',
+                parent: '3J64TI',
+                target: 'HJWH3N',
+                room: '3J64TI',
+            },
+            {
+                id: 'FH3RAL',
+                name: 'West',
+                description: 'This exit has no description',
+                type: 'exit',
+                parent: '3J64TI',
+                target: '82EOEA',
+                room: '3J64TI',
+            },
+            {
+                id: 'HTC4LA',
+                name: 'Bonfire',
+                description:
+                    'A cozy bonfire made out of several large logs, burning intensely with a satisfying crackle.',
+                type: 'item',
+                parent: '3J64TI',
+                room: '3J64TI',
+            },
+        ],
+        area: 0,
+    },
+    {
+        id: 'HJWH3N',
+        name: "Village Elder's tent",
+        description:
+            'This tent belongs to Makar. It is decorated with a variety of brightly dyed skulls hanging from from poles. In the back is a small dresser covered with a small collection of burning candles. A large mat with intricate patterns adorns the center of the room.',
+        type: 'room',
+        event: {
+            playerEntered: ['villageElderQuest'],
         },
-        statistic: {
-          damage: 1,
-          critChance: 1,
-          critDamage: 1.5,
-          maxWeight: 1,
-          maxHealth: 2,
-          attSpeed: 2500
+        parent: 'NULLED',
+        content: [
+            {
+                id: 'SI9Y5T',
+                name: 'West',
+                description: 'This exit has no description',
+                type: 'exit',
+                parent: 'HJWH3N',
+                target: '3J64TI',
+                room: 'HJWH3N',
+            },
+            {
+                id: '4CYFTB',
+                name: 'Makar, the village elder',
+                description: 'This entity has no description',
+                type: 'npc',
+                parent: 'HJWH3N',
+                room: 'HJWH3N',
+                health: 2,
+                attribute: {
+                    strength: 1,
+                    intelligence: 1,
+                    dexterity: 1,
+                    constitution: 1,
+                    wisdom: 1,
+                    charisma: 1,
+                    luck: 1,
+                },
+                statistic: {
+                    damage: 1,
+                    critChance: 1,
+                    critDamage: 1.5,
+                    maxWeight: 1,
+                    maxHealth: 2,
+                    attSpeed: 2500,
+                },
+                idleChance: 0.8,
+            },
+        ],
+        area: 0,
+    },
+    {
+        id: '82EOEA',
+        name: 'Path through a camp',
+        description:
+            'A corner in the small village surrounded by tents. The dusty path is covered with pebbles and other debris.A few buckets and other leftover goods lay stranded aside the path.',
+        type: 'room',
+        parent: 'NULLED',
+        content: [
+            {
+                id: 'BUDHN0',
+                name: 'East',
+                description: 'This exit has no description',
+                type: 'exit',
+                parent: '82EOEA',
+                target: '3J64TI',
+                room: '82EOEA',
+            },
+            {
+                id: 'TX70YS',
+                name: 'South',
+                description: 'This exit has no description',
+                type: 'exit',
+                parent: '82EOEA',
+                target: 'HYX9OP',
+                room: '82EOEA',
+            },
+            {
+                id: '0JF7BV',
+                name: 'West',
+                description: 'This exit has no description',
+                type: 'exit',
+                target: '3N6DSO',
+                room: '82EOEA',
+            },
+        ],
+        area: 0,
+    },
+    {
+        id: 'HYX9OP',
+        name: 'Your tent',
+        description:
+            'Central to your tent is a cozy looking bedroll adorned with various types of furry animal hides. From the ceiling hangs a deer skull attached by thick twine. A makeshift table consisting of a tree stump stands in the back adorned with various mugs and plates.',
+        type: 'room',
+        action: {
+            sleep: 'playerTentSleep',
         },
-        idleMessage: ["busies herself with preparing some lavish looking meal."],
-        idleChance: 0.8
-      }
-    ],
-    area: 0
-  },
-  {
-    id: "9KXOVH",
-    name: "A tent in the camp",
-    description: "A sparsely decorated tent with only a bedroll in the back and a few plates and cutleries sprewn about. A small collection of flies buzzes around, attracted to the myriad of leftover scraps of food sticking to all the kitchenware.The distinct smell of stale food permeates the air. ",
-    type: "room",
-    parent: "NULLED",
-    content: [
-      {
-        id: "DZ6RLT",
-        name: "East",
-        description: "This exit has no description",
-        type: "exit",
-        target: "VTXQ93",
-        room: "9KXOVH"
-      }
-    ],
-    area: 0
-  },
-  {
-    id: "RD6KJE",
-    name: "Southwestern corner of a camp",
-    description: "The path to the camp ends abruptly with only a single, rather large, tent set up on the west side of the path. A small stack of firewood is neatly stacked to the side of the tent.A few children's toys are laying about, seemingly discarded in the front. ",
-    type: "room",
-    parent: "NULLED",
-    content: [
-      {
-        id: "EBVXNP",
-        name: "North",
-        description: "This exit has no description",
-        type: "exit",
-        target: "3N6DSO",
-        room: "RD6KJE"
-      },
-      {
-        id: "QAR2LM",
-        name: "West",
-        description: "This exit has no description",
-        type: "exit",
-        target: "RKJM9O",
-        room: "RD6KJE"
-      }
-    ],
-    area: 0
-  },
-  {
-    id: "RKJM9O",
-    name: "Front side of a tent",
-    description: "A rather large tent sprawling even further west. To the south side of the tent are two bedrolls, with a smaller bedroll spread out in the north. A pile of clothing is stacked neatly on top of the smaller bedroll. ",
-    type: "room",
-    parent: "NULLED",
-    content: [
-      {
-        id: "J3NB57",
-        name: "East",
-        description: "This exit has no description",
-        type: "exit",
-        target: "RD6KJE",
-        room: "RKJM9O"
-      },
-      {
-        id: "K6M1JC",
-        name: "West",
-        description: "This exit has no description",
-        type: "exit",
-        target: "A8KBX2",
-        room: "RKJM9O"
-      },
-      {
-        id: "1X2HU1",
-        name: "Rachida",
-        description: "A young woman with a dark complexion, dark hair and brown eyes. Her hair extends to about the middle of her back, seemingly well-kempt and neat. She wears a white-yellow top with short, poofy sleeves with a long green skirt underneath. Her shoes are made of brown cloth with a simple lace tie holding them together.",
-        type: "npc",
-        parent: "QMR50F",
-        room: "RKJM9O",
-        health: 2,
-        attribute: {
-          strength: 1,
-          intelligence: 1,
-          dexterity: 1,
-          constitution: 1,
-          wisdom: 1,
-          charisma: 1,
-          luck: 1
+        event: {
+            playerEntered: ['yourTentInit'],
         },
-        statistic: {
-          damage: 1,
-          critChance: 1,
-          critDamage: 1.5,
-          maxWeight: 1,
-          maxHealth: 2,
-          attSpeed: 2500
-        },
-        idleChance: 0.8
-      }
-    ],
-    area: 0
-  },
-  {
-    id: "A8KBX2",
-    name: "Back end of a large tent",
-    description: "The tent spreads further back, adorned by a small kitchen table consisting of a few simple planks stacked on top of eachother. A few bowls are set up on the table, as if someone were preparing to serve a meal. From the ceiling of the tent hangs a bushel of rosemary, spreading a pleasant scent through the air.",
-    type: "room",
-    parent: "NULLED",
-    content: [
-      {
-        id: "N670TV",
-        name: "East",
-        description: "This exit has no description",
-        type: "exit",
-        target: "RKJM9O",
-        room: "A8KBX2"
-      }
-    ],
-    area: 0
-  },
-  {
-    id: "YLKBVN",
-    name: "A small river",
-    description: "From the north stretches a small river, blocking your way further west. It stretches a few more meters south before curving further west. Its water is a clear, pale blue with a moderatedly paced flow. A couple of birds stand on the western bank, taking in the fresh water.",
-    type: "room",
-    parent: "NULLED",
-    content: [
-      {
-        id: "W7CBVU",
-        name: "East",
-        description: "This exit has no description",
-        type: "exit",
-        target: "N01KBO",
-        room: "YLKBVN"
-      }
-    ],
-    area: 0
-  },
-  {
-    id: "BIMY9P",
-    name: "Forest pathway along a camp",
-    description: "The forest continues to expand further eastward alongside a small encampment to the south. The grass is thick with the occasional wild flower poking out from the surrounding shrubbery.",
-    type: "room",
-    parent: "NULLED",
-    content: [
-      {
-        id: "6DJ7RM",
-        name: "West",
-        description: "This exit has no description",
-        type: "exit",
-        target: "N01KBO"
-      },
-      {
-        id: "EG7KYX",
-        name: "East",
-        description: "This exit has no description",
-        type: "exit",
-        target: "6EXUX7"
-      }
-    ],
-    area: 0
-  },
-  {
-    id: "6EXUX7",
-    name: "Forest pathway",
-    description: "The forest grow thicker further away from the encampment. A couple of large, felled trees lay sprawling to the north, blocking further passage. The pathway is littered with small pebbles and other forest debris.",
-    type: "room",
-    parent: "NULLED",
-    content: [
-      {
-        id: "7UVV37",
-        name: "West",
-        description: "This exit has no description",
-        type: "exit",
-        target: "BIMY9P"
-      }
-    ],
-    area: 0
-  }
+        parent: 'NULLED',
+        content: [
+            {
+                id: 'EYJRXP',
+                name: 'North',
+                description: 'Towards here is the rest of the village',
+                type: 'exit',
+                parent: 'HYX9OP',
+                target: '82EOEA',
+                room: 'HYX9OP',
+            },
+        ],
+        area: 0,
+    },
+    {
+        id: '3N6DSO',
+        name: 'Western corner of a camp',
+        description:
+            'The path through the camp ends here with more tents surrounding the area.To the south a small center can be seen with a bunch of wooden toys laying about the area, presumably from the kids living in the camp. ',
+        type: 'room',
+        parent: 'NULLED',
+        content: [
+            {
+                id: 'XA95C4',
+                name: 'East',
+                description: 'This exit has no description',
+                type: 'exit',
+                target: '82EOEA',
+                room: '3N6DSO',
+            },
+            {
+                id: 'XHE1ER',
+                name: 'North',
+                description: 'This exit has no description',
+                type: 'exit',
+                target: 'VTXQ93',
+                room: '3N6DSO',
+            },
+            {
+                id: 'VM2ZTZ',
+                name: 'South',
+                description: 'This exit has no description',
+                type: 'exit',
+                target: 'RD6KJE',
+                room: '3N6DSO',
+            },
+        ],
+        area: 0,
+    },
+    {
+        id: 'VTXQ93',
+        name: 'Northwestern end of a camp',
+        description:
+            'A quiet corner of the camp that is well kempt and looking rather new. To the north is a tent that is decorated with twigs and decorative leaves, sewed on rather boldly to the canvas. To the west is a comparatively bland tent with a small stack of dirty bowls piled next to it.',
+        type: 'room',
+        parent: 'NULLED',
+        content: [
+            {
+                id: 'QQDWEY',
+                name: 'South',
+                description: 'This exit has no description',
+                type: 'exit',
+                target: '3N6DSO',
+                room: 'VTXQ93',
+            },
+            {
+                id: '7W1XCU',
+                name: 'North',
+                description: 'This exit has no description',
+                type: 'exit',
+                target: 'W0K521',
+                room: 'VTXQ93',
+            },
+            {
+                id: '1JZGCX',
+                name: 'West',
+                description: 'This exit has no description',
+                type: 'exit',
+                target: '9KXOVH',
+                room: 'VTXQ93',
+            },
+        ],
+        area: 0,
+    },
+    {
+        id: 'W0K521',
+        name: 'A tent in the camp',
+        description:
+            'The inside of the canvas is about as well decorated as the outside, with decorated leaves sprewn about in a rather sporadic style. A large pot is brewing on a small fire in the middle of tent. A table with cooking utensils and a few bowls of spices is spread along the eastern side of the tent.',
+        type: 'room',
+        parent: 'NULLED',
+        content: [
+            {
+                id: 'N8QEE9',
+                name: 'South',
+                description: 'This exit has no description',
+                type: 'exit',
+                target: 'VTXQ93',
+                room: 'W0K521',
+            },
+            {
+                id: 'TFA1HV',
+                name: 'Camilla',
+                description:
+                    'A small humanoid woman, about middle-aged, with long dark hair bound tightly into a messy bun. She is wearing a large, dark apron, seemingly made from the hide of an animal, covered in dried splotches of food residue. Underneath the apron she wears a shagged-looking plaid dress with rough seams and a noticable nicks and cuts along the sleeves. On her feet she wears simple leather sandals.',
+                type: 'npc',
+                parent: 'QMR50F',
+                room: 'W0K521',
+                health: 2,
+                attribute: {
+                    strength: 1,
+                    intelligence: 1,
+                    dexterity: 1,
+                    constitution: 1,
+                    wisdom: 1,
+                    charisma: 1,
+                    luck: 1,
+                },
+                statistic: {
+                    damage: 1,
+                    critChance: 1,
+                    critDamage: 1.5,
+                    maxWeight: 1,
+                    maxHealth: 2,
+                    attSpeed: 2500,
+                },
+                idleMessage: [
+                    'busies herself with preparing some lavish looking meal.',
+                ],
+                idleChance: 0.8,
+            },
+        ],
+        area: 0,
+    },
+    {
+        id: '9KXOVH',
+        name: 'A tent in the camp',
+        description:
+            'A sparsely decorated tent with only a bedroll in the back and a few plates and cutleries sprewn about. A small collection of flies buzzes around, attracted to the myriad of leftover scraps of food sticking to all the kitchenware.The distinct smell of stale food permeates the air. ',
+        type: 'room',
+        parent: 'NULLED',
+        content: [
+            {
+                id: 'DZ6RLT',
+                name: 'East',
+                description: 'This exit has no description',
+                type: 'exit',
+                target: 'VTXQ93',
+                room: '9KXOVH',
+            },
+        ],
+        area: 0,
+    },
+    {
+        id: 'RD6KJE',
+        name: 'Southwestern corner of a camp',
+        description:
+            "The path to the camp ends abruptly with only a single, rather large, tent set up on the west side of the path. A small stack of firewood is neatly stacked to the side of the tent.A few children's toys are laying about, seemingly discarded in the front. ",
+        type: 'room',
+        parent: 'NULLED',
+        content: [
+            {
+                id: 'EBVXNP',
+                name: 'North',
+                description: 'This exit has no description',
+                type: 'exit',
+                target: '3N6DSO',
+                room: 'RD6KJE',
+            },
+            {
+                id: 'QAR2LM',
+                name: 'West',
+                description: 'This exit has no description',
+                type: 'exit',
+                target: 'RKJM9O',
+                room: 'RD6KJE',
+            },
+        ],
+        area: 0,
+    },
+    {
+        id: 'RKJM9O',
+        name: 'Front side of a tent',
+        description:
+            'A rather large tent sprawling even further west. To the south side of the tent are two bedrolls, with a smaller bedroll spread out in the north. A pile of clothing is stacked neatly on top of the smaller bedroll. ',
+        type: 'room',
+        parent: 'NULLED',
+        content: [
+            {
+                id: 'J3NB57',
+                name: 'East',
+                description: 'This exit has no description',
+                type: 'exit',
+                target: 'RD6KJE',
+                room: 'RKJM9O',
+            },
+            {
+                id: 'K6M1JC',
+                name: 'West',
+                description: 'This exit has no description',
+                type: 'exit',
+                target: 'A8KBX2',
+                room: 'RKJM9O',
+            },
+            {
+                id: '1X2HU1',
+                name: 'Rachida',
+                description:
+                    'A young woman with a dark complexion, dark hair and brown eyes. Her hair extends to about the middle of her back, seemingly well-kempt and neat. She wears a white-yellow top with short, poofy sleeves with a long green skirt underneath. Her shoes are made of brown cloth with a simple lace tie holding them together.',
+                type: 'npc',
+                parent: 'QMR50F',
+                room: 'RKJM9O',
+                health: 2,
+                attribute: {
+                    strength: 1,
+                    intelligence: 1,
+                    dexterity: 1,
+                    constitution: 1,
+                    wisdom: 1,
+                    charisma: 1,
+                    luck: 1,
+                },
+                statistic: {
+                    damage: 1,
+                    critChance: 1,
+                    critDamage: 1.5,
+                    maxWeight: 1,
+                    maxHealth: 2,
+                    attSpeed: 2500,
+                },
+                idleChance: 0.8,
+            },
+        ],
+        area: 0,
+    },
+    {
+        id: 'A8KBX2',
+        name: 'Back end of a large tent',
+        description:
+            'The tent spreads further back, adorned by a small kitchen table consisting of a few simple planks stacked on top of eachother. A few bowls are set up on the table, as if someone were preparing to serve a meal. From the ceiling of the tent hangs a bushel of rosemary, spreading a pleasant scent through the air.',
+        type: 'room',
+        parent: 'NULLED',
+        content: [
+            {
+                id: 'N670TV',
+                name: 'East',
+                description: 'This exit has no description',
+                type: 'exit',
+                target: 'RKJM9O',
+                room: 'A8KBX2',
+            },
+        ],
+        area: 0,
+    },
+    {
+        id: 'YLKBVN',
+        name: 'A small river',
+        description:
+            'From the north stretches a small river, blocking your way further west. It stretches a few more meters south before curving further west. Its water is a clear, pale blue with a moderatedly paced flow. A couple of birds stand on the western bank, taking in the fresh water.',
+        type: 'room',
+        parent: 'NULLED',
+        content: [
+            {
+                id: 'W7CBVU',
+                name: 'East',
+                description: 'This exit has no description',
+                type: 'exit',
+                target: 'N01KBO',
+                room: 'YLKBVN',
+            },
+        ],
+        area: 0,
+    },
+    {
+        id: 'BIMY9P',
+        name: 'Forest pathway along a camp',
+        description:
+            'The forest continues to expand further eastward alongside a small encampment to the south. The grass is thick with the occasional wild flower poking out from the surrounding shrubbery.',
+        type: 'room',
+        parent: 'NULLED',
+        content: [
+            {
+                id: '6DJ7RM',
+                name: 'West',
+                description: 'This exit has no description',
+                type: 'exit',
+                target: 'N01KBO',
+            },
+            {
+                id: 'EG7KYX',
+                name: 'East',
+                description: 'This exit has no description',
+                type: 'exit',
+                target: '6EXUX7',
+            },
+        ],
+        area: 0,
+    },
+    {
+        id: '6EXUX7',
+        name: 'Forest pathway',
+        description:
+            'The forest grow thicker further away from the encampment. A couple of large, felled trees lay sprawling to the north, blocking further passage. The pathway is littered with small pebbles and other forest debris.',
+        type: 'room',
+        parent: 'NULLED',
+        content: [
+            {
+                id: '7UVV37',
+                name: 'West',
+                description: 'This exit has no description',
+                type: 'exit',
+                target: 'BIMY9P',
+            },
+        ],
+        area: 0,
+    },
 ]
 
 export default room

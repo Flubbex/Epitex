@@ -9,8 +9,8 @@ class Emitter {
      * Returns an unsubscribe function.
      */
     on(event, fn) {
-        if (typeof fn !== "function")
-            throw new TypeError("Emitter.on: listener must be a function")
+        if (typeof fn !== 'function')
+            throw new TypeError('Emitter.on: listener must be a function')
 
         let list = this._events[event]
         if (!list) {
@@ -50,9 +50,8 @@ class Emitter {
             return this
         }
 
-        this._events[event] = list.filter(f => f !== fn && f._original !== fn)
-        if (this._events[event].length === 0)
-            delete this._events[event]
+        this._events[event] = list.filter((f) => f !== fn && f._original !== fn)
+        if (this._events[event].length === 0) delete this._events[event]
 
         return this
     }
@@ -70,19 +69,16 @@ class Emitter {
             // Copy so listeners can on/off during emit
             for (const fn of list.slice()) {
                 try {
-                    if (passEvent)
-                        fn(event, ...args)
-                    else
-                        fn(...args)
+                    if (passEvent) fn(event, ...args)
+                    else fn(...args)
                 } catch (err) {
                     console.error(`Emitter: error in "${event}" listener`, err)
                 }
             }
         }
 
-        run(this._events["*"], true)
-        if (event !== "*")
-            run(this._events[event], false)
+        run(this._events['*'], true)
+        if (event !== '*') run(this._events[event], false)
 
         return this
     }
@@ -103,12 +99,10 @@ class Emitter {
      * Number of listeners for an event (or total if no event given).
      */
     listenerCount(event) {
-        if (event)
-            return this._events[event]?.length ?? 0
+        if (event) return this._events[event]?.length ?? 0
 
         let n = 0
-        for (const key in this._events)
-            n += this._events[key].length
+        for (const key in this._events) n += this._events[key].length
         return n
     }
 

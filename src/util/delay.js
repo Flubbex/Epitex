@@ -1,7 +1,8 @@
-const delay = (time) =>  new Promise((resolve)=>{
-        window.setTimeout(()=>{
+const delay = (time) =>
+    new Promise((resolve) => {
+        window.setTimeout(() => {
             resolve()
-        },time)
+        }, time)
     })
 
 export default delay

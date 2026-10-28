@@ -1,5 +1,5 @@
-import base from "./base"
+import base from './base'
 
-const content = {base}
+const content = { base }
 
 export default content

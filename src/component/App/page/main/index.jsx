@@ -1,6 +1,6 @@
 //import { useEffect, useState } from "react"
-import ScrollingView from "./ScrollingView"
-import InputBox from "./InputBox"
+import ScrollingView from './ScrollingView'
+import InputBox from './InputBox'
 
 /*
 const ControlPanel = ({ game }) => {
@@ -41,16 +41,16 @@ const ControlPanel = ({ game }) => {
 */
 
 const MainPage = ({ game }) => (
-  <div className="container-fluid p-0">
-    <div className="row">
-      <ScrollingView game={game} />
+    <div className="container-fluid p-0">
+        <div className="row">
+            <ScrollingView game={game} />
+        </div>
+        <div className="row">
+            <div className="col p-0">
+                <InputBox game={game} />
+            </div>
+        </div>
     </div>
-    <div className="row" >
-      <div className="col p-0">
-        <InputBox game={game} />
-      </div>
-    </div>
-  </div>
 )
 
 export default MainPage

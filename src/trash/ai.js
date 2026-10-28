@@ -1,21 +1,20 @@
 class AiController {
-
-    constructor(aiCall){
+    constructor(aiCall) {
         this.call = aiCall
         this.entities = []
-        window.dbg("AiController","init")
+        window.dbg('AiController', 'init')
     }
 
-    spawn(ent){
+    spawn(ent) {
         this.entities.push(ent)
     }
 
-    update(game,ent){
-        this.call[ent.script](game,ent)
+    update(game, ent) {
+        this.call[ent.script](game, ent)
     }
-    
-    tick(game){
-        this.entities.map((e)=>this.update(game,e))
+
+    tick(game) {
+        this.entities.map((e) => this.update(game, e))
     }
 }
 

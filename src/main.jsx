@@ -1,15 +1,15 @@
-import React from "react"
+import React from 'react'
 import ReactDOM from 'react-dom/client'
 
-import "./debug"
+import './debug'
 
 import AppComponent from './component/App'
 
-import contentPackList    from "./content"
+import contentPackList from './content'
 
-import Engine from "./engine"
+import Engine from './engine'
 
-import "./style"
+import './style'
 
 const game = new Engine(contentPackList)
 
@@ -20,7 +20,7 @@ game.start()
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
 root.render(
-  <React.StrictMode>
-    <AppComponent game={game} />
-  </React.StrictMode>
+    <React.StrictMode>
+        <AppComponent game={game} />
+    </React.StrictMode>
 )

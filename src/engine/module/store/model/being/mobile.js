@@ -1,66 +1,56 @@
-import NPC from "./npc.js"
+import NPC from './npc.js'
 
 class Mobile extends NPC {
     moveChance = 0.05
     spawner = null
     area = 0
-    constructor(state={}){
+    constructor(state = {}) {
         super(state)
         this.moveChance = state.moveChance ?? this.moveChance
         this.spawner = state.spawner ?? this.spawner
         this.area = state.area ?? this.area
     }
 
-    tick(API,room){
-        super.tick(API,room)
-        if (this.health <= 0)
-        {
+    tick(API, room) {
+        super.tick(API, room)
+        if (this.health <= 0) {
             const parent = API.get(this.parent)
-            if (parent.type === "spawner")
-            {
+            if (parent.type === 'spawner') {
                 parent.eject(this.id)
             }
             return
         }
-        if (this.locked)
-            return
-        if (Math.random()<this.moveChance)
-            this.moveRandom(API,room)
-
+        if (this.locked) return
+        if (Math.random() < this.moveChance) this.moveRandom(API, room)
     }
-    randomExit(list){
-        const randomInt = Math.floor(Math.random()*list.length)
+    randomExit(list) {
+        const randomInt = Math.floor(Math.random() * list.length)
         return list[randomInt]
     }
 
-    moveRandom(API,room){
+    moveRandom(API, room) {
         let attemptLeft = 3
         let next = null
-        const exitOrList = room.get("exit")
+        const exitOrList = room.get('exit')
 
-        if (!exitOrList)
-            return 
-        
+        if (!exitOrList) return
+
         while (attemptLeft > 0) {
             next = exitOrList.length ? this.randomExit(exitOrList) : exitOrList
-            if (API.get(next.target).area!==this.area)
-                next = null
-            else 
-                break
+            if (API.get(next.target).area !== this.area) next = null
+            else break
             attemptLeft--
         }
-          
-        if (next === null) 
-            return
 
-        room.echo(this.name+" moves towards the "+next.name.toLowerCase())
-        API.get(next.target).echo(this.name+" walks in")
-        
-        this.move(API.get(next.target),room)
-        
+        if (next === null) return
+
+        room.echo(this.name + ' moves towards the ' + next.name.toLowerCase())
+        API.get(next.target).echo(this.name + ' walks in')
+
+        this.move(API.get(next.target), room)
+
         this.room = next.target
     }
 }
 
 export default Mobile
-

@@ -1,8 +1,8 @@
-import baseCommandConstructor      from "./base"
-import playerCommandConstructor    from "./player"
-import buildCommandConstructor     from "./building"
-import debugCommandConstructor     from "./debug"
-import garbageCommandConstructor   from "./garbage"
+import baseCommandConstructor from './base'
+import playerCommandConstructor from './player'
+import buildCommandConstructor from './building'
+import debugCommandConstructor from './debug'
+import garbageCommandConstructor from './garbage'
 
 const commandConstructor = (API) => {
     return {
@@ -10,7 +10,7 @@ const commandConstructor = (API) => {
         ...playerCommandConstructor(API),
         ...buildCommandConstructor(API),
         ...debugCommandConstructor(API),
-        ...garbageCommandConstructor(API)
+        ...garbageCommandConstructor(API),
     }
 }
 

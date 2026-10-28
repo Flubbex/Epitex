@@ -1,34 +1,33 @@
-import store from "../store"
+import store from '../store'
 
-import modalService from "./modal"
+import modalService from './modal'
 
 class APIService {
-
     /**
      * Create an instance in the world
      */
-    create(state){
+    create(state) {
         return store.world.instance(state)
     }
 
     /**
      * Get anything from world's byID table
      */
-    get(id){
+    get(id) {
         return store.world.byId[id]
     }
 
     /**
      * Return the current room the player is
      */
-    room(){
+    room() {
         return this.get(store.player.room)
     }
 
     /**
      * Place an item into a container
      */
-    place(item,_target=null){
+    place(item, _target = null) {
         const target = this.get(_target) || this.room()
         target.add(item)
     }
@@ -36,7 +35,7 @@ class APIService {
     /**
      * remove an item from a container
      */
-    remove(item,_target){
+    remove(item, _target) {
         const target = this.get(_target) || this.room()
         target.remove(item)
     }
@@ -46,7 +45,7 @@ class APIService {
      * @param {any} props - The state of the modal\
      * Drop an example in here
      */
-    showModal(props){
+    showModal(props) {
         modalService.show(props)
         //this.emit("modalChanged",modalService)
     }
@@ -54,7 +53,7 @@ class APIService {
     /**
      * Hide the current modal
      */
-    hideModal(){
+    hideModal() {
         modalService.hide()
         //this.emit("modalChanged",null)
     }
