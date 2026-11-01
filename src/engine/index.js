@@ -77,8 +77,8 @@ class Engine extends Emitter {
         }
 
         //Listen to any script passed to the master room
-        this.store.get('NULLED').on('script', (name)=>{
-            setTimeout(()=>this.script.run(name),0)
+        this.store.get('NULLED').on('script', (name,...arg)=>{
+            setTimeout(()=>this.script.run(name,...arg),0)
         } )
 
         //Listen to any echoes in the current room
@@ -101,7 +101,7 @@ class Engine extends Emitter {
 
         //Trigger any missed "player entered room" scripts
         const plyRoom = this.store.get(this.store.player.room)
-        plyRoom.emit('script',plyRoom.id+'_playerEntered',plyRoom,this.store.player)
+        plyRoom.emit('script',plyRoom.id+'_playerEntered',plyRoom,null)
 
         //Run all init scripts
         this.script.runAll("init")

@@ -39,19 +39,19 @@ class ScriptModule {
 
     runAll(event){
         window.dbg("scriptModule","Running all",event)
-        const keys = Object.keys(this.script).filter((e)=>e.indexOf("init") !== -1)
+        const keys = Object.keys(this.script).filter((e)=>e.indexOf(event) !== -1)
         
         keys.map((script) => this.run(script))
     }
 
-    run(name) {
+    run(name,...arg) {
         if (!this.script[name])
             return 
 
         window.dbg("scriptModule","Running",name)
 
         try {
-            this.script[name].call.apply(this.script[name].owner, [this.API])
+            this.script[name].call.apply(this.script[name].owner, [this.API].concat(arg))
         } catch (e)
         {
             throw new Error(`Encountered a problem running script '${name}'`,e)

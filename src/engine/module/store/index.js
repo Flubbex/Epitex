@@ -53,7 +53,7 @@ class StoreModule extends Emitter {
     create(objectState) {
         if (objectState.id in this.byId) {
             console.warn(
-                `Collision warning: #${newObject.id} already exists as ${this.get(newObject.id).name}, this will cause an override`
+                `Collision warning: #${objectState.id} already exists, this will cause an override`
             )
         }
 
