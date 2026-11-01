@@ -19,22 +19,9 @@ class Player extends Being {
 
     move(nextRoom, currentRoom) {
         this.room = nextRoom.id
-
-        if (currentRoom.event['playerLeft'])
-            currentRoom.emit(
-                'event',
-                currentRoom.event['playerLeft'],
-                currentRoom,
-                this
-            )
-
-        if (nextRoom.event['playerEntered'])
-            nextRoom.emit(
-                'event',
-                nextRoom.event['playerEntered'],
-                nextRoom,
-                this
-            )
+        
+        currentRoom.emit('script',currentRoom.id+'_playerLeft',currentRoom,nextRoom)
+        nextRoom.emit('script',nextRoom.id+'_playerEntered',currentRoom,nextRoom)
 
         this.emit('moved', nextRoom, currentRoom)
     }

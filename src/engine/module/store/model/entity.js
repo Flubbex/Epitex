@@ -34,7 +34,6 @@ class Entity extends Emitter {
 
     tag = []
     action = {}
-    event = {}
     script = null
 
     //TODO: Parent will be the exact same as room on Beings and up (NPC,Player,etc)
@@ -52,7 +51,6 @@ class Entity extends Emitter {
 
         this.tag = state.tag ? [...state.tag] : this.tag
         this.action = state.action ? { ...state.action } : this.action
-        this.event = state.event ? { ...state.event } : this.event
 
         this.script = state.script ?? this.script
 

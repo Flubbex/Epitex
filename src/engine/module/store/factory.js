@@ -64,6 +64,8 @@ class Factory extends Emitter {
 
         if (!out.parent) out.parent = 'NULLED'
 
+
+        this.emit("instanced",out)
         return out
     }
 
@@ -73,7 +75,6 @@ class Factory extends Emitter {
             result = this.doInstance(stateOrType, state)
         else result = this.doInstance(stateOrType.type, stateOrType)
 
-        this.emit('objectInstantiated', result)
         return result
     }
 }

@@ -4,7 +4,9 @@ class Menu extends Room {
     type = 'menu'
     constructor(state = {}) {
         super(state)
-        this.event['objRemoved'] = ['clear']
+        this.script = {
+            playerLeft:"API.clear()",...state.script
+        }
     }
 
     look() {

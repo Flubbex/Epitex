@@ -25,7 +25,7 @@ class StoreModule extends Emitter {
 
         this.factory = new Factory()
 
-        this.factory.on('objectInstantiated', this.register.bind(this))
+        this.factory.on('instanced', this.register.bind(this))
 
         this.ui = new UI()
     }
@@ -47,8 +47,9 @@ class StoreModule extends Emitter {
 
         if (object.type === 'room') this.world.room.push(object)
 
-        if (object.script) this.emit('registerScriptedObject', object)
+        this.emit('registered', object)
     }
+
     create(objectState) {
         if (objectState.id in this.byId) {
             console.warn(
@@ -57,7 +58,7 @@ class StoreModule extends Emitter {
         }
 
         const newObject = this.factory.instance(objectState)
-
+        
         return newObject
     }
 

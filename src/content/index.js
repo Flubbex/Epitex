@@ -1,5 +1,5 @@
 import adventure from './adventure'
-import test from './test'
+import testbed from './testbed'
 import animation from './animation'
 
-export default [adventure, test, animation]
+export default [adventure, testbed, animation]

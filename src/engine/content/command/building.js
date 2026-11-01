@@ -146,6 +146,11 @@ const commandConstructor = (API) => {
         return API.patch(fullString)
     }
 
+    const gex = ([filename]) => {
+        API.exportPack(filename)
+        return "Exported game"
+    }
+
     return {
         edit,
         dig,
@@ -154,6 +159,7 @@ const commandConstructor = (API) => {
         remove,
         runpad,
         patch,
+        gex
     }
 }
 

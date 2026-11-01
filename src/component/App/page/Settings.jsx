@@ -1,29 +1,16 @@
-import { Component } from 'react'
+import { useState,useEffect } from 'react'
 
-class Settings extends Component {
-    constructor() {
-        super()
-        this.state = {
-            theme: 'default',
-        }
+const Settings = () => {
+    const [theme,setTheme] = useState("default")
+    let tag = document.getElementById('theme')
+    const onThemeChanged = (newTheme) => {
+        setTheme(newTheme.target.value)
+        tag.href = '/Epitex/css/' + newTheme.target.value + '.css'
+        document.head.removeChild(tag)
+        document.head.appendChild(tag)
+    }
 
-        this.tag = null
-    }
-    componentDidMount() {
-        this.tag = document.getElementById('theme')
-    }
-    setTheme(theme) {
-        this.tag.href = '/css/' + theme + '.css'
-        document.head.removeChild(this.tag)
-        document.head.appendChild(this.tag)
-    }
-    render() {
-        const setTheme = ({ target: { value: theme } }) => {
-            this.setState({ theme })
-            this.setTheme(theme)
-        }
-
-        return (
+    return (
             <div
                 className="container bg-dark text-light"
                 style={{ height: '75vh' }}
@@ -32,7 +19,7 @@ class Settings extends Component {
                     <div className="col d-flex">
                         <span className="w-25">Theme:</span>
                         <span>
-                            <select onChange={setTheme}>
+                            <select onChange={onThemeChanged}>
                                 <option>Default</option>
                                 <option>darkly</option>
                             </select>
@@ -41,7 +28,5 @@ class Settings extends Component {
                 </div>
             </div>
         )
-    }
 }
-
 export default Settings

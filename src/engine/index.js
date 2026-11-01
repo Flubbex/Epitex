@@ -2,7 +2,6 @@ import Emitter from './class/emitter'
 
 import StorageModule from './module/storage'
 import InteractionModule from './module/interaction'
-import EventModule from './module/event'
 import CombatModule from './module/combat'
 import ContentModule from './module/content'
 import StoreModule from './module/store'
@@ -32,28 +31,25 @@ class Engine extends Emitter {
         this.store = new StoreModule()
         this.action = new InteractionModule(this.API)
         this.combat = new CombatModule(this.API)
-        this.event = new EventModule(this.API)
         this.script = new ScriptModule(this.API)
 
         this.storage = new StorageModule(this.store)
 
         this.content = new ContentModule(
-            contentPackList.map((packConstructor) => packConstructor(this.API))
+            contentPackList.map((packConstructor) => typeof packConstructor === "function" ? packConstructor(this.API) : packConstructor)
         )
 
         //Print output from the interaction module
         this.action.on('output', (...arg) => this.print(...arg))
 
-        this.store.on(
-            'registerScriptedObject',
-            this.script.registerScriptedObject.bind(this.script)
-        )
+        this.store.on('registered',(obj) => this.onObjectRegistered(obj) )
     }
     start(gamePackName) {
         //Reset any content actively loaded in
         //Always load the base content pack, provides a default mode
         this.content.reset()
         this.action.reset()
+        this.script.reset()
 
         const baseContentPack = baseContentConstructor(this.API)
         this.content.load(baseContentPack)
@@ -80,8 +76,10 @@ class Engine extends Emitter {
             this.store.load(this.content.newGame(baseContentPack.info))
         }
 
-        //Listen to any event passed to the master room
-        this.store.get('NULLED').on('event', this.event.createHandler(this))
+        //Listen to any script passed to the master room
+        this.store.get('NULLED').on('script', (name)=>{
+            setTimeout(()=>this.script.run(name),0)
+        } )
 
         //Listen to any echoes in the current room
         this.echo = this.echo.bind(this)
@@ -101,15 +99,12 @@ class Engine extends Emitter {
         //Cancel any fight when the player dies
         this.API.player().on('died', () => this.combat.endFight())
 
-        //Trigger any missed "player entered room" events
+        //Trigger any missed "player entered room" scripts
         const plyRoom = this.store.get(this.store.player.room)
-        if (plyRoom.event['playerEntered'])
-            plyRoom.emit(
-                'event',
-                plyRoom.event['playerEntered'],
-                plyRoom,
-                this.store.player
-            )
+        plyRoom.emit('script',plyRoom.id+'_playerEntered',plyRoom,this.store.player)
+
+        //Run all init scripts
+        this.script.runAll("init")
 
         if (this.tickerId) {
             window.dbg('Engine', 'Clearing existing ticker')
@@ -119,6 +114,10 @@ class Engine extends Emitter {
         this.tickerId = window.setInterval(() => this.tick(), 5000)
     }
 
+    onObjectRegistered(obj){
+        if (obj.script)
+            this.script.register(obj)
+    }
     echo(...arg) {
         this.print(...arg)
     }

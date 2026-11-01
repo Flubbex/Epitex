@@ -33,23 +33,21 @@ const engineContentConstructor = (API) => {
             type: 'menu',
             name: 'Load Screen',
             description: epiTextLogo,
-            event: {
-                playerViewed: ['loadMenu'],
+            script: {
+                playerViewed: `
+                    API.print('')
+                    API.print('Available adventures:')
+                    const packSet = API.getContentPackSet()
+                    packSet.map((pack) => {
+                        const { name } = pack.info
+                        API.print(
+                            \`<button onClick="game.handle('loadGame \${name}',true)">\${name}</button>\`
+                        )
+                    })
+                    `,
             },
         },
     ]
-
-    const loadMenu = () => {
-        API.print('')
-        API.print('Available adventures:')
-        const packSet = API.getContentPackSet()
-        packSet.map((pack) => {
-            const { name } = pack.info
-            API.print(
-                `<button onClick="game.handle('loadGame ${name}',true)">${name}</button>`
-            )
-        })
-    }
 
     const bananaClicked = () => {
         API.print('Why you touching my banana bro?')
@@ -87,7 +85,6 @@ const engineContentConstructor = (API) => {
         item: [],
 
         quest: {},
-        event: { loadMenu, returnToPlayer },
         command,
         action: {},
     }

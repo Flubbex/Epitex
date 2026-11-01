@@ -54,8 +54,7 @@ const commandConstructor = (API) => {
                 target.map((e) => e.name)
             )
 
-        if (target.event['playerViewed'])
-            target.emit('event', target.event['playerViewed'])
+        target.emit('script', target.id+'_playerViewed')
 
         return target.look()
     }

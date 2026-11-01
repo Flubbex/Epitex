@@ -8,11 +8,13 @@ export default class ContentModule extends Emitter {
         enemy: [],
         item: [],
 
-        quest: {},
-        event: {},
+        npc:{},
+        script:{},
         command: {},
         action: {},
     }
+
+    currentPack = null 
 
     constructor(contentPackSet) {
         super()
@@ -26,19 +28,22 @@ export default class ContentModule extends Emitter {
     reset() {
         window.dbg('ContentModule', 'Resetting')
         this.content = {
-            room: [],
-            enemy: [],
-            item: [],
+        room: [],
+        enemy: [],
+        item: [],
 
-            quest: {},
-            event: {},
-            command: {},
-            action: {},
-        }
+        npc:{},
+        script:{},
+        quest: {},
+        command: {},
+        action: {},
+    }
     }
 
     load(contentPack) {
         window.dbg('ContentModule', 'Loading content:', contentPack.info.name)
+        this.currentPack = contentPack.info 
+        
         for (const key in contentPack) {
             if (key in this.content)
                 if (Array.isArray(this.content[key]))
@@ -54,6 +59,7 @@ export default class ContentModule extends Emitter {
             else if (key !== 'info')
                 console.warn(`Pack contains unrecognized material: '${key}' `)
         }
+
     }
 
     loadPack(name) {
@@ -97,8 +103,6 @@ export default class ContentModule extends Emitter {
                 room: this.content.room,
             },
             enemy: this.content.enemy,
-            event: this.content.event,
-            quest: this.content.quest,
             item: this.content.item,
             command: this.content.command,
             action: this.content.action,

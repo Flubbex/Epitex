@@ -13,12 +13,10 @@ const App = ({ game }) => {
             <div className="backdrop" id="backdrop_3"></div>
 
             <div className="container-fluid" id="container">
-                <div className="row">
+                <div className="row d-none d-md-block">
                     <Sidebar route={route} setRoute={setRoute} />
                 </div>
-                <div className="row" id="frame">
-                    <Switch route={route} setRoute={setRoute} game={game} />
-                </div>
+                 <Switch route={route} setRoute={setRoute} game={game} />
             </div>
         </>
     )

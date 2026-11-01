@@ -3,9 +3,13 @@ import Being from '.'
 class NPC extends Being {
     idleMessage = ['glances around', 'coughs softly', 'hangs about']
     idleChance = 0.9
-    event = {
+    
+    /*
+    TODO: Implement a default "return item to player script and have it run from here"
+    script = {
         objAdded: ['returnToPlayer'],
     }
+    */
     constructor(state = {}) {
         super(state)
         this.idleChance = state.idleChance ?? this.idleChance
@@ -13,7 +17,8 @@ class NPC extends Being {
             ? [...state.idleMessage]
             : this.idleMessage
 
-        this.event = state.event ?? this.event
+        //TODO: Don't forget to -extend- script here, not overwrite it
+        //this.script = state.script ? {...this.script,state.script} : this.script
     }
 
     randomIdleMessage() {

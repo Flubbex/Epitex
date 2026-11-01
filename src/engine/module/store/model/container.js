@@ -13,8 +13,7 @@ class Container extends Entity {
         if (this.type === 'room') item.room = this.id
         else item.parent = this.id
 
-        if (this.event['objAdded'])
-            this.emit('event', this.event['objAdded'], this, item)
+        this.emit('script', this.id+"_objAdded", this, item)
 
         return this.content.push(item)
     }
@@ -25,8 +24,7 @@ class Container extends Entity {
         if (this.content.length === c)
             console.warn(this.name, 'tried to remove', item.name, 'but failed')
 
-        if (this.event['objRemoved'])
-            this.emit('event', this.event['objRemoved'], this, item)
+        this.emit('script', this.id+"_objRemoved", this, item)
 
         return this.content.length
     }

@@ -5,15 +5,6 @@
 const apiConstructor = (engine) => {
     const util = engine.util
 
-    /**
-     * Start a quest
-     */
-    const startQuest = async (name, room, ent) => {
-        console.log('SQ', name)
-        const quest = engine.content.get('quest', name)
-        if (quest) quest(room, ent)
-        else console.warn(`Attempted to start missing quest ${name}`)
-    }
 
     /**
      * Handle a command
@@ -248,13 +239,6 @@ const apiConstructor = (engine) => {
     }
 
     /**
-     * Get an event, either all or by name if passed
-     */
-    const getEvent = (name) => {
-        return engine.content.get('event', name)
-    }
-
-    /**
      * Return available content packs
      */
     const getContentPackSet = () => {
@@ -286,8 +270,12 @@ const apiConstructor = (engine) => {
     /**
      * Play a song
      */
-    const playMusic = (videoId, startSeconds = 0, callBack = null) => {
-        engine.store.ui.setMusic({ videoId, startSeconds, callBack })
+    const playMusic = (videoId, startSeconds = 0) => {
+        return new Promise((resolve)=>
+            {
+                engine.store.ui.setMusic({ videoId, startSeconds, callBack:resolve })
+            }
+        )
     }
 
     /**
@@ -299,9 +287,19 @@ const apiConstructor = (engine) => {
 
     const runScript = (name) => engine.script.run(name)
 
+    /**
+     * Export to content pack
+     */
+    const exportPack = (filename="export") => {
+        const pack = {...engine.store.save().world}
+        pack.room = pack.room.filter((e)=>e.id !== "NULLED")
+        pack.info = engine.content.currentPack
+        console.log(pack)
+        createDownload(JSON.stringify(pack,null,2),"text/plain",filename)
+    }
+
     return {
         util,
-        startQuest,
         handle,
         print,
         clear,
@@ -328,7 +326,6 @@ const apiConstructor = (engine) => {
         playerGetKey,
         createDownload,
         generateSave,
-        getEvent,
         getContentPackSet,
         loadGamePack,
         quit,
@@ -336,6 +333,7 @@ const apiConstructor = (engine) => {
         createScript,
         runScript,
         scriptExists,
+        exportPack
     }
 }
 

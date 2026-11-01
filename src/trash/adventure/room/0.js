@@ -1,14 +1,170 @@
 const room = [
     {
+        id:"Storage",
+        name:"Storage Room",
+        description:"This room holds some tough stuff",
+        type:"room",
+        content:[
+            {
+                id:"VillageElderQuest",
+                name:"QO_VillageElderQuest",
+                type:"item",
+                script:{
+                    '2':`
+                    const delay = util.delay
+                    const r = room()
+                    const ply = player()
+                    await delay(1000)
+                    r.echo(
+                        "As you enter Makar's tent his smile lights up instantly from the putrid smell eminating from your bowl of bat crap."
+                    )
+                    await delay(2000)
+                    r.echo(
+                        "'Well done! I'll be more than happy to take this off your hands now' Makar says as he happily tugs the bowl from your hands."
+                    )
+
+                    ply.remove(ent.get('any', 'Wooden Bowl'))
+                    await delay(2000)
+                    r.echo(
+                        'Makar takes a particularly large helping of bat excrement in his hand and wastes no time munching it down.'
+                    )
+                    await delay(3000)
+                    r.echo(
+                        "Within minutes, Makar's pupils grow intensely black as he lays down on his bed roll, giggling like a madman."
+                    )
+                    await delay(3000)
+                    r.echo(
+                        "You're not quite sure what to make of the situation but at least you completed your errand."
+                    )
+
+                    r.get('any', 'Makar').idleMessage = [
+                        'continues to giggle like a madman',
+                    ]
+                    questFlag('villageElderQuest', 3)
+                    questFlag('main', 2)
+                    `,
+                    '1':`
+                    const delay = util.delay
+                    const r = room()
+                    const ply = player()
+                    await delay(1000)
+                    r.echo('The village elder looks at you with a sigh of relief.')
+                    await delay(2000)
+                    r.echo(
+                        "'Good to see you've finally managed to get out of bed' Makar grumbles."
+                    )
+                    await delay(2000)
+                    r.echo("'I have a particularly special task for you today.'")
+                    await delay(2000)
+                    r.echo('He points his cane to the north of his tent')
+                    await delay(2500)
+                    r.echo(
+                        "'North of the village is a large cave, home to a special kind of bat.'"
+                    )
+                    await delay(2000)
+                    r.echo(
+                        "'I need you to go over there and collect me a nice, big bowl of their poop.'"
+                    )
+
+                    await delay(2500)
+                    const bowl = {
+                        type: 'item',
+                        name: 'Wooden bowl',
+                        description:
+                            'An ordinary bowl, bestowed upon you by the village elder,destined to be filled with bat excrement.',
+                    }
+                    ply.add(create(bowl))
+                    r.echo('He hands you a simple wooden bowl')
+
+                    await delay(2000)
+                    const lantern = {
+                        type: 'item',
+                        name: 'Lantern',
+                        description:
+                            'A small lantern made from waxed wood, it emits a fair amount of light.',
+                        tag: ['light'],
+                    }
+                    ply.add(create(lantern))
+                    r.echo(
+                        "'Be warned that the inside of the cave can be a bit dimly lit around this time, this lantern should come in handy.'"
+                    )
+
+                    await delay(2000)
+                    r.echo(
+                        'He hands you a small lantern, the candle inside flickers in the wind.'
+                    )
+                    await delay(2500)
+                    r.echo(
+                        "'Now get to it. If the bats give you any sort of trouble, find a nice big rock and deal with them.'"
+                    )
+                    await delay(2000)
+                    r.echo(
+                        'Makar continues along his business, leaving you with your thoughts.'
+                    )
+
+                    questFlag('villageElderQuest', 1)
+                    `,
+                    '1B':`
+                    await util.delay(1000)
+                    room().echo('Makar looks at you with an air of impatience..')
+                    await util.delay(2000)
+                    room().echo("'Have you gotten me that bowl of bat poop yet?' he asks. ")
+                    `
+                }
+            },
+            {
+                id:"mainQuest",
+                name:"QO_MainQuest",
+                type:"item",
+                script:{
+                    'yourTentInit':`
+                    const ply = player()
+                    const r = room()
+                    const delay = util.delay
+                    if (API.questFlag('main') > 0) return
+                    ply.locked = true
+                    ply.lockedMessage = 'You need a bit more time to wake up'
+                    await delay(1000)
+                    r.echo(
+                        'You wake up from a turbulent sleep, feeling somewhat groggy.'
+                    )
+                    await delay(2000)
+                    r.echo(
+                        'You peek outside your tent and notice the sun has been up for a while.'
+                    )
+                    await delay(2000)
+                    r.echo(
+                        'A slight moan escapes your mouth as you realize you were supposed to be running errands today and the village elder will have your head for sleeping in late again.'
+                    )
+                    await delay(3000)
+                    r.echo(
+                        'It would probably be best to go see him as soon as possible.'
+                    )
+                    await delay(2000)
+                    r.echo('You throw on some clothes and get ready to leave.')
+                    ply.locked = false
+                    ply.lockedMessage = 'You feel compelled to stay where you are'
+
+                    questFlag('main', 1)
+                    `
+                }
+            }
+        ]
+
+    },
+    {
         id: 'MainMenu',
         name: 'Main Menu',
         description:
             "****************************************\n*  _____ _                        _    *\n* | ____| |_ ___ _ __ _ __   __ _| |   * \n* |  _| | __/ _ \\ '__| '_ \\ / _` | |   *\n* | |___| ||  __/ |  | | | | (_| | |   *\n* |_____|\\__\\___|_|  |_| |_|\\__,_|_|   *\n* |  _ \\  ___  ___  ___ ___ _ __ | |_  *\n* | | | |/ _ \\/ __|/ __/ _ \\ '_ \\| __| *\n* | |_| |  __/\\__ \\ (_|  __/ | | | |_  *\n* |____/ \\___||___/\\___\\___|_| |_|\\__| *\n****************************************\n*         Some goofy subtitle          *\n*         v0.3     by Flubber          *\n****************************************",
         type: 'menu',
         tag: ['noprompt'],
-        event: {
-            playerLeft: ['clearStart'],
-            playerEntered: ['setup'],
+        script: {
+            playerLeft:`
+            API.clear()
+            API.handle('look', true)
+            `,
+            playerEntered: `API.player().home = 'HYX9OP'`,
         },
         parent: 'NULLED',
         content: [
@@ -208,8 +364,21 @@ const room = [
         description:
             'This tent belongs to Makar. It is decorated with a variety of brightly dyed skulls hanging from from poles. In the back is a small dresser covered with a small collection of burning candles. A large mat with intricate patterns adorns the center of the room.',
         type: 'room',
-        event: {
-            playerEntered: ['villageElderQuest'],
+        script: {
+            playerEntered: `
+            switch (questFlag('villageElderQuest')) {
+            case null:
+                //API.questFlag('villageElderQuest', 'quest_in_progress')
+                runScript('VillageElderQuest_1')
+                break
+            case 1: //Waiting for the poop bowl
+                runScript('VillageElderQuest_1B')
+                break
+            case 2: //Poop bowl in inventory
+                //API.questFlag('villageElderQuest', 'quest_in_progress')
+                runScript('VillageElderQuest_2')
+                break
+        }`,
         },
         parent: 'NULLED',
         content: [
@@ -298,8 +467,8 @@ const room = [
         action: {
             sleep: 'playerTentSleep',
         },
-        event: {
-            playerEntered: ['yourTentInit'],
+        script: {
+            playerEntered: `runScript('mainQuest_yourTentInit')`,
         },
         parent: 'NULLED',
         content: [
