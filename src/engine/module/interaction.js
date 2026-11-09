@@ -89,21 +89,21 @@ export default class InteractionModule extends Emitter {
 
         //We now check if there's an action in the player's current room
         const room = this.API.room()
-        if (room.action[clean])
-            return this.API.runAction(room.action[clean], room, arg)
+        if (room.action && room.action.indexOf(clean) !== -1)
+            return room.emit("action_" + clean, room, arg)
 
         //We check any item inside of the current room
-        const targetItem = room.content.find((e) => e.action && e.action[clean])
-        if (targetItem)
-            return this.API.runAction(targetItem.action[clean], targetItem, arg)
+        room.content.map((targetItem) =>{
+                if (targetItem && targetItem.action && targetItem.action.indexOf(clean) !== -1)
+                    targetItem.emit("action_" + clean, targetItem, arg)
+        })
 
         //Finally, we check the player's inventory
         const player = this.API.player()
-        const playerItem = player.content.find(
-            (e) => e.action && e.action[clean]
-        )
-        if (playerItem)
-            return this.API.runAction(playerItem.action[clean], playerItem, arg)
+        player.content.map((targetItem) =>{
+                if (targetItem && targetItem.action && targetItem.action.indexOf(clean) !== -1)
+                    targetItem.emit("action_" + clean, targetItem, arg)
+        })
 
         return this.error(clean)
     }

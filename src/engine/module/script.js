@@ -17,8 +17,10 @@ class ScriptModule {
 
         const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
 
+        let call 
+        
         try {
-        const call = new AsyncFunction('API', `with (API) {${this.script}}`)
+            call = new AsyncFunction('API', `with (API) {${this.script}}`)
         }
         catch(err){
             throw new Error(err)
@@ -30,13 +32,13 @@ class ScriptModule {
         window.dbg("ScriptModule",`Loading object script for ${object.name}`)
 
         const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-
+        let call
         try {
-            const call = new AsyncFunction('API', `with (API) {${object.script}}`)
+            call = new AsyncFunction('API', `with (API) {${object.script}}`)
         } catch (err) {
             throw new Error(err)
         }
-        
+
         call.apply(object,[this.API])
     }
 

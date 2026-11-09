@@ -352,8 +352,8 @@ const apiConstructor = (engine) => {
         const pack = {...engine.store.save().world}
         pack.room = pack.room.filter((e)=>e.id !== "NULLED")
         pack.info = engine.content.currentPack
-        pack.script = engine.script.script || getContentPackSet().script || ""
-        
+        pack.script = engine.script.script || getCurrentPack()?.script || ""
+
         createDownload(JSON.stringify(pack,null,2),"application/json",filename)
     }
 
