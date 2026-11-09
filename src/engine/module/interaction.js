@@ -83,27 +83,25 @@ export default class InteractionModule extends Emitter {
     }
 
     runHandle(clean, arg) {
-        //window.dbg("InteractionModule",`Handling "${clean}"`)
-        //We first check if the command is in the general command set
         if (this.command[clean]) return this.command[clean](arg)
 
-        //We now check if there's an action in the player's current room
         const room = this.API.room()
-        if (room.action && room.action.indexOf(clean) !== -1)
-            return room.emit("action_" + clean, room, arg)
+        if (room.action?.includes(clean)) {
+            room.emit("action_" + clean, room, arg)
+            return
+        }
 
-        //We check any item inside of the current room
-        room.content.map((targetItem) =>{
-                if (targetItem && targetItem.action && targetItem.action.indexOf(clean) !== -1)
-                    targetItem.emit("action_" + clean, targetItem, arg)
-        })
+        const roomItem = room.content.find(e => e.action?.includes(clean))
+        if (roomItem) {
+            roomItem.emit("action_" + clean, roomItem, arg)
+            return
+        }
 
-        //Finally, we check the player's inventory
-        const player = this.API.player()
-        player.content.map((targetItem) =>{
-                if (targetItem && targetItem.action && targetItem.action.indexOf(clean) !== -1)
-                    targetItem.emit("action_" + clean, targetItem, arg)
-        })
+        const invItem = this.API.player().content.find(e => e.action?.includes(clean))
+        if (invItem) {
+            invItem.emit("action_" + clean, invItem, arg)
+            return
+        }
 
         return this.error(clean)
     }

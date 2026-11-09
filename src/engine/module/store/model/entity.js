@@ -33,7 +33,7 @@ class Entity extends Emitter {
     locked = false
 
     tag = []
-    action = {}
+    action = []
     script = null
 
     //TODO: Parent will be the exact same as room on Beings and up (NPC,Player,etc)
@@ -50,7 +50,7 @@ class Entity extends Emitter {
         this.locked = state.locked ?? this.locked
 
         this.tag = state.tag ? [...state.tag] : this.tag
-        this.action = state.action ? { ...state.action } : this.action
+        this.action = state.action ? this.action.concat(state.action) : this.action
 
         this.script = state.script ?? this.script
 
