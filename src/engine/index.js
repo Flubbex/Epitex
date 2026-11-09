@@ -88,8 +88,9 @@ class Engine extends Emitter {
         this.script.load(gamePack.script)
 
         //Listen to any echoes in the current room
-        const channelEcho = (_room,...args)=> this.echo(args)
+        const channelEcho = (_room,...args)=> this.echo(...args)
 
+        //Note: Store gets reset on load, this does not stack
         this.store.get(this.store.player.room).on('echo', channelEcho)
 
         //Listen to any echoes in any further room explored

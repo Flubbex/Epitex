@@ -12,12 +12,17 @@ class ScriptModule {
         window.dbg("ScriptModule",`Loading script (override=${override})`)
 
 
-        this.script = override ? script : this.script + "\n" + script
+        const next = script || ""
+        this.script = override || !this.script ? next : this.script + "\n" + next
 
         const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
 
+        try {
         const call = new AsyncFunction('API', `with (API) {${this.script}}`)
-        
+        }
+        catch(err){
+            throw new Error(err)
+        }
         call(this.API)
     }
 
@@ -26,8 +31,12 @@ class ScriptModule {
 
         const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
 
-        const call = new AsyncFunction('API', `with (API) {${object.script}}`)
-
+        try {
+            const call = new AsyncFunction('API', `with (API) {${object.script}}`)
+        } catch (err) {
+            throw new Error(err)
+        }
+        
         call.apply(object,[this.API])
     }
 

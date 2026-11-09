@@ -308,8 +308,11 @@ const apiConstructor = (engine) => {
      * Import a game pack
      */
     const importPack = (p) => {
-        delete engine.content.contentPackSet.find((e) => e.info.name === p.info.name)
+        engine.content.contentPackSet = 
+            engine.content.contentPackSet.filter(e => e.info.name !== p.info.name)
+        
         engine.content.contentPackSet.push(p)
+        
         loadGamePack(p.info.name)
     }
 
@@ -349,7 +352,8 @@ const apiConstructor = (engine) => {
         const pack = {...engine.store.save().world}
         pack.room = pack.room.filter((e)=>e.id !== "NULLED")
         pack.info = engine.content.currentPack
-        console.log(pack)
+        pack.script = engine.script.script || getContentPackSet().script || ""
+        
         createDownload(JSON.stringify(pack,null,2),"application/json",filename)
     }
 

@@ -9,7 +9,6 @@ export default class ContentModule extends Emitter {
         item: [],
 
         npc:{},
-        script:{},
         command: {},
         action: {},
     }
@@ -33,7 +32,6 @@ export default class ContentModule extends Emitter {
         item: [],
 
         npc:{},
-        script:{},
         quest: {},
         command: {},
         action: {},
@@ -45,6 +43,7 @@ export default class ContentModule extends Emitter {
         this.currentPack = contentPack.info 
         
         for (const key in contentPack) {
+            console.log(key)
             if (key in this.content)
                 if (Array.isArray(this.content[key]))
                     this.content[key] = this.content[key].concat(
@@ -56,7 +55,7 @@ export default class ContentModule extends Emitter {
                         this.content[key],
                         contentPack[key]
                     )
-            else if (key !== 'info')
+            else if (key !== "info" && key !== "script")
                 console.warn(`Pack contains unrecognized material: '${key}' `)
         }
 

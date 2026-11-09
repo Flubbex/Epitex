@@ -80,7 +80,6 @@ const commandConstructor = (API) => {
 
         if (id == null) {
             const newRoom = API.create('room')
-            API.create(newRoom)
             playerRoom.content.push(
                 API.create({
                     type: 'exit',
@@ -182,11 +181,15 @@ const commandConstructor = (API) => {
         if (target === null)
             return "Can't find that"
 
+        //NOTE: Currently game scripts are not exported unless they are run
         switch (command){
             case "run":
-                if (targetName === "game")
+                if (targetName === "game"){
                     API.reloadStore()
-                API.runObjectScript(target)
+                    API.loadGamePack(API.getCurrentPack().info.name)
+                }
+                else 
+                    API.runObjectScript(target)
                 break
             case "frompad":
                 target.script = API.notepad()
@@ -197,7 +200,7 @@ const commandConstructor = (API) => {
             case "write":
                 target.script = ""
                 API.inputPrompt((splitInput) => {
-                    const input = splitInput.join("/n")
+                    const input = splitInput.join("\n")
 
                     console.log("Got input",input)
                     

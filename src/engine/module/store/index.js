@@ -49,7 +49,7 @@ class StoreModule extends Emitter {
         this.emit('object_registered', object)
 
         //Bubble any event from objects upward
-        object.on("*",(event,target,...args) => ()=>this.emit(event,target,...args))
+        object.on("*",(event,target,...args) => this.emit(event,target,...args))
     }
 
     reload(){
