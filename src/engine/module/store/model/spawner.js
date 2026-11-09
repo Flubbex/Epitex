@@ -22,6 +22,8 @@ class Spawner extends Container {
     }
 
     tick(API, room) {
+        super.tick()
+        return
         if (this.entities.length >= this.limit) return
         if (Math.random() > this.chance) return
 

@@ -12,7 +12,7 @@ class Room extends Container {
     }
 
     echo(...message) {
-        this.emit('echo', ...message)
+        this.emit('echo',this, ...message)
     }
 
     tick(API) {
@@ -23,6 +23,7 @@ class Room extends Container {
         return `<button class='btn btn-secondary' onClick='${onClick}'>${text}</button>`
     }
     look() {
+        super.look()
         const exitList = []
         const itemList = []
         const beingList = []

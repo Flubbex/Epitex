@@ -33,19 +33,6 @@ const engineContentConstructor = (API) => {
             type: 'menu',
             name: 'Load Screen',
             description: epiTextLogo,
-            script: {
-                playerViewed: `
-                    API.print('')
-                    API.print('Available adventures:')
-                    const packSet = API.getContentPackSet()
-                    packSet.map((pack) => {
-                        const { name } = pack.info
-                        API.print(
-                            \`<button onClick="game.handle('loadGame \${name}',true)">\${name}</button>\`
-                        )
-                    })
-                    `,
-            },
         },
     ]
 
@@ -60,33 +47,54 @@ const engineContentConstructor = (API) => {
 
     /**
      * Return an item given to an npc, this is default behaviour to prevent silliness
-     */
+     
     const returnToPlayer = (npc, item) => {
         npc.remove(item)
         API.print(`"I'm not sure what to do with this" ${npc.name} says`)
         API.print(`"They hand you back your ${item.name}`)
         API.player().add(item)
     }
-
+    */
+   
     const command = {
         ...commandConstructor(API),
         ...{ loadgame: loadGame, bananaclicked: bananaClicked },
     }
+
     return {
         info: {
-            name: 'Base content pack',
+            name: 'Base',
             description:
                 'Basic content every text adventure engine should never go without.',
             version: 1,
             startRoom: 'LoaderMenu',
         },
         room,
-        enemy: [],
-        item: [],
-
-        quest: {},
         command,
-        action: {},
+        script:`
+        const printMenu = () => {
+            print("\\n")
+            print('Available adventures:')
+            print("\\n")
+            const packSet = getContentPackSet()
+            packSet.map((pack) => {
+                const { name } = pack.info
+                print(
+                    \`<button onClick="game.handle('loadGame \${name}',true)">\${name}</button>\`
+                )
+            })
+            print("\\n")
+            print("Or, if you're feeling more adventurous..")
+            print("\\n")
+            print('<button onClick="game.new()">Create a new game</button>')
+        }
+
+        const clear = () => {
+            API.clear()    
+        }
+
+        connect("LoaderMenu","object_viewed", ()=>window.setTimeout(printMenu,0) )
+        `
     }
 }
 export default engineContentConstructor

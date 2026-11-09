@@ -59,7 +59,7 @@ class Entity extends Emitter {
     }
 
     toJSON() {
-        let out = Object.assign({}, this, { call: null })
+        let out = Object.assign({}, this, { _events:null })
         out = this.cleanObject(out)
         return out
     }
@@ -79,8 +79,18 @@ class Entity extends Emitter {
 
         return result
     }
+    
+    use(){
+        this.emit("object_used",this)
+    }
+    
     look() {
+        this.emit("object_viewed",this)
         return ['<b>' + this.name + '</b>', this.description]
+    }
+
+    tick(){
+        this.emit("object_ticked",this)
     }
 }
 

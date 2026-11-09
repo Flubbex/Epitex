@@ -2,7 +2,7 @@ import Being from '.'
 
 class NPC extends Being {
     idleMessage = ['glances around', 'coughs softly', 'hangs about']
-    idleChance = 0.9
+    idleChance = 0.95
     
     /*
     TODO: Implement a default "return item to player script and have it run from here"
@@ -26,8 +26,8 @@ class NPC extends Being {
         return this.idleMessage[randomInt]
     }
 
-    tick(game, room) {
-        super.tick(game, room)
+    tick(API, room) {
+        super.tick(API, room)
 
         if (this.health <= 0) return
 

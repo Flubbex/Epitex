@@ -3,7 +3,6 @@ class World {
     zone = []
 
     constructor(state = {}) {
-        window.dbg('Store/world', 'Constructor')
         this.room = state.room ? [...state.room] : this.room
     }
 }

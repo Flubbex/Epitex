@@ -1,4 +1,5 @@
 const commandConstructor = (API) => {
+
     const clear = (arg) => {
         API.clear()
         if ('silent' in arg === false) API.print('Output cleared')
@@ -188,20 +189,6 @@ const commandConstructor = (API) => {
         return 'Loading music..'
     }
 
-    const makescript = ([name, content]) => {
-        if (!name) return 'Create a script with what name?'
-        if (!content) return 'You failed to pass any content'
-
-        API.print(`Creating script "${name}"`)
-        return API.createScript(name, content)
-    }
-
-    const runscript = ([name]) => {
-        if (!name) return 'Run which script?'
-        if (!API.scriptExists(name)) return 'No such script'
-        return API.runScript(name)
-    }
-
     const use = ([targetName]) => {
         if (!targetName) return 'Use what?'
         const curRoom = API.room()
@@ -209,7 +196,7 @@ const commandConstructor = (API) => {
         const roomItem = curRoom.get('any', targetName)
 
         if (roomItem) {
-            window.setTimeout(() => API.runScript(`${roomItem.id}_use`), 0)
+            roomItem.use()
             return `You use the ${roomItem.name}`
         }
 
@@ -217,7 +204,7 @@ const commandConstructor = (API) => {
         const playerItem = player.get('any', targetName)
 
         if (playerItem) {
-            window.setTimeout(() => API.runScript(`${playerItem.id}_use`), 0)
+            playerItem.use()
             return `You use your ${playerItem.name}`
         }
 
@@ -231,8 +218,6 @@ const commandConstructor = (API) => {
         map,
         quit,
         playmusic,
-        makescript,
-        runscript,
         use,
     }
 }

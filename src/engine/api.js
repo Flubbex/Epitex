@@ -5,7 +5,6 @@
 const apiConstructor = (engine) => {
     const util = engine.util
 
-
     /**
      * Handle a command
      */
@@ -46,13 +45,6 @@ const apiConstructor = (engine) => {
      */
     const get = (id) => {
         return engine.store.get(id)
-    }
-
-    /**
-     * Create a room
-     */
-    const addRoom = (room) => {
-        return engine.store.create(room)
     }
 
     /**
@@ -121,10 +113,17 @@ const apiConstructor = (engine) => {
     }
 
     /**
+     * Set the current text in the notepad
+     */
+    const setNotepad = (v) => {
+        engine.store.ui.setNotepad(v)
+    }
+
+    /**
      * Set the input prompt
      */
     const inputPrompt = (prompt) => {
-        engine.inputPrompt = prompt
+        engine.action.request = prompt
     }
 
     /**
@@ -239,6 +238,26 @@ const apiConstructor = (engine) => {
     }
 
     /**
+     * Start a file upload
+     */
+
+    const createUpload =  () => {
+        const promise = window.showOpenFilePicker({
+        types: [
+            {
+            description: "JSON file",
+            accept: {
+                "application/json": [".json"],
+            },
+            },
+        ],
+        excludeAcceptAllOption: true,
+        multiple: false,
+        })
+        return promise
+    }
+
+    /**
      * Return available content packs
      */
     const getContentPackSet = () => {
@@ -246,14 +265,52 @@ const apiConstructor = (engine) => {
     }
 
     /**
+     * Return the current content pack
+     */
+    const getCurrentPack = () => {
+        const contentPack = engine.content.contentPackSet.find(
+            (e) => e.info.name === engine.content.currentPack.name
+        )
+
+        return contentPack
+    }
+
+    /**
+     * Create a new pack
+     */
+    const createPack = (name="New Pack",description="This is an entirely new pack",startRoom="init_room") => {
+        const info = {
+            name,
+            description,
+            startRoom
+        },
+        room = [
+            {
+                id:"init_room",
+                type:"room",
+                name:"New Room",
+                description:"Exciting!"
+            }
+        ]
+        return {info,room}
+    }
+
+    /**
      * Load a game
      */
-    const loadGamePack = async (name) => {
+    const loadGamePack = (name) => {
         window.dbg('--------------', 'Loading Pack')
-        engine.print(`Loading game ${name}..`)
-        await engine.util.delay(0)
         engine.store.ui.clear()
         engine.start(name)
+    }
+
+    /**
+     * Import a game pack
+     */
+    const importPack = (p) => {
+        delete engine.content.contentPackSet.find((e) => e.info.name === p.info.name)
+        engine.content.contentPackSet.push(p)
+        loadGamePack(p.info.name)
     }
 
     /**
@@ -262,7 +319,6 @@ const apiConstructor = (engine) => {
     const quit = async () => {
         window.dbg('--------------', 'Quitting')
         engine.store.ui.clear()
-        await engine.util.delay(0)
         engine.storage.removeSaveListener()
         engine.start()
     }
@@ -279,13 +335,12 @@ const apiConstructor = (engine) => {
     }
 
     /**
-     * Create a script
+     * Run a script
      */
-    const createScript = (name, content) => engine.script.create(name, content)
 
-    const scriptExists = (name) => engine.script.exists(name)
-
-    const runScript = (name) => engine.script.run(name)
+    const runObjectScript = (object) => {
+        engine.script.loadObjectScript(object)
+    }
 
     /**
      * Export to content pack
@@ -295,9 +350,52 @@ const apiConstructor = (engine) => {
         pack.room = pack.room.filter((e)=>e.id !== "NULLED")
         pack.info = engine.content.currentPack
         console.log(pack)
-        createDownload(JSON.stringify(pack,null,2),"text/plain",filename)
+        createDownload(JSON.stringify(pack,null,2),"application/json",filename)
     }
 
+    /**
+     * Connect a call to an event on an object 
+     * prevents hooking up the same event multiple times
+     */
+    const connect = (objectOrId,event,call) => {
+        let target 
+        if (typeof objectOrId === "string")
+            target = get(objectOrId)
+        else 
+            target = objectOrId
+
+        if (!target)
+            throw new Error("API.connect called with invalid object or id:",objectOrId)
+
+        target.off(event,call)
+        target.on(event,call)
+    }
+
+    /**
+     * Connect a call to an event on an object once 
+     * prevents hooking up the same event multiple times
+     */
+    const connectOnce = (objectOrId,event,call) => {
+        let target 
+        if (typeof objectOrId === "string")
+            target = get(objectOrId)
+        else 
+            target = objectOrId
+
+        if (!target)
+            throw new Error("API.connect called with invalid object or id:",objectOrId)
+
+        target.off(event,call)
+        target.once(event,call)
+    }
+
+    //**
+    // reload the store
+    //  */
+
+    const reloadStore = () => {
+        engine.store.reload()
+    }
     return {
         util,
         handle,
@@ -306,7 +404,6 @@ const apiConstructor = (engine) => {
         create,
         player,
         get,
-        addRoom,
         filterRoom,
         mapRoom,
         findRoom,
@@ -316,6 +413,7 @@ const apiConstructor = (engine) => {
         place,
         remove,
         notepad,
+        setNotepad,
         inputPrompt,
         questFlag,
         fight,
@@ -325,15 +423,20 @@ const apiConstructor = (engine) => {
         runAction,
         playerGetKey,
         createDownload,
+        createUpload,
         generateSave,
         getContentPackSet,
         loadGamePack,
+        createPack,
         quit,
         playMusic,
-        createScript,
-        runScript,
-        scriptExists,
-        exportPack
+        exportPack,
+        runObjectScript,
+        getCurrentPack,
+        connect,
+        connectOnce,
+        reloadStore,
+        importPack
     }
 }
 

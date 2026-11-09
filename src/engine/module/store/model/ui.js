@@ -28,6 +28,7 @@ class UIModel extends Emitter {
 
     setNotepad(v) {
         this.notepad = v
+        this.emit("updatedNotepad",this.notepad)
     }
 
     toJSON() {

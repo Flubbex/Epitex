@@ -9,7 +9,6 @@ const Switch = ({ route, game }) => {
     
     return (
         <div className="row">
-
             <div className={"col "+ (route === 'editor' ? '' : 'd-none')}>
                 <Editor game={game} />
             </div>

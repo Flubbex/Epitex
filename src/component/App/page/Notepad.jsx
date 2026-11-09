@@ -7,6 +7,8 @@ const Notepad = ({ game }) => {
         setText(value)
         game.store.ui.setNotepad(value)
     }
+
+    game.store.ui.on("updatedNotepad",setText)
     return (
         <div className="container" style={{ height: '75vh' }}>
             <div className="row h-100">

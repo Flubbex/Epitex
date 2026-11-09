@@ -44,11 +44,11 @@ class Being extends Container {
         this.room = nextRoom.id
         nextRoom.add(this)
         currentRoom.remove(this)
-        this.emit('moved', nextRoom, currentRoom)
+        this.emit('moved', this,nextRoom, currentRoom)
     }
 
-    tick(API, room) {
-        if (this.health <= 0) this.health--
+    decompose(API,room){
+        this.health--
 
         if (this.health <= -5) {
             room.echo(this.name + ' has wasted away')
@@ -57,6 +57,11 @@ class Being extends Container {
             room.echo(this.name + ' has turned to a corpse')
             this.name = 'Corpse of ' + this.name
         }
+    }
+    tick(API, room) {
+        super.tick(API,room)
+        if (this.health <= 0)
+            this.decompose(API,room)
     }
 
     die() {
@@ -73,7 +78,7 @@ class Being extends Container {
     hurt(amount, inflictor) {
         this.health = this.health - amount < 0 ? 0 : this.health - amount
         if (this.health <= 0) this.die()
-        this.emit('hurt', amount, inflictor, this)
+        this.emit('hurt', this,amount, inflictor)
     }
 
     calculateStatistic(_modifier = {}) {

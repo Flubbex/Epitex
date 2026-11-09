@@ -4,12 +4,10 @@ class Menu extends Room {
     type = 'menu'
     constructor(state = {}) {
         super(state)
-        this.script = {
-            playerLeft:"API.clear()",...state.script
-        }
     }
 
     look() {
+        super.look()
         const exitList = []
 
         this.content.map((obj) => {

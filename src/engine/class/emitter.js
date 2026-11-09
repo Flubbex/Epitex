@@ -49,7 +49,7 @@ class Emitter {
             delete this._events[event]
             return this
         }
-
+        
         this._events[event] = list.filter((f) => f !== fn && f._original !== fn)
         if (this._events[event].length === 0) delete this._events[event]
 

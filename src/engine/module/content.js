@@ -67,7 +67,7 @@ export default class ContentModule extends Emitter {
         const contentPack = this.contentPackSet.find(
             (e) => e.info.name === name
         )
-
+        
         if (!contentPack)
             throw new Error(
                 `Tried loading a non-existant content pack "${name}" `

@@ -30,8 +30,10 @@ const cardinalMoveWare = (API) => {
 
 export default class InteractionModule extends Emitter {
     API = null
+    request = null
     command = {}
     ware = []
+    
 
     constructor(API) {
         super()
@@ -132,6 +134,12 @@ export default class InteractionModule extends Emitter {
     }
 
     handle(input, silent) {
-        return input.split(';').map((p) => this.doHandle(p, silent))
+        const splitInput = input.split(';') 
+        if (this.request) {
+            const result = this.request(splitInput)
+            this.emit('output',result)
+        }
+        else 
+            return splitInput.map((p) => this.doHandle(p, silent))
     }
 }

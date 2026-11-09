@@ -1,6 +1,7 @@
 import Being from './being'
 
 class Player extends Being {
+    name = "Player"
     type = 'player'
     healTick = 0
     maxHealTick = 2
@@ -12,6 +13,7 @@ class Player extends Being {
 
     constructor(state = {}) {
         super(state)
+        this.name = state.name ?? this.name
         this.room = state.room ?? this.room
         this.quest = state.quest ? { ...state.quest } : this.quest
         this.home = state.home ?? this.home
@@ -20,10 +22,10 @@ class Player extends Being {
     move(nextRoom, currentRoom) {
         this.room = nextRoom.id
         
-        currentRoom.emit('script',currentRoom.id+'_playerLeft',currentRoom,nextRoom)
-        nextRoom.emit('script',nextRoom.id+'_playerEntered',currentRoom,nextRoom)
+        currentRoom.emit('player_left',this,currentRoom,nextRoom)
+        nextRoom.emit('player_entered',this,nextRoom,currentRoom)
 
-        this.emit('moved', nextRoom, currentRoom)
+        this.emit('moved', this, nextRoom, currentRoom)
     }
 
     tick(API) {

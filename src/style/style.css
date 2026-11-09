@@ -79,6 +79,9 @@ body {
 }
 
 .message {
+    padding: 0px;
+    margin: 0px;
+    line-height: 1.15em;
     white-space: pre-wrap;
     line-break: strict;
     font-family: monospace;

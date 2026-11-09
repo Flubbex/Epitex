@@ -26,9 +26,10 @@ class Engine extends Emitter {
 
         this.util = util
 
+        this.store = new StoreModule()
+
         this.API = APIConstructor(this)
 
-        this.store = new StoreModule()
         this.action = new InteractionModule(this.API)
         this.combat = new CombatModule(this.API)
         this.script = new ScriptModule(this.API)
@@ -36,59 +37,65 @@ class Engine extends Emitter {
         this.storage = new StorageModule(this.store)
 
         this.content = new ContentModule(
-            contentPackList.map((packConstructor) => typeof packConstructor === "function" ? packConstructor(this.API) : packConstructor)
+            contentPackList.map((packConstructor) => 
+                typeof packConstructor === "function" ? packConstructor(this.API) : packConstructor)
+            .concat(baseContentConstructor(this.API))
         )
 
         //Print output from the interaction module
         this.action.on('output', (...arg) => this.print(...arg))
 
-        this.store.on('registered',(obj) => this.onObjectRegistered(obj) )
+        this.store.on("*",(event,target,...args)=>{
+
+            if (["object_ticked","object_registered"].indexOf(event) === -1)
+                console.log(`%c Store emitted ${event} on ${target.name}`,'color:yellow;')
+
+            switch (event){
+                case "object_registered":
+                    this.onObjectRegistered(target)
+                    break
+            }
+            
+        } )
     }
-    start(gamePackName) {
+
+    start(gamePackName="Base") {
+        window.dbg('Engine', `Starting ${gamePackName}`)
+
         //Reset any content actively loaded in
         //Always load the base content pack, provides a default mode
         this.content.reset()
         this.action.reset()
         this.script.reset()
 
-        const baseContentPack = baseContentConstructor(this.API)
-        this.content.load(baseContentPack)
+        if (gamePackName !== "Base"){
+            //Enable saving if we're NOT in base mode
+            this.storage.addSaveListener(gamePackName,this.store)
 
-        //If provided, load the game pack on top of the base content
-        if (gamePackName) {
-            window.dbg('Engine', `Starting ${gamePackName}`)
-
-            const gamePack = this.content.loadPack(gamePackName)
-
-            this.action.load(this.content.get('command'))
-
-            this.storage.saveName = gamePack.info.name
-            this.storage.addSaveListener(this.store)
-
-            this.store.load(
-                this.storage.load(gamePack.info) ||
-                    this.content.newGame(gamePack.info)
-            )
-        } else {
-            //Notice: We don't enable saving in default mode to prevent shenanigans
-            window.dbg('Engine', `Starting in default mode`)
-            this.action.load(this.content.get('command'))
-            this.store.load(this.content.newGame(baseContentPack.info))
+            //Load content from base pack for default functionality
+            this.content.loadPack("Base")
         }
+        
+        const gamePack = this.content.loadPack(gamePackName)
 
-        //Listen to any script passed to the master room
-        this.store.get('NULLED').on('script', (name,...arg)=>{
-            setTimeout(()=>this.script.run(name,...arg),0)
-        } )
+        this.action.load(this.content.get('command'))
+
+        this.store.load(
+            this.storage.load(gamePack.info) ||
+                this.content.newGame(gamePack.info)
+        )
+
+        this.script.load(gamePack.script)
 
         //Listen to any echoes in the current room
-        this.echo = this.echo.bind(this)
-        this.store.get(this.store.player.room).on('echo', this.echo)
+        const channelEcho = (_room,...args)=> this.echo(args)
+
+        this.store.get(this.store.player.room).on('echo', channelEcho)
 
         //Listen to any echoes in any further room explored
-        this.store.player.on('moved', (next, prev) => {
-            this.store.get(prev.id).off('echo', this.echo)
-            this.store.get(next.id).on('echo', this.echo)
+        this.store.player.on('moved', (_player,next, prev) => {
+            this.store.get(prev.id).off('echo', channelEcho)
+            this.store.get(next.id).on('echo', channelEcho)
         })
 
         this.handle('look', true)
@@ -101,10 +108,7 @@ class Engine extends Emitter {
 
         //Trigger any missed "player entered room" scripts
         const plyRoom = this.store.get(this.store.player.room)
-        plyRoom.emit('script',plyRoom.id+'_playerEntered',plyRoom,null)
-
-        //Run all init scripts
-        this.script.runAll("init")
+        plyRoom.emit('player_entered',plyRoom,null)
 
         if (this.tickerId) {
             window.dbg('Engine', 'Clearing existing ticker')
@@ -114,10 +118,11 @@ class Engine extends Emitter {
         this.tickerId = window.setInterval(() => this.tick(), 5000)
     }
 
-    onObjectRegistered(obj){
-        if (obj.script)
-            this.script.register(obj)
+    onObjectRegistered(object){
+        if (object.script)
+            this.script.loadObjectScript(object)
     }
+
     echo(...arg) {
         this.print(...arg)
     }
@@ -147,6 +152,14 @@ class Engine extends Emitter {
             this.printError(error)
         }
         return false
+    }
+
+    new(){
+        window.dbg("--------","Creating new game")
+        this.store.ui.clear()
+        const newpack = this.API.createPack()
+        this.content.contentPackSet.push(newpack)
+        this.start(newpack.info.name)
     }
 
     tick() {

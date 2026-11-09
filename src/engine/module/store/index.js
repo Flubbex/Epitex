@@ -19,6 +19,8 @@ class StoreModule extends Emitter {
 
     byId = {}
 
+    storedSaveData = null
+
     constructor() {
         super()
         window.dbg('StoreModule', 'Constructing')
@@ -42,12 +44,18 @@ class StoreModule extends Emitter {
         //window.dbg("StoreModule",`Registering ${object.name}`)
         this.byId[object.id] = object
 
-        if (object.id !== 'NULLED')
-            object.on('*', (...e) => this.get('NULLED').emit(...e))
-
         if (object.type === 'room') this.world.room.push(object)
 
-        this.emit('registered', object)
+        this.emit('object_registered', object)
+
+        //Bubble any event from objects upward
+        object.on("*",(event,target,...args) => ()=>this.emit(event,target,...args))
+    }
+
+    reload(){
+        window.dbg('StoreModule', 'Reloading')
+        this.load(this.storedSaveData)
+
     }
 
     create(objectState) {
@@ -65,9 +73,12 @@ class StoreModule extends Emitter {
     load(saveData) {
         window.dbg('StoreModule', 'Loading')
 
+        this.storedSaveData = saveData
+
         this.byId = {}
 
         this.world = new World()
+        
         saveData.world.room.map((room) => this.create(room))
         //saveData.world.zone.map((zone) => this.create(zone))
 

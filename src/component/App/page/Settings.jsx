@@ -1,10 +1,8 @@
-import { useState,useEffect } from 'react'
 
 const Settings = () => {
-    const [theme,setTheme] = useState("default")
-    let tag = document.getElementById('theme')
+
     const onThemeChanged = (newTheme) => {
-        setTheme(newTheme.target.value)
+        const tag = document.getElementById('theme')
         tag.href = '/Epitex/css/' + newTheme.target.value + '.css'
         document.head.removeChild(tag)
         document.head.appendChild(tag)

@@ -9,11 +9,15 @@ class Container extends Entity {
         if (state && state.content) state.content.map((i) => this.add(i))
     }
 
+    tick(API,room){
+        super.tick(API,room)
+    }
+    
     add(item) {
         if (this.type === 'room') item.room = this.id
         else item.parent = this.id
 
-        this.emit('script', this.id+"_objAdded", this, item)
+        this.emit('object_added', this, item)
 
         return this.content.push(item)
     }
@@ -24,7 +28,7 @@ class Container extends Entity {
         if (this.content.length === c)
             console.warn(this.name, 'tried to remove', item.name, 'but failed')
 
-        this.emit('script', this.id+"_objRemoved", this, item)
+        this.emit('object_removed', this, item)
 
         return this.content.length
     }

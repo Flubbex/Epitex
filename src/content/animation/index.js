@@ -64,10 +64,10 @@ const animation = async (API) => {
 }
 
 
-export default (API) => {
+export default () => {
     const animationScript = animation.toString()
     
-    const body = `const girl=\`${girlData}\`;\n`+animationScript.slice(animationScript.indexOf("{")+1,animationScript.lastIndexOf("}")-1)
+    const script = `const girl=\`${girlData}\`;\n`+animationScript.slice(animationScript.indexOf("{")+1,animationScript.lastIndexOf("}")-1)
     return {
         room: [
             {
@@ -75,9 +75,7 @@ export default (API) => {
                 name: 'Animation Test',
                 type: 'menu',
                 description: 'Loading..',
-                script: {
-                    playerEntered: body,
-                },
+                script
             },
         ],
         info: {

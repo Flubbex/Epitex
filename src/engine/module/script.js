@@ -1,62 +1,40 @@
 class ScriptModule {
     API = null
 
-    script = {}
+    script = null
 
     constructor(API) {
         this.API = API
     }
 
 
-    reset(){
-        this.script = {}
-    }
-    
-    register(object) {
-        const id = object.id
-        for (const eventName in object.script)
-            this.create(`${id}_${eventName}`, object.script[eventName], object)
-    }
+    load(script,override=false){
+        window.dbg("ScriptModule",`Loading script (override=${override})`)
 
-    create(name, content, owner = null) {
-        window.dbg("ScriptModule","Creating", name,owner?owner.name:null)
-        if (name in this.script) console.warn('Overriding script', name)
 
-        const AsyncFunction = Object.getPrototypeOf(
-            async function () {}
-        ).constructor
+        this.script = override ? script : this.script + "\n" + script
 
-        const call = new AsyncFunction('API', `with (API) {${content}}`)
+        const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
 
-        const newScript = { name, content, owner, call }
-        this.script[name] = newScript
-        return newScript
-    }
-
-    exists(name) {
-        return name in this.script
-    }
-
-    runAll(event){
-        window.dbg("scriptModule","Running all",event)
-        const keys = Object.keys(this.script).filter((e)=>e.indexOf(event) !== -1)
+        const call = new AsyncFunction('API', `with (API) {${this.script}}`)
         
-        keys.map((script) => this.run(script))
+        call(this.API)
     }
 
-    run(name,...arg) {
-        if (!this.script[name])
-            return 
+    loadObjectScript(object){
+        window.dbg("ScriptModule",`Loading object script for ${object.name}`)
 
-        window.dbg("scriptModule","Running",name)
+        const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
 
-        try {
-            this.script[name].call.apply(this.script[name].owner, [this.API].concat(arg))
-        } catch (e)
-        {
-            throw new Error(`Encountered a problem running script '${name}'`,e)
-        }
+        const call = new AsyncFunction('API', `with (API) {${object.script}}`)
+
+        call.apply(object,[this.API])
     }
+
+    reset(){
+        this.script = null
+    }
+
 }
 
 export default ScriptModule

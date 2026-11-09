@@ -1,21 +1,31 @@
 export default class StorageService {
-    saveName = 'savedGame'
-    disableSaving = true
+    disableSaving = false
     storedSave = null
+
+    autoSaveCall = null 
 
     constructor(store) {
         window.dbg('StorageService', 'Constructing')
         this.autoSave = this.autoSave.bind(this, store)
     }
-    autoSave(store) {
-        //window.dbg("StorageService", "Autosaving")
-        if (!this.disableSaving && !window.nuked) this.save(store.save())
+    autoSave(store,saveName) {
+        window.dbg("StorageService", "Autosaving",store.save())
+        if (!this.disableSaving && !window.nuked) this.save(saveName,store.save())
     }
 
-    addSaveListener() {
-        window.dbg('StorageService', 'Adding save listener')
-        window.removeEventListener('visibilitychange', this.autoSave)
-        window.addEventListener('visibilitychange', this.autoSave)
+    createAutoSaver(saveName,store){
+        return () => this.autoSave(saveName,store)
+    }
+
+    addSaveListener(saveName,store) {
+        window.dbg('StorageService',`Adding save listener for ${saveName}`)
+
+        if (this.autoSaveCall)
+            window.removeEventListener('visibilitychange', this.autoSaveCall)
+
+        this.autoSaveCall = this.createAutoSaver(saveName,store).bind(this)
+
+        window.addEventListener('visibilitychange', this.autoSaveCall)
     }
 
     removeSaveListener() {
@@ -25,10 +35,10 @@ export default class StorageService {
     load(gamePackInfo) {
         window.dbg(
             'StorageService',
-            `Attempting to load from saved state "${this.saveName}" `
+            `Attempting to load from saved state "${gamePackInfo.name}" `
         )
 
-        this.storedSave = window.localStorage.getItem(this.saveName)
+        this.storedSave = window.localStorage.getItem(gamePackInfo.name)
 
         if (!this.storedSave || this.storedSave === 'null') {
             window.dbg('StorageService', 'No saved state found')
@@ -50,16 +60,18 @@ export default class StorageService {
 
         saveData.gamePackInfo = gamePackInfo
 
+        this.storedSave = saveData
+
         return saveData
     }
 
-    save(saveState) {
+    save(saveName,saveState) {
         //window.dbg("StorageService", "Saving")
         localStorage.setItem('notepad', saveState.ui.notepad)
-        localStorage.setItem(this.saveName, JSON.stringify(saveState))
+        localStorage.setItem(saveName, JSON.stringify(saveState))
     }
 
     nuke() {
-        localStorage.removeItem(this.saveName)
+        localStorage.removeItem(this.storedSave.gamePackInfo.name)
     }
 }

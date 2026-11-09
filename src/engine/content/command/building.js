@@ -39,7 +39,10 @@ const commandConstructor = (API) => {
         northwest: 'Southeast',
         southwest: 'Northeast',
         southeast: 'Northwest',
+        up:'Down',
+        down:'Up'
     }
+
     const tunnel = ([direction = '', id = 0]) => {
         if (!direction || !cardinalOpposite[direction.toLowerCase()])
             return 'Please enter at least a proper cardinal direction'
@@ -49,7 +52,6 @@ const commandConstructor = (API) => {
 
         if (!otherRoom) {
             otherRoom = API.create('room')
-            API.addRoom(otherRoom)
         }
 
         API.print(
@@ -78,7 +80,7 @@ const commandConstructor = (API) => {
 
         if (id == null) {
             const newRoom = API.create('room')
-            API.addRoom(newRoom)
+            API.create(newRoom)
             playerRoom.content.push(
                 API.create({
                     type: 'exit',
@@ -146,9 +148,72 @@ const commandConstructor = (API) => {
         return API.patch(fullString)
     }
 
-    const gex = ([filename]) => {
+    const gexp = ([filename]) => {
         API.exportPack(filename)
         return "Exported game"
+    }
+
+    const gimp = async () => {
+        const [handle] = await API.createUpload()
+        const file = await handle.getFile()
+        const text = await file.text()
+        const data = JSON.parse(text)
+        
+        API.importPack(data)
+    } 
+
+    const script = ([targetName,command]) => {
+        if (!targetName)
+            return "Script what?"
+
+        const room = API.room()
+        const player = API.player()
+
+        let target = null
+
+        if (targetName === "game")
+            target = API.getCurrentPack()
+        else if (targetName === "here")
+            target = room 
+        else {
+            target = room.get("any",targetName) || player.get("any",targetName)
+        }
+
+        if (target === null)
+            return "Can't find that"
+
+        switch (command){
+            case "run":
+                if (targetName === "game")
+                    API.reloadStore()
+                API.runObjectScript(target)
+                break
+            case "frompad":
+                target.script = API.notepad()
+                return "Set target script to content in notepad"
+            case "edit":
+                API.setNotepad(target.script)
+                return "Sent script to notepad, do 'script [target] frompad' to save"
+            case "write":
+                target.script = ""
+                API.inputPrompt((splitInput) => {
+                    const input = splitInput.join("/n")
+
+                    console.log("Got input",input)
+                    
+                    if (input && input !== ".") {
+                        target.script += input
+                    }
+                    else {
+                        API.inputPrompt(null)
+                        return "finished"
+                    }
+                    return input
+                })
+            break
+            default:
+                return target.script
+        }
     }
 
     return {
@@ -159,7 +224,9 @@ const commandConstructor = (API) => {
         remove,
         runpad,
         patch,
-        gex
+        gexp,
+        gimp,
+        script
     }
 }
 
