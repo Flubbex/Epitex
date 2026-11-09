@@ -86,18 +86,18 @@ export default class InteractionModule extends Emitter {
         if (this.command[clean]) return this.command[clean](arg)
 
         const room = this.API.room()
-        if (room.action?.includes(clean)) {
+        if (room.action?.map((e)=>e.toLowerCase()).includes(clean)) {
             room.emit("action_" + clean, room, arg)
             return
         }
 
-        const roomItem = room.content.find(e => e.action?.includes(clean))
+        const roomItem = room.content.find(e => e.action?.map((e)=>e.toLowerCase()).includes(clean))
         if (roomItem) {
             roomItem.emit("action_" + clean, roomItem, arg)
             return
         }
 
-        const invItem = this.API.player().content.find(e => e.action?.includes(clean))
+        const invItem = this.API.player().content.find(e => e.action?.map((e)=>e.toLowerCase()).includes(clean))
         if (invItem) {
             invItem.emit("action_" + clean, invItem, arg)
             return
