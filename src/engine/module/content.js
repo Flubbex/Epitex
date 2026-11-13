@@ -1,111 +1,55 @@
 import Emitter from '../class/emitter'
 
 export default class ContentModule extends Emitter {
-    contentPackSet = []
-
-    content = {
-        room: [],
-        enemy: [],
-        item: [],
-
-        npc:{},
-        command: {},
-        action: {},
-    }
-
+    library = {}
+    game = {}
     currentPack = null 
 
     constructor(contentPackSet) {
         super()
-        this.contentPackSet = contentPackSet
-        window.dbg(
-            'ContentModule',
-            `Constructed with ${this.contentPackSet.length} pack(s) of content`
-        )
+        window.dbg("ContentModule","Constructing")
+
+        const boundLoadPack = this.loadPack.bind(this)
+        contentPackSet.map(boundLoadPack)
     }
 
-    reset() {
-        window.dbg('ContentModule', 'Resetting')
-        this.content = {
-        room: [],
-        enemy: [],
-        item: [],
-
-        npc:{},
-        quest: {},
-        command: {},
-        action: {},
-    }
-    }
-
-    load(contentPack) {
-        window.dbg('ContentModule', 'Loading content:', contentPack.info.name)
-        this.currentPack = contentPack.info 
+    loadPack(pack){
+        window.dbg("ContentModule",`Loading pack ${pack.info.name}`)
+        this.library[pack.info.name] = pack 
         
-        for (const key in contentPack) {
-            console.log(key)
-            if (key in this.content)
-                if (Array.isArray(this.content[key]))
-                    this.content[key] = this.content[key].concat(
-                        contentPack[key]
-                    )
-                else
-                    this.content[key] = Object.assign(
-                        {},
-                        this.content[key],
-                        contentPack[key]
-                    )
-            else if (key !== "info" && key !== "script")
-                console.warn(`Pack contains unrecognized material: '${key}' `)
-        }
-
+        if (pack.game)
+            this.game[pack.game.name] = pack.game
     }
 
-    loadPack(name) {
-        window.dbg('ContentModule', 'Loading pack:', name)
-        const contentPack = this.contentPackSet.find(
-            (e) => e.info.name === name
-        )
-        
-        if (!contentPack)
-            throw new Error(
-                `Tried loading a non-existant content pack "${name}" `
-            )
+    loadDependency(name){
+        const depInfo = this.library[name]
+        if (!depInfo)
+            throw new Error(`Tried loading invalid dependency "${name}"`)
+        else
+            window.dbg("ContentModule",`Loading dependency '${name}'`)
+        return depInfo
+    }
+    createGame(name){
+        const gameInfo = this.game[name]
 
-        this.load(contentPack)
+        if (!gameInfo)
+            throw new Error(`Tried creating a nonexistant game "${name}"`)
 
-        return contentPack
+        const dependencies = {}
+
+        if (gameInfo.depend)
+            gameInfo.depend.map((depName)=> {
+                const dep = this.loadDependency(depName)
+                const keys = Object.keys(dep).filter((e) => ['info','game'].indexOf(e) === -1)
+                keys.map((k) => dependencies[k] = dependencies[k] ? [...dependencies[k], ...dep[k]] : dep[k] )
+            })
+
+        //Always load base content first
+        const newGame = {...this.library["Base"],
+                         ...dependencies,
+                         ...gameInfo}
+
+        return newGame
     }
 
-    get(type, name) {
-        if (!type) return this.content
-
-        if (!name) return this.content[type]
-
-        return this.content[type][name]
-    }
-
-    newGame(_gamePackInfo) {
-        const gamePackInfo = _gamePackInfo || {
-            name: 'Fallback mode',
-            description: 'You probably should not be running in this mode',
-            startRoom: 'NULLED',
-        }
-
-        window.dbg(
-            'ContentModule',
-            'Creating new game based on pack:',
-            gamePackInfo.name
-        )
-        return {
-            world: {
-                room: this.content.room,
-            },
-            enemy: this.content.enemy,
-            item: this.content.item,
-            command: this.content.command,
-            action: this.content.action,
-            gamePackInfo,
-        }
-    }
 }

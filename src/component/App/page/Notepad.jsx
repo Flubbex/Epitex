@@ -1,14 +1,15 @@
 import { useState } from 'react'
 
-const Notepad = ({ game }) => {
-    const [text, setText] = useState(game.store.ui.notepad)
+const Notepad = ({ ui }) => {
+    const [text, setText] = useState(ui.notepad)
 
     const changeText = (value) => {
         setText(value)
-        game.store.ui.setNotepad(value)
+        ui.setNotepad(value)
     }
 
-    game.store.ui.on("updatedNotepad",setText)
+    ui.on("updatedNotepad",setText)
+    
     return (
         <div className="container" style={{ height: '75vh' }}>
             <div className="row h-100">

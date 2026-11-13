@@ -4,25 +4,25 @@ import Notepad from './page/Notepad'
 import Settings from './page/Settings'
 import MusicPlayer from './page/MusicPlayer'
 
-const Switch = ({ route, game }) => {
+const Switch = ({ route, ui }) => {
 
     
     return (
         <div className="row">
             <div className={"col "+ (route === 'editor' ? '' : 'd-none')}>
-                <Editor game={game} />
+                <Editor ui={ui} />
             </div>
             <div className={"col "+ (route === 'notepad' ? '' : 'd-none')}>
-                <Notepad game={game} />
+                <Notepad ui={ui} />
             </div>
             <div className={"col "+ (route === 'settings' ? '' : 'd-none')}>
-                <Settings game={game} />
+                <Settings ui={ui} />
             </div>
             <div className={"col "+ (route === 'main' ? '' : 'd-none')}>
-                <Main game={game} />
+                <Main ui={ui} />
             </div>
             <div className={"col "+ (route === 'music' ? '' : 'd-none')}>
-                <MusicPlayer game={game} />
+                <MusicPlayer ui={ui} />
             </div>
         </div>
     )

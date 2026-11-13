@@ -11,6 +11,7 @@ const cardinalExit = {
     sw: 'southwest',
 }
 
+/*
 const cardinalMoveWare = (API) => {
     return (_target) => {
         const target =
@@ -27,24 +28,29 @@ const cardinalMoveWare = (API) => {
         return API.handle('go ' + exit.name, true)
     }
 }
+*/
 
 export default class InteractionModule extends Emitter {
     API = null
     request = null
+    
     command = {}
     ware = []
     
 
     constructor(API) {
+        window.dbg("InteractionModule","Constructing")
         super()
         this.API = API
 
-        this.createWare(cardinalMoveWare)
+        //this.createWare(cardinalMoveWare)
     }
 
     reset() {
         this.command = {}
+        this.ware = []
     }
+
     load(command) {
         window.dbg(
             'InteractionModule',
@@ -52,7 +58,7 @@ export default class InteractionModule extends Emitter {
             Object.keys(command).length,
             'commands'
         )
-        this.command = { ...this.command, ...command }
+        this.command = command
     }
 
     createWare(wareConstructor) {
@@ -85,6 +91,7 @@ export default class InteractionModule extends Emitter {
     runHandle(clean, arg) {
         if (this.command[clean]) return this.command[clean](arg)
 
+
         const room = this.API.room()
         if (room.action?.map((e)=>e.toLowerCase()).includes(clean)) {
             room.emit("action_" + clean, room, arg)
@@ -102,6 +109,7 @@ export default class InteractionModule extends Emitter {
             invItem.emit("action_" + clean, invItem, arg)
             return
         }
+        
 
         return this.error(clean)
     }
@@ -118,14 +126,16 @@ export default class InteractionModule extends Emitter {
                 true
             )
 
-        const wareResult = this.ware
+        if (this.API.game()){
+            const wareResult = this.ware
             .map((ware) => ware(clean, arg))
             .filter((e) => e)
 
-        if (wareResult.length) return wareResult
-
+            if (wareResult.length) return wareResult
+        }
+        
         const output = this.runHandle(clean, arg)
-
+        
         this.emit('output', output)
 
         return output

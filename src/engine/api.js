@@ -6,6 +6,11 @@ const apiConstructor = (engine) => {
     const util = engine.util
 
     /**
+     * Get current game
+     */
+    const game = () =>  engine.game
+
+    /**
      * Handle a command
      */
     const handle = (input, silent = false) => {
@@ -16,14 +21,14 @@ const apiConstructor = (engine) => {
      * Print some text
      */
     const print = (...message) => {
-        engine.store.ui.print(message)
+        engine.ui.print(message)
     }
 
     /**
      * Clear the buffer
      */
     const clear = () => {
-        engine.store.ui.clear()
+        engine.ui.clear()
     }
 
     /**
@@ -37,14 +42,14 @@ const apiConstructor = (engine) => {
      * Return the player
      */
     const player = () => {
-        return engine.store.player
+        return game().player
     }
 
     /**
      * Get any object in the world by its id
      */
     const get = (id) => {
-        return engine.store.get(id)
+        return game().get(id)
     }
 
     /**
@@ -79,7 +84,7 @@ const apiConstructor = (engine) => {
      * Get the current room the player is in
      */
     const room = () => {
-        return get(engine.store.player.room)
+        return get(player().room)
     }
 
     /**
@@ -116,7 +121,7 @@ const apiConstructor = (engine) => {
      * Set the current text in the notepad
      */
     const setNotepad = (v) => {
-        engine.store.ui.setNotepad(v)
+        engine.ui.setNotepad(v)
     }
 
     /**
@@ -132,9 +137,9 @@ const apiConstructor = (engine) => {
     const questFlag = (name, value) => {
         if (value === undefined)
             return name
-                ? engine.store.player.quest[name] || null
-                : engine.store.player.quest
-        else engine.store.player.quest[name] = value
+                ? engine.game.player.quest[name] || null
+                : engine.game.player.quest
+        else engine.game.player.quest[name] = value
     }
 
     /**
@@ -148,14 +153,14 @@ const apiConstructor = (engine) => {
      * Return the current battle
      */
     const getBattle = () => {
-        return engine.store.battle
+        return engine.game.battle
     }
 
     /**
      * Set the current battle
      */
     const setBattle = (battle) => {
-        engine.store.battle = battle
+        engine.game.battle = battle
     }
 
     /**
@@ -210,7 +215,7 @@ const apiConstructor = (engine) => {
      * Generate a raw save state
      */
     const generateSave = () => {
-        return engine.store.save()
+        return engine.game.save()
     }
 
     /**
@@ -258,10 +263,10 @@ const apiConstructor = (engine) => {
     }
 
     /**
-     * Return available content packs
+     * Return available games
      */
-    const getContentPackSet = () => {
-        return engine.content.contentPackSet
+    const getAvailableGames = () => {
+        return engine.content.game
     }
 
     /**
@@ -300,7 +305,7 @@ const apiConstructor = (engine) => {
      */
     const loadGamePack = (name) => {
         window.dbg('--------------', 'Loading Pack')
-        engine.store.ui.clear()
+        engine.ui.clear()
         engine.start(name)
     }
 
@@ -308,22 +313,23 @@ const apiConstructor = (engine) => {
      * Import a game pack
      */
     const importPack = (p) => {
-        engine.content.contentPackSet = 
-            engine.content.contentPackSet.filter(e => e.info.name !== p.info.name)
-        
-        engine.content.contentPackSet.push(p)
-        
-        loadGamePack(p.info.name)
+        engine.content.loadPack(p)
+        console.log(p)
+        engine.start(p.game.name)
     }
 
     /**
      * Drop back to the main menu (Unload any pack)
      */
-    const quit = async () => {
-        window.dbg('--------------', 'Quitting')
-        engine.store.ui.clear()
-        engine.storage.removeSaveListener()
-        engine.start()
+    const quit = () => {
+        engine.start("Main Menu")
+    }
+
+    /**
+     * Start a pack
+     */
+    const start = (name) => {
+        engine.start(name)
     }
 
     /**
@@ -393,15 +399,10 @@ const apiConstructor = (engine) => {
         target.once(event,call)
     }
 
-    //**
-    // reload the store
-    //  */
 
-    const reloadStore = () => {
-        engine.store.reload()
-    }
     return {
         util,
+        game,
         handle,
         print,
         clear,
@@ -429,7 +430,7 @@ const apiConstructor = (engine) => {
         createDownload,
         createUpload,
         generateSave,
-        getContentPackSet,
+        getAvailableGames,
         loadGamePack,
         createPack,
         quit,
@@ -439,8 +440,8 @@ const apiConstructor = (engine) => {
         getCurrentPack,
         connect,
         connectOnce,
-        reloadStore,
-        importPack
+        importPack,
+        start
     }
 }
 

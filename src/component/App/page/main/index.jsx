@@ -40,14 +40,14 @@ const ControlPanel = ({ game }) => {
 }
 */
 
-const MainPage = ({ game }) => (
+const MainPage = ({ ui }) => (
     <div className="container-fluid p-0">
         <div className="row">
-            <ScrollingView game={game} />
+            <ScrollingView ui={ui} />
         </div>
         <div className="row">
             <div className="col p-0">
-                <InputBox game={game} />
+                <InputBox ui={ui} />
             </div>
         </div>
     </div>

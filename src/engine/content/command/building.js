@@ -171,7 +171,7 @@ const commandConstructor = (API) => {
         let target = null
 
         if (targetName === "game")
-            target = API.getCurrentPack()
+            target = API.game().script
         else if (targetName === "here")
             target = room 
         else {
@@ -185,8 +185,7 @@ const commandConstructor = (API) => {
         switch (command){
             case "run":
                 if (targetName === "game"){
-                    API.reloadStore()
-                    API.loadGamePack(API.getCurrentPack().info.name)
+                    API.start(API.game().storedGame.game.name)
                 }
                 else 
                     API.runObjectScript(target)
@@ -215,7 +214,7 @@ const commandConstructor = (API) => {
                 })
             break
             default:
-                return target.script
+                return target.script.split("\n").map((e,n)=> `${n+1}\t${e}`).join("\n")
         }
     }
 

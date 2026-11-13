@@ -1,17 +1,25 @@
 const commandConstructor = (API) => {
-    const request = (url, callback) => {
+    const request = (url) => {
         return fetch(url, {
             method: 'GET',
-        }).then(callback)
-    }
-
-    const quote = () => {
-        const url = 'http://dummyjson.com/quotes/random/'
-        request(url, (res) => {
-            res.json().then((e) => API.print(e.quote))
         })
     }
 
+    const quote = async() => {
+        const url = 'http://dummyjson.com/quotes/random/'
+        const rq = await request(url)
+        const result = await rq.json()
+        API.print(result.quote)
+        return ""
+    }
+
+    const figlet = async(string)=>{
+        const url = `https://asciified.thelicato.io/api/v2/ascii?text=${escape(string)}`
+        const rq = await request(url)
+        const result = await rq.text()
+        API.print(result)
+        return ""
+    }
     const sexypipe = () => {
         window.setInterval(() => {
             request('http://pipecigarmen.tumblr.com/random', (result) => {
@@ -65,6 +73,7 @@ const commandConstructor = (API) => {
         quote,
         sexycigar,
         sexypipe,
+        figlet
     }
 }
 export default commandConstructor

@@ -34,18 +34,18 @@ const Player = ({ videoId, startSeconds = 0, callBack }) => {
 
     return <div ref={containerRef} />
 }
-const MusicPlayer = ({ game }) => {
-    const [music, setMusic] = useState(game.store.ui.music)
+const MusicPlayer = ({ ui }) => {
+    const [music, setMusic] = useState(ui.music)
 
     const applyMusic = (v) => {
         setMusic(v)
     }
     useEffect(() => {
-        game.store.ui.on('updatedMusic', applyMusic)
+        ui.on('updatedMusic', applyMusic)
         return () => {
-            game.store.ui.off('updatedMusic', applyMusic)
+            ui.off('updatedMusic', applyMusic)
         }
-    }, [game])
+    }, [ui])
 
     return (
         <div className="container p-0 bg-dark" style={{ height: '75vh' }}>

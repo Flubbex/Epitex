@@ -1,11 +1,6 @@
 {
   "room": [
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "Storage",
       "name": "Storage Room",
       "description": "This room holds some tough stuff",
@@ -1510,9 +1505,14 @@
   ],
   "zone": [],
   "info": {
-    "name": "Adventure",
-    "description": "Save the tribe (Or something)",
-    "startRoom": "HJWH3N"
-  },
-  "script":"const smokePipe = ()=>{API.print('Makar sucks on his pipe and exhales two jets of smoke from his nostrils')};return {smokePipe}"
+    "name": "Adventure Pack",
+    "description": "Save the tribe (Or something)"
+    },
+    "game":{
+      "name":"Example Adventure",
+      "description":"Example adventure",
+      "startRoom": "HJWH3N",
+      "depend":["Adventure Pack"],
+      "script":"const smokePipe = ()=>{API.print('Makar sucks on his pipe and exhales two jets of smoke from his nostrils')};return {smokePipe}"
+    }
 }

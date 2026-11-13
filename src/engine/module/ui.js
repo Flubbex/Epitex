@@ -1,9 +1,9 @@
-import Emitter from '../../../class/emitter.js'
+import Emitter from '../class/emitter.js'
 
 /**
- * Storage model for managing input,output, notepad and modals
+ * UI module for managing input,output, notepad,music
  */
-class UIModel extends Emitter {
+class UIModule extends Emitter {
     notepad = localStorage.getItem('notepad') ?? ''
     output = []
     input = ''
@@ -11,10 +11,6 @@ class UIModel extends Emitter {
 
     constructor(state = {}) {
         super()
-        this.load(state)
-    }
-
-    load(state = {}) {
         this.notepad = state.notepad ?? this.notepad
         this.output = state.output ?? this.output
         this.input = state.input ?? this.input
@@ -74,6 +70,10 @@ class UIModel extends Emitter {
 
         this.emit('updatedOutput', this.output)
     }
+
+    handle(command){
+        this.emit("commandHandled",command)
+    }
 }
 
-export default UIModel
+export default UIModule

@@ -3,7 +3,7 @@ import { useState } from 'react'
 import Sidebar from './Sidebar'
 import Switch from './Switch'
 
-const App = ({ game }) => {
+const App = ({ ui }) => {
     const [route, setRoute] = useState('main')
 
     return (
@@ -16,7 +16,7 @@ const App = ({ game }) => {
                 <div className="row d-none d-md-block">
                     <Sidebar route={route} setRoute={setRoute} />
                 </div>
-                 <Switch route={route} setRoute={setRoute} game={game} />
+                 <Switch route={route} ui={ui} />
             </div>
         </>
     )

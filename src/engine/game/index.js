@@ -1,35 +1,66 @@
-import Emitter from '../../class/emitter.js'
+import Emitter from '../class/emitter.js'
 
 import Player from './model/player.js'
 import World from './model/world.js'
-import UI from './model/ui.js'
 import Battle from './model/battle.js'
 
 import Factory from './factory.js'
+import ScriptModule from './script.js'
 
-class StoreModule extends Emitter {
+class Game extends Emitter {
     player = null
     world = null
-    ui = null
     battle = null
 
     factory = null
+
+    script = null 
 
     new = true
 
     byId = {}
 
-    storedSaveData = null
+    storedGame = null
 
-    constructor() {
+    gamePackInfo = null 
+
+    constructor(API,saveData) {
         super()
-        window.dbg('StoreModule', 'Constructing')
+        window.dbg('Game', 'Constructing')
 
         this.factory = new Factory()
+        this.script = new ScriptModule(API)
 
         this.factory.on('instanced', this.register.bind(this))
 
-        this.ui = new UI()
+        this.storedGame = saveData
+
+        this.world = new World()
+        
+        if (saveData.room)
+            saveData.room.map((room) => this.create(room))
+
+        this.battle = new Battle(saveData.battle)
+        this.player = new Player(saveData.player)
+
+        this.player.content = this.player.content.map((obj) => this.create(obj))
+
+        this.new = 'new' in saveData ? false : true
+
+        this.gamePackInfo = saveData.gamePackInfo
+
+        if (this.new)
+            if (saveData.startRoom)
+                this.player.room = saveData.startRoom
+            else
+                console.warn(
+                    "Store doesn't know where to start player on a new game"
+                )
+    }
+
+    start(){
+        if (this.storedGame.script)
+            this.script.load(this.storedGame.script)
     }
 
     get(id) {
@@ -46,16 +77,11 @@ class StoreModule extends Emitter {
 
         if (object.type === 'room') this.world.room.push(object)
 
-        this.emit('object_registered', object)
+        if (object.script)
+            this.script.loadObjectScript(object)
 
         //Bubble any event from objects upward
         object.on("*",(event,target,...args) => this.emit(event,target,...args))
-    }
-
-    reload(){
-        window.dbg('StoreModule', 'Reloading')
-        this.load(this.storedSaveData)
-
     }
 
     create(objectState) {
@@ -68,38 +94,6 @@ class StoreModule extends Emitter {
         const newObject = this.factory.instance(objectState)
         
         return newObject
-    }
-
-    load(saveData) {
-        window.dbg('StoreModule', 'Loading')
-
-        this.storedSaveData = saveData
-
-        this.byId = {}
-
-        this.world = new World()
-        
-        saveData.world.room.map((room) => this.create(room))
-        //saveData.world.zone.map((zone) => this.create(zone))
-
-        this.battle = new Battle(saveData.battle)
-        this.player = new Player(saveData.player)
-
-        this.ui.load(saveData.ui)
-
-        this.player.content = this.player.content.map((obj) => this.create(obj))
-
-        this.new = 'new' in saveData ? false : true
-
-        this.gamePackInfo = saveData.gamePackInfo
-
-        if (this.new)
-            if (this.gamePackInfo?.startRoom)
-                this.player.room = this.gamePackInfo.startRoom
-            else
-                console.warn(
-                    "Store doesn't know where to start player on a new game"
-                )
     }
 
     //TODO: Lifted this from room, fix it
@@ -135,7 +129,6 @@ class StoreModule extends Emitter {
         return {
             world: this.world,
             player: this.player,
-            ui: this.ui,
             battle: {
                 target: this.battle.target ? this.battle.target.id : null,
             },
@@ -144,4 +137,4 @@ class StoreModule extends Emitter {
     }
 }
 
-export default StoreModule
+export default Game

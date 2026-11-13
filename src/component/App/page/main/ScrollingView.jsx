@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
-const ScrollingView = ({ game }) => {
-    const [output, setOutput] = useState(game.store.ui.output)
+const ScrollingView = ({ ui }) => {
+    const [output, setOutput] = useState(ui.output)
     const [locked, setLocked] = useState(true)
 
     const scrollEndRef = useRef(null)
@@ -9,12 +9,12 @@ const ScrollingView = ({ game }) => {
 
     useEffect(() => {
         const handleOutput = (v) => setOutput(v)
-        game.store.ui.on('updatedOutput', handleOutput)
+        ui.on('updatedOutput', handleOutput)
 
         return () => {
-            game.store.ui.off('updatedOutput', handleOutput)
+            ui.off('updatedOutput', handleOutput)
         }
-    }, [game])
+    }, [ui])
 
     useEffect(() => {
         if (locked) scrollEndRef.current.scrollIntoView({ behavior: 'instant' })

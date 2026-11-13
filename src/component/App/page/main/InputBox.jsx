@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const InputBox = ({ game }) => {
+const InputBox = ({ ui }) => {
     const [input, setInput] = useState(
         localStorage.getItem('dbg_lastInput') || ''
     )
@@ -24,7 +24,7 @@ const InputBox = ({ game }) => {
         }
 
         localStorage.setItem('dbg_lastInput', input)
-        game.handle(input)
+        ui.handle(input)
         setHistory(history.concat(input))
         setHistoryKey(history.length + 1)
         setInput('')

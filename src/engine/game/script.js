@@ -8,7 +8,7 @@ class ScriptModule {
     }
 
 
-    load(script,override=false){
+    load(script,override=true){
         window.dbg("ScriptModule",`Loading script (override=${override})`)
 
 

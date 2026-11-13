@@ -3,6 +3,7 @@ import Being from './being'
 class Player extends Being {
     name = "Player"
     type = 'player'
+    id = "PLAYER"
     healTick = 0
     maxHealTick = 2
     room = 'NULLED'

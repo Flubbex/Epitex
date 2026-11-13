@@ -1,4 +1,4 @@
-import Emitter from '../../../class/emitter.js'
+import Emitter from '../../class/emitter.js'
 
 const cleanObject = (o) => {
     // Check if it's an array or an object and clean recursively

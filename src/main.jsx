@@ -11,16 +11,14 @@ import Engine from './engine'
 
 import './style'
 
-const game = new Engine(contentPackList)
+const engine = new Engine(contentPackList)
 
-window.game = game
-
-game.start()
+window.engine = engine
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
 root.render(
     <React.StrictMode>
-        <AppComponent game={game} />
+        <AppComponent ui={engine.ui} />
     </React.StrictMode>
 )

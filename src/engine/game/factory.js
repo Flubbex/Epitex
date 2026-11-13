@@ -1,4 +1,4 @@
-import Emitter from '../../class/emitter.js'
+import Emitter from '../class/emitter.js'
 
 import Room from './model/room/index.js'
 import Exit from './model/room/exit.js'

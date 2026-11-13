@@ -1,11 +1,12 @@
 import Emitter from './class/emitter'
+import Game from "./game"
 
 import StorageModule from './module/storage'
 import InteractionModule from './module/interaction'
 import CombatModule from './module/combat'
 import ContentModule from './module/content'
-import StoreModule from './module/store'
-import ScriptModule from './module/script'
+
+import UIModule from './module/ui'
 
 import baseContentConstructor from './content'
 
@@ -17,11 +18,87 @@ import util from '../util'
  * Main engine, needs a store,content and commands.
  */
 class Engine extends Emitter {
-    inputPrompt = null
     tickerId = null
 
-    constructor(contentPackList) {
+    util = null 
+
+    API = null 
+
+    store   = null 
+    action  = null 
+    combat  = null
+    storage = null 
+    content = null 
+
+    game = null 
+    
+    constructor(contentPackList){
         super()
+        window.dbg('Engine', 'Constructing')
+
+        this.API = APIConstructor(this)
+        this.API.util = util
+        this.ui = new UIModule()
+        this.action = new InteractionModule(this.API)
+
+        //TODO: Planned obsolete: In future, we won't be loading content from disk anymore aside from base content
+        this.content = new ContentModule(
+            [baseContentConstructor(this.API)].concat(
+                this.createContent(contentPackList)
+            ))
+
+        this.ui.on("commandHandled", (e)=> this.handle(e))
+        this.action.on('output', (...arg) => this.ui.print(...arg))
+       
+        this.start()
+    }
+
+    start(gameName="Main Menu") {
+        console.log(`%cEngine starting ${gameName}`,"color:yellow;")
+        this.ui.clear()
+        
+        const game = this.content.createGame(gameName)
+
+        this.action.load(game.command)
+
+        this.game = new Game(this.API,game)
+        this.game.start()
+
+        this.game.on("*",(event,target,...args)=>{
+
+            if (["object_ticked","object_registered"].indexOf(event) === -1)
+                console.log(`%c Store emitted ${event} on ${target.name}`,'color:yellow;')
+
+            switch (event){
+                case "echo":
+                    if (target.type === "room" && target.id !== this.game.player.room)
+                        break 
+                    if (target.type !== "room" && target.room !== this.game.player.room)
+                        break 
+                    this.print(...args)
+                    break
+                case "object_registered":
+                    this.onObjectRegistered(target)
+                    break
+            }
+            
+        } )
+
+        this.API.handle("look",true)
+
+        if (this.tickerId) {
+            window.dbg('Engine', 'Clearing existing ticker')
+            window.clearInterval(this.tickerId)
+        }
+
+        this.tickerId = window.setInterval(() => this.tick(), 5000)
+    }
+
+    createContent(contentPackList){
+        return contentPackList.map((e) => typeof e === "function" ? e(this.API) : e)
+    }
+
+    OLD_constructor(contentPackList) {
         window.dbg('Engine', 'Constructing')
 
         this.util = util
@@ -33,7 +110,6 @@ class Engine extends Emitter {
         this.action = new InteractionModule(this.API)
         this.combat = new CombatModule(this.API)
         this.script = new ScriptModule(this.API)
-
         this.storage = new StorageModule(this.store)
 
         this.content = new ContentModule(
@@ -59,7 +135,7 @@ class Engine extends Emitter {
         } )
     }
 
-    start(gamePackName="Base") {
+    OLD_start(gamePackName="Base") {
         window.dbg('Engine', `Starting ${gamePackName}`)
 
         //Reset any content actively loaded in
@@ -119,6 +195,31 @@ class Engine extends Emitter {
         this.tickerId = window.setInterval(() => this.tick(), 5000)
     }
 
+    new(name="New Game"){
+        const newGame = {
+            room:[
+                {
+                    id:"InitRoom",
+                    type:"room",
+                    name:"Empty Room",
+                    description:"Empty Room"
+                }
+            ],
+            info:{
+                name: name+" Pack",
+                description:name+" Pack"
+            },
+            game:{
+                name,
+                depend:[name+" Pack"],
+                description:"New Game",
+                startRoom:"InitRoom"
+            }
+        }
+
+        this.content.loadPack(newGame)
+        this.start(name)
+    }
     onObjectRegistered(object){
         if (object.script)
             this.script.loadObjectScript(object)
@@ -129,7 +230,7 @@ class Engine extends Emitter {
     }
 
     print(raw, isInput = false) {
-        this.store.ui.print(raw, isInput)
+        this.ui.print(raw, isInput)
     }
 
     clear() {
@@ -143,7 +244,7 @@ class Engine extends Emitter {
     }
 
     printError(err) {
-        this.store.ui.printError(err)
+        this.ui.printError(err)
     }
 
     handle(input, silent = false) {
@@ -155,18 +256,14 @@ class Engine extends Emitter {
         return false
     }
 
-    new(){
-        window.dbg("--------","Creating new game")
-        this.store.ui.clear()
-        const newpack = this.API.createPack()
-        this.content.contentPackSet.push(newpack)
-        this.start(newpack.info.name)
+    fromFile(){
+        this.API.handle("gimp",true)
     }
 
     tick() {
         try {
-            this.store.world.room.map((room) => room.tick(this.API))
-            this.store.player.tick(this.API)
+            this.game.world.room.map((room) => room.tick(this.API))
+            this.game.player.tick(this.API)
         } catch (error) {
             this.printError(error)
         }

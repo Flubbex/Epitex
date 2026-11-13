@@ -36,7 +36,7 @@ class Room extends Container {
                     itemList.push(
                         this.buttonify(
                             obj.name,
-                            `game.handle("look ${obj.name}")`
+                            `engine.handle("look ${obj.name}")`
                         )
                     )
                     break
@@ -46,7 +46,7 @@ class Room extends Container {
                     beingList.push(
                         this.buttonify(
                             obj.name,
-                            `game.handle("look ${obj.name}")`
+                            `engine.handle("look ${obj.name}")`
                         )
                     )
                     break
@@ -57,7 +57,7 @@ class Room extends Container {
                     exitList.push(
                         this.buttonify(
                             lockedName,
-                            `game.handle("go ${obj.name}")`
+                            `engine.handle("go ${obj.name}")`
                         )
                     )
                     break

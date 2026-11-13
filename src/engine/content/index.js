@@ -5,15 +5,16 @@ import commandConstructor from './command'
 const banana = `<img src='img/banana.gif' onClick="game.handle('bananaclicked',true)" width="64" height="64" style="display:inline;hover:cursor;"/>`
 const epiTextLogo = `                                        
  ▄▄▄▄▄▄▄▄               ██                                  
- ██▀▀▀▀▀▀               ▀▀       ██                         
- ██        ██▄███▄    ████     ███████    ▄████▄   ▀██  ██▀ 
- ███████   ██▀  ▀██     ██       ██      ██▄▄▄▄██    ████   
- ██        ██    ██     ██       ██      ██▀▀▀▀▀▀    ▄██▄   
- ██▄▄▄▄▄▄  ███▄▄██▀  ▄▄▄██▄▄▄    ██▄▄▄   ▀██▄▄▄▄█   ▄█▀▀█▄  
- ▀▀▀▀▀▀▀▀  ██ ▀▀▀    ▀▀▀▀▀▀▀▀     ▀▀▀▀     ▀▀▀▀▀   ▀▀▀  ▀▀▀ 
+ ██▀▀▀▀▀▀               ▀▀      ██                         
+ ██        ██▄███▄    ████    ███████   ▄████▄   ▀██  ██▀ 
+ ███████   ██▀  ▀██     ██      ██     ██▄▄▄▄██    ████   
+ ██        ██    ██     ██      ██     ██▀▀▀▀▀▀    ▄██▄   
+ ██▄▄▄▄▄▄  ███▄▄██▀  ▄▄▄██▄▄▄   ██▄▄▄  ▀██▄▄▄▄█   ▄█▀▀█▄  
+ ▀▀▀▀▀▀▀▀  ██ ▀▀▀    ▀▀▀▀▀▀▀▀    ▀▀▀▀    ▀▀▀▀▀   ▀▀▀  ▀▀▀ 
            ██                                               
-    v0.2                         made by Flubber  ${banana}
 `
+
+const subText = `v0.2                         made by Flubber  ${banana}`
 
 /**
  * Sets up base content required by the engine, along with some fun stuff.
@@ -21,6 +22,16 @@ const epiTextLogo = `
  * @returns Base content Pack
  */
 const engineContentConstructor = (API) => {
+
+    const r = (min,max) => Math.random()*max+min
+
+    const rainbow = (input) => {
+        return input.split("").map((char)=>{
+            const randomColor = `rgb(${r(64,192)},${r(64,192)},${r(64,192)})`
+            return `<span style="color:${randomColor};">${char}</span>`
+        }).join("")
+    }
+
     const room = [
         {
             id: 'NULLED',
@@ -32,7 +43,7 @@ const engineContentConstructor = (API) => {
             id: 'LoaderMenu',
             type: 'menu',
             name: 'Load Screen',
-            description: epiTextLogo,
+            description: rainbow(epiTextLogo) + subText,
         },
     ]
 
@@ -66,35 +77,40 @@ const engineContentConstructor = (API) => {
             name: 'Base',
             description:
                 'Basic content every text adventure engine should never go without.',
-            version: 1,
-            startRoom: 'LoaderMenu',
+            version: 1
         },
         room,
         command,
-        script:`
-        const printMenu = () => {
-            print("\\n")
-            print('Available adventures:')
-            print("\\n")
-            const packSet = getContentPackSet()
-            packSet.map((pack) => {
-                const { name } = pack.info
-                print(
-                    \`<button onClick="game.handle('loadGame \${name}',true)">\${name}</button>\`
-                )
-            })
-            print("\\n")
-            print("Or, if you're feeling more adventurous..")
-            print("\\n")
-            print('<button onClick="game.new()">Create a new game</button>')
-        }
+        game:{
+            name:"Main Menu",
+            description:"A main menu",
+            startRoom: 'LoaderMenu',
+            script:`
+            const printMenu = () => {
+                print("\\n")
+                print('Available adventures:')
+                print("\\n")
+                const allGames = getAvailableGames()
+                const packSet = Object.keys(allGames).map((e)=>allGames[e])
+                packSet.map((pack) => {
+                    print(
+                        \`<button onClick="engine.start('\${pack.name}')">\${pack.name}</button>\`
+                    )
+                })
+                print("\\n")
+                print("Or, if you're feeling more adventurous..")
+                print("\\n")
+                print('<button onClick="engine.new()">Create a new game</button>')
+                print('<button onClick="engine.fromFile()">Load a game file</button>')
+            }
 
-        const clear = () => {
-            API.clear()    
-        }
+            const clear = () => {
+                API.clear()    
+            }
 
-        connect("LoaderMenu","object_viewed", ()=>window.setTimeout(printMenu,0) )
-        `
+            connect("LoaderMenu","object_viewed", ()=>window.setTimeout(printMenu,0) )
+            `
+        }
     }
 }
 export default engineContentConstructor
