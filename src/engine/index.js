@@ -2,8 +2,6 @@ import Emitter from './class/emitter'
 import Game from "./game"
 
 import StorageModule from './module/storage'
-import InteractionModule from './module/interaction'
-import CombatModule from './module/combat'
 import ContentModule from './module/content'
 
 import UIModule from './module/ui'
@@ -25,7 +23,6 @@ class Engine extends Emitter {
     API = null 
 
     store   = null 
-    action  = null 
     combat  = null
     storage = null 
     content = null 
@@ -38,8 +35,9 @@ class Engine extends Emitter {
 
         this.API = APIConstructor(this)
         this.API.util = util
+
         this.ui = new UIModule()
-        this.action = new InteractionModule(this.API)
+        this.storage = new StorageModule()
 
         //TODO: Planned obsolete: In future, we won't be loading content from disk anymore aside from base content
         this.content = new ContentModule(
@@ -48,41 +46,22 @@ class Engine extends Emitter {
             ))
 
         this.ui.on("commandHandled", (e)=> this.handle(e))
-        this.action.on('output', (...arg) => this.ui.print(...arg))
-       
+ 
         this.start()
     }
 
-    start(gameName="Main Menu") {
+    start(gameName="Base") {
         console.log(`%cEngine starting ${gameName}`,"color:yellow;")
         this.ui.clear()
         
         const game = this.content.createGame(gameName)
+        const savedGame = this.storage.get(gameName)
+        const restoredGame = {...game,...savedGame}    
+        this.game = new Game(this.API,restoredGame)
 
-        this.action.load(game.command)
+        this.game.on("actionOutput",(_target,message) => this.print(message,false) )
 
-        this.game = new Game(this.API,game)
         this.game.start()
-
-        this.game.on("*",(event,target,...args)=>{
-
-            if (["object_ticked","object_registered"].indexOf(event) === -1)
-                console.log(`%c Store emitted ${event} on ${target.name}`,'color:yellow;')
-
-            switch (event){
-                case "echo":
-                    if (target.type === "room" && target.id !== this.game.player.room)
-                        break 
-                    if (target.type !== "room" && target.room !== this.game.player.room)
-                        break 
-                    this.print(...args)
-                    break
-                case "object_registered":
-                    this.onObjectRegistered(target)
-                    break
-            }
-            
-        } )
 
         this.API.handle("look",true)
 
@@ -91,49 +70,29 @@ class Engine extends Emitter {
             window.clearInterval(this.tickerId)
         }
 
+         //Listen to any echoes in the current room
+        const channelEcho = (_room,...args)=> this.echo(...args)
+
+        //Note: Store gets reset on load, this does not stack
+        this.game.get(this.game.player.room).on('echo', channelEcho)
+
+        //Listen to any echoes in any further room explored
+        this.game.player.on('moved', (_player,next, prev) => {
+            this.game.get(prev.id).off('echo', channelEcho)
+            this.game.get(next.id).on('echo', channelEcho)
+        })
+
+        if (gameName !== "Base")
+            this.storage.createSaveListener(gameName,this.game)
+
         this.tickerId = window.setInterval(() => this.tick(), 5000)
     }
 
+    
     createContent(contentPackList){
         return contentPackList.map((e) => typeof e === "function" ? e(this.API) : e)
     }
 
-    OLD_constructor(contentPackList) {
-        window.dbg('Engine', 'Constructing')
-
-        this.util = util
-
-        this.store = new StoreModule()
-
-        this.API = APIConstructor(this)
-
-        this.action = new InteractionModule(this.API)
-        this.combat = new CombatModule(this.API)
-        this.script = new ScriptModule(this.API)
-        this.storage = new StorageModule(this.store)
-
-        this.content = new ContentModule(
-            contentPackList.map((packConstructor) => 
-                typeof packConstructor === "function" ? packConstructor(this.API) : packConstructor)
-            .concat(baseContentConstructor(this.API))
-        )
-
-        //Print output from the interaction module
-        this.action.on('output', (...arg) => this.print(...arg))
-
-        this.store.on("*",(event,target,...args)=>{
-
-            if (["object_ticked","object_registered"].indexOf(event) === -1)
-                console.log(`%c Store emitted ${event} on ${target.name}`,'color:yellow;')
-
-            switch (event){
-                case "object_registered":
-                    this.onObjectRegistered(target)
-                    break
-            }
-            
-        } )
-    }
 
     OLD_start(gamePackName="Base") {
         window.dbg('Engine', `Starting ${gamePackName}`)
@@ -196,6 +155,17 @@ class Engine extends Emitter {
     }
 
     new(name="New Game"){
+        let realName = name 
+
+        if (this.content.game[realName]) {
+            let next = 1
+            realName = `${name} (${next})`
+            while (this.content.game[realName]) {
+                next++
+                realName = `${name} (${next})`
+            }
+        }
+
         const newGame = {
             room:[
                 {
@@ -206,23 +176,21 @@ class Engine extends Emitter {
                 }
             ],
             info:{
-                name: name+" Pack",
-                description:name+" Pack"
-            },
-            game:{
-                name,
-                depend:[name+" Pack"],
-                description:"New Game",
+                type:"game",
+                name:realName,
+                description:name+" Pack",
                 startRoom:"InitRoom"
             }
         }
 
         this.content.loadPack(newGame)
-        this.start(name)
+        this.start(realName)
     }
-    onObjectRegistered(object){
-        if (object.script)
-            this.script.loadObjectScript(object)
+
+    save(){
+        const state = this.game.save()
+        this.storage.save(this.game.storedGame.info.name,state)
+        return state
     }
 
     echo(...arg) {
@@ -248,8 +216,11 @@ class Engine extends Emitter {
     }
 
     handle(input, silent = false) {
+        if (! this.game)
+            return "No game loaded"
+
         try {
-            return this.action.handle(input, silent)
+            return this.game.handle(input, silent)
         } catch (error) {
             this.printError(error)
         }

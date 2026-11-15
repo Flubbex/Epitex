@@ -6,6 +6,7 @@ const Notepad = ({ ui }) => {
     const changeText = (value) => {
         setText(value)
         ui.setNotepad(value)
+        localStorage.setItem('notepad', value)
     }
 
     ui.on("updatedNotepad",setText)

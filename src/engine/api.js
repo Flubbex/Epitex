@@ -35,7 +35,7 @@ const apiConstructor = (engine) => {
      * Create an object
      */
     const create = (state) => {
-        return engine.store.create(state)
+        return engine.game.create(state)
     }
 
     /**
@@ -114,7 +114,7 @@ const apiConstructor = (engine) => {
      * Return the current text in the notepad
      */
     const notepad = () => {
-        return engine.store.ui.notepad
+        return engine.ui.notepad
     }
 
     /**
@@ -219,6 +219,13 @@ const apiConstructor = (engine) => {
     }
 
     /**
+     * Perform a save
+     */
+    const save = () => {
+        return engine.save()
+    }
+
+    /**
      * Start a file download
      */
     const createDownload = (data, type, filename) => {
@@ -273,11 +280,7 @@ const apiConstructor = (engine) => {
      * Return the current content pack
      */
     const getCurrentPack = () => {
-        const contentPack = engine.content.contentPackSet.find(
-            (e) => e.info.name === engine.content.currentPack.name
-        )
-
-        return contentPack
+        return engine.game.storedGame
     }
 
     /**
@@ -312,17 +315,16 @@ const apiConstructor = (engine) => {
     /**
      * Import a game pack
      */
-    const importPack = (p) => {
-        engine.content.loadPack(p)
-        console.log(p)
-        engine.start(p.game.name)
+    const importPack = (pack) => {
+        engine.content.loadPack(pack)
+        engine.start(pack.info.name)
     }
 
     /**
      * Drop back to the main menu (Unload any pack)
      */
     const quit = () => {
-        engine.start("Main Menu")
+        engine.start()
     }
 
     /**
@@ -355,11 +357,10 @@ const apiConstructor = (engine) => {
      * Export to content pack
      */
     const exportPack = (filename="export") => {
-        const pack = {...engine.store.save().world}
-        pack.room = pack.room.filter((e)=>e.id !== "NULLED")
-        pack.info = engine.content.currentPack
-        pack.script = engine.script.script || getCurrentPack()?.script || ""
+        const pack = {...getCurrentPack(), ...{room:engine.game.world.room}}
 
+        pack.info.script = engine.game.script.script
+        
         createDownload(JSON.stringify(pack,null,2),"application/json",filename)
     }
 
@@ -441,7 +442,8 @@ const apiConstructor = (engine) => {
         connect,
         connectOnce,
         importPack,
-        start
+        start,
+        save
     }
 }
 

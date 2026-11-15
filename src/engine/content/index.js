@@ -73,17 +73,13 @@ const engineContentConstructor = (API) => {
     }
 
     return {
-        info: {
-            name: 'Base',
-            description:
-                'Basic content every text adventure engine should never go without.',
-            version: 1
-        },
         room,
         command,
-        game:{
-            name:"Main Menu",
-            description:"A main menu",
+        info:{
+            type:"game",
+            version:1,
+            name:"Base",
+            description:"Base content + A main menu",
             startRoom: 'LoaderMenu',
             script:`
             const printMenu = () => {
@@ -91,10 +87,10 @@ const engineContentConstructor = (API) => {
                 print('Available adventures:')
                 print("\\n")
                 const allGames = getAvailableGames()
-                const packSet = Object.keys(allGames).map((e)=>allGames[e])
+                const packSet = Object.keys(allGames).map((e)=>allGames[e].info.name)
                 packSet.map((pack) => {
                     print(
-                        \`<button onClick="engine.start('\${pack.name}')">\${pack.name}</button>\`
+                        \`<button onClick="engine.start('\${pack}')">\${pack}</button>\`
                     )
                 })
                 print("\\n")

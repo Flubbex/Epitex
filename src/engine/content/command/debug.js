@@ -18,25 +18,8 @@ const commandConstructor = (API) => {
             .replace(/"([^"]*)"/g, '"$1"') // Replace double quotes with single quotes
     }
 
-    const save = ([_area]) => {
-        const area = parseInt(_area)
-        const plyRoom = API.room()
-        const withoutPlayer = Object.assign(
-            {},
-            util.cleanObject(plyRoom.toJSON()),
-            { content: plyRoom.content.filter((e) => e.type !== 'player') }
-        )
-        let roomWithoutPlayer = API.filterRoom((r) =>
-            r.id === plyRoom.id ? withoutPlayer : r
-        )
-        if (area.toString() !== 'NaN')
-            roomWithoutPlayer = roomWithoutPlayer.filter((r) => r.area === area)
-        const code = objectToCode(roomWithoutPlayer)
-        const contentEntry = 'const room = ' + code + '\n\nexport default room'
-        navigator.clipboard.writeText(contentEntry)
-
-        const size = new Blob([code]).size / 1000
-        return 'Saved world to clipboard (' + size + ' kb)'
+    const save = () => {
+        API.save()
     }
 
     const reset = () => {

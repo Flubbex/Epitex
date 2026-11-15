@@ -15,14 +15,19 @@ export default class ContentModule extends Emitter {
 
     loadPack(pack){
         window.dbg("ContentModule",`Loading pack ${pack.info.name}`)
-        this.library[pack.info.name] = pack 
         
-        if (pack.game)
-            this.game[pack.game.name] = pack.game
+        if (pack.info.type === "game")
+            this.game[pack.info.name] = pack
+        else if (pack.info.type === "library")
+            this.library[pack.info.name] = pack 
+        else {
+            console.log(pack)
+            throw new Error("Tried loading a pack with an invalid type")
+        }
     }
 
     loadDependency(name){
-        const depInfo = this.library[name]
+        const depInfo = this.library[name] || this.game[name]
         if (!depInfo)
             throw new Error(`Tried loading invalid dependency "${name}"`)
         else
@@ -30,25 +35,34 @@ export default class ContentModule extends Emitter {
         return depInfo
     }
     createGame(name){
-        const gameInfo = this.game[name]
+         window.dbg("ContentModule",`Creating game "${name}"`)
+        const game= this.game[name]
 
-        if (!gameInfo)
+        if (!game)
             throw new Error(`Tried creating a nonexistant game "${name}"`)
 
-        const dependencies = {}
+        let dependencies = game.info.depend?.map((depName)=>  this.loadDependency(depName)) || []
 
-        if (gameInfo.depend)
-            gameInfo.depend.map((depName)=> {
-                const dep = this.loadDependency(depName)
-                const keys = Object.keys(dep).filter((e) => ['info','game'].indexOf(e) === -1)
-                keys.map((k) => dependencies[k] = dependencies[k] ? [...dependencies[k], ...dep[k]] : dep[k] )
-            })
+        if (name !== "Base")
+        dependencies.push(game)
 
         //Always load base content first
-        const newGame = {...this.library["Base"],
-                         ...dependencies,
-                         ...gameInfo}
+        const newGame = {...this.game["Base"]}
+        
+        dependencies.map((dep)=>{
+            const contentKey = Object.keys(dep).filter((e) => ["info"].indexOf(e) === -1)
+            contentKey.map((key)=>{
+                if (!newGame[key])
+                    newGame[key] = dep[key]
+                else if (Array.isArray(newGame[key]))
+                    newGame[key] = newGame[key].concat(dep[key])
+                else 
+                    newGame[key] = {...newGame[key],...dep[key]}
+            })
+        })
 
+        console.log(newGame)
+        newGame.info = game.info
         return newGame
     }
 

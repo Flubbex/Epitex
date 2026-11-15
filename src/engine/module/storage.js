@@ -1,74 +1,88 @@
 export default class StorageService {
     disableSaving = false
-    storedSave = null
-
     autoSaveCall = null 
 
-    constructor(store) {
+    keySet = []
+    stored = {}
+
+    constructor() {
         window.dbg('StorageService', 'Constructing')
-        this.autoSave = this.autoSave.bind(this, store)
-    }
-    autoSave(store,saveName) {
-        window.dbg("StorageService", "Autosaving",store.save())
-        if (!this.disableSaving && !window.nuked) this.save(saveName,store.save())
-    }
+        console.log(localStorage)
+        const storedKeySet = localStorage.getItem("keySet")
+        this.keySet = storedKeySet ? storedKeySet.split(",") : this.keySet
 
-    createAutoSaver(saveName,store){
-        return () => this.autoSave(saveName,store)
+        this.keySet.map((key)=>{
+            this.stored[key] = this.load(key)
+        })
     }
-
-    addSaveListener(saveName,store) {
-        window.dbg('StorageService',`Adding save listener for ${saveName}`)
+ 
+    createSaveListener(saveName,store) {
+        window.dbg('StorageService',`Creating save listener for ${saveName}`)
 
         if (this.autoSaveCall)
             window.removeEventListener('visibilitychange', this.autoSaveCall)
 
-        this.autoSaveCall = this.createAutoSaver(saveName,store).bind(this)
+        this.autoSaveCall = () => this.save(saveName,store.save())
 
         window.addEventListener('visibilitychange', this.autoSaveCall)
     }
 
     removeSaveListener() {
-        window.removeEventListener('visibilitychange', this.autoSave)
+        if (this.autoSaveCall)
+            window.removeEventListener('visibilitychange', this.autoSaveCall)
     }
 
-    load(gamePackInfo) {
+    load(slot) {
         window.dbg(
             'StorageService',
-            `Attempting to load from saved state "${gamePackInfo.name}" `
+            `Attempting to load saved state from "${slot}" `
         )
 
-        this.storedSave = window.localStorage.getItem(gamePackInfo.name)
+        const storedDataString = window.localStorage.getItem(slot)
 
-        if (!this.storedSave || this.storedSave === 'null') {
+        if (!storedDataString) {
             window.dbg('StorageService', 'No saved state found')
             return null
         }
+
         let saveData = {}
+        
         try {
-            saveData = JSON.parse(this.storedSave)
+            saveData = JSON.parse(storedDataString)
         } catch (error) {
             console.warn(
-                'StorageService: Savedata is malformed, starting fresh.'
+                'StorageService: Savedata is malformed'
             )
             console.warn(error)
-            window.localStorage.removeItem(this.saveName)
+            window.localStorage.removeItem(slot)
             return null
         } finally {
-            window.dbg('StorageService', 'Save loaded succesfully')
+            window.dbg('StorageService', 'Data loaded succesfully')
         }
-
-        saveData.gamePackInfo = gamePackInfo
-
-        this.storedSave = saveData
-
+        
         return saveData
     }
 
-    save(saveName,saveState) {
-        //window.dbg("StorageService", "Saving")
-        localStorage.setItem('notepad', saveState.ui.notepad)
-        localStorage.setItem(saveName, JSON.stringify(saveState))
+    get(slot){
+        return this.stored[slot]
+    }
+
+    save(slot,saveState) {
+        console.log("Saving",slot,saveState)
+        localStorage.setItem(slot, JSON.stringify(saveState))
+        if (this.keySet.indexOf(slot) === -1) {
+            this.keySet.push(slot)
+            localStorage.setItem("keySet",this.keySet.join(","))
+        }
+        this.stored[slot] = saveState
+    }
+
+    clear(slot){
+        localStorage.removeItem(slot)
+        if (this.keySet.indexOf(slot) !== -1){
+            this.keySet = this.keySet.filter((e) => e === slot)
+            localStorage.setItem("key",this.keySet)
+        }
     }
 
     nuke() {

@@ -4,8 +4,10 @@ import Player from './model/player.js'
 import World from './model/world.js'
 import Battle from './model/battle.js'
 
-import Factory from './factory.js'
 import ScriptModule from './script.js'
+import InteractionModule from "./interaction.js"
+
+import Factory from './factory.js'
 
 class Game extends Emitter {
     player = null
@@ -15,6 +17,7 @@ class Game extends Emitter {
     factory = null
 
     script = null 
+    action = null
 
     new = true
 
@@ -29,8 +32,11 @@ class Game extends Emitter {
         window.dbg('Game', 'Constructing')
 
         this.factory = new Factory()
+        
         this.script = new ScriptModule(API)
+        this.action = new InteractionModule(API)
 
+        this.action.load(saveData.command)
         this.factory.on('instanced', this.register.bind(this))
 
         this.storedGame = saveData
@@ -47,11 +53,11 @@ class Game extends Emitter {
 
         this.new = 'new' in saveData ? false : true
 
-        this.gamePackInfo = saveData.gamePackInfo
+        this.action.on("output",(...arg) => this.emit("actionOutput",this,...arg))
 
         if (this.new)
-            if (saveData.startRoom)
-                this.player.room = saveData.startRoom
+            if (saveData.info.startRoom)
+                this.player.room = saveData.info.startRoom
             else
                 console.warn(
                     "Store doesn't know where to start player on a new game"
@@ -59,8 +65,8 @@ class Game extends Emitter {
     }
 
     start(){
-        if (this.storedGame.script)
-            this.script.load(this.storedGame.script)
+        if (this.storedGame.info.script)
+            this.script.load(this.storedGame.info.script)
     }
 
     get(id) {
@@ -69,6 +75,10 @@ class Game extends Emitter {
             throw new Error(`Tried getting an invalid object with id #${id}`)
         }
         return foundObject
+    }
+
+    handle(input,silent=false){
+        return this.action.handle(input,silent)
     }
 
     register(object) {
@@ -127,12 +137,12 @@ class Game extends Emitter {
 
     save() {
         return {
-            world: this.world,
+            room: this.world.room,
             player: this.player,
             battle: {
                 target: this.battle.target ? this.battle.target.id : null,
             },
-            new: this.new,
+            new: false,
         }
     }
 }

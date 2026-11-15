@@ -1504,15 +1504,11 @@
     }
   ],
   "zone": [],
-  "info": {
-    "name": "Adventure Pack",
-    "description": "Save the tribe (Or something)"
-    },
-    "game":{
+    "info":{
+      "type":"game",
       "name":"Example Adventure",
       "description":"Example adventure",
       "startRoom": "HJWH3N",
-      "depend":["Adventure Pack"],
       "script":"const smokePipe = ()=>{API.print('Makar sucks on his pipe and exhales two jets of smoke from his nostrils')};return {smokePipe}"
     }
 }
