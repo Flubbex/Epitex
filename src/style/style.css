@@ -1,11 +1,15 @@
 @font-face {
-    font-family: SpaceMono;
-    src: url(/font/SpaceMono-Regular.ttf);
+    font-family: Jet Mono;
+    src: url(/font/JetBrainsMono-Regular.woff2);
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
-    font-family: Consola Mono;
-    src: url(/font/ConsolaMono-Book.ttf);
+    font-family: Jet Mono;
+    src: url(/font/JetBrainsMono-Bold.woff2);
+    font-weight: bold;
+    font-style: normal;
 }
 
 @font-face {
@@ -89,7 +93,7 @@ body {
     line-height: 1.15em;
     white-space: pre-wrap;
     line-break: strict;
-    font-family: monospace;
+    font-family: Jet Mono;
     --animate-duration: 0.5s;
      font-size: clamp(14px, 1.5vw, 24px);
 }

@@ -152,7 +152,6 @@ const commandConstructor = (API) => {
         maxY += pad
 
         const lines = [
-            ' ' + new Array(Math.abs(minX) + maxX + 1).fill('▲').join(''),
         ]
         for (let y = minY + 1; y <= maxY; y++) {
             let row = ''
@@ -162,19 +161,16 @@ const commandConstructor = (API) => {
                     row += '▮'
                 } else if (id === curRoom.id) {
                     // current room — different color
-                    row += "<span class='text-success'>▯</span>"
+                    row += "⋆"
                 } else {
-                    row += '<span>▯</span>'
+                    row += '▯'
                 }
             }
-            lines.push('◄' + row + '►')
+            lines.push(row)
         }
 
-        lines.push([
-            ' ' + new Array(Math.abs(minX) + maxX + 1).fill('▼').join(''),
-        ])
-
-        API.print(...lines)
+        const output = lines.map((content) => ({type:"span",content}) )
+        API.print(output)
     }
 
     const quit = () => {

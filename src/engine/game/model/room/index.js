@@ -74,20 +74,21 @@ class Room extends Container {
             ]
         }
 
+        const compareName = (a, b) => String(a.content).localeCompare(String(b.content))
         if (itemList.length > 0) {
             output.content.push({type:"div",className:"bold mt-1 mb-1",content:"Items here:"})
-            output.content = [...output.content,...itemList.sort()]
+            output.content = [...output.content,...itemList.sort(compareName)]
         }
 
         if (beingList.length > 0) {
             output.content.push({type:"div",className:"bold mt-1 mb-1",content:"Beings here:"})
-            output.content = [...output.content,...beingList.sort()]
+            output.content = [...output.content,...beingList.sort(compareName)]
         }
 
         output.content.push({type:"div",className:"bold mt-1 mb-1",content:"Available exits:"})
         
         if (exitList.length > 0)
-            output.content = [...output.content,...exitList.sort()]
+            output.content = [...output.content,...exitList.sort(compareName)]
         else output.content.push({type:"div",content:"None"})
 
         return output

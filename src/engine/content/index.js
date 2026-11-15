@@ -102,7 +102,7 @@ const engineContentConstructor = (API) => {
             startRoom: 'LoaderMenu',
             script:`
             const printMenu = () => {
-                print({className:"bold",content:'Available adventures:'})
+                print({type:"span",className:"bold",content:'Available adventures:'})
                 const allGames = getAvailableGames()
                 const packSet = Object.keys(allGames).map((e)=>allGames[e].info.name)
                 packSet.map((pack) => 
@@ -111,7 +111,7 @@ const engineContentConstructor = (API) => {
                     )
                 )
                 print("\\n")
-                print( {className:"bold",content:"Or if you're feeling a little more adventurous.."})
+                print( {type:"span",className:"bold",content:"Or if you're feeling a little more adventurous.."})
                 print({type:"button",className:"btn",content:"Create a new game",onClick:()=>engine.new()})
                 print({type:"button",className:"btn",content:"Load a game from a file",onClick:()=>engine.fromFile()})
             }

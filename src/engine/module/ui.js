@@ -54,23 +54,41 @@ class UIModule extends Emitter {
         this.emit('updatedOutput', this.output)
     }
 
-    render(raw) {
-        let out = null
-        if (typeof raw === 'undefined') return out
-        else if (Array.isArray(raw)) out = raw
-        else if (typeof raw === 'string') out = raw.split('\n')
-        else if (typeof raw === 'object')
-            out = JSON.stringify(raw, null, 2).split('\n')
+    /**
+     * Normalize any value into an array of message descriptors.
+     * - string → { type: "span", content }
+     * - message object → [object]
+     * - array → flatten + normalize each item
+     * - null/undefined → []
+     */
+    normalizeToMessages(value) {
+        if (value == null) return []
 
-        return out
+        if (typeof value === 'string') {
+            // Preserve newlines as separate messages if desired, or keep as one
+            // Uncomment the split if you want old string.split('\n') behavior
+            // return value.split('\n').filter(Boolean).map(line => ({ type: 'span', content: line }))
+            return [{ type: 'span', content: value }]
+        }
+
+        if (Array.isArray(value)) {
+            return value.flatMap(item => this.normalizeToMessages(item))
+        }
+
+        if (typeof value === 'object' && value.type) {
+            // Already a message descriptor
+            return [value]
+        }
+
+        // Fallback for unexpected objects
+        return [{ type: 'span', content: String(value) }]
     }
 
     print(content) {
-        if (typeof content === "string") 
-            this.output = this.output.concat({type:"span",content})
-        else 
-            this.output = this.output.concat(content)
+        const messages = this.normalizeToMessages(content)
+        if (messages.length === 0) return
 
+        this.output = this.output.concat(messages)
         this.emit('updatedOutput', this.output)
     }
 
