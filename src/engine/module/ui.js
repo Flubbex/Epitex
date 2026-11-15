@@ -36,12 +36,16 @@ class UIModule extends Emitter {
     }
 
     printError(error) {
-        this.print("<h4 class='text-danger bold'>Something went wrong</h4>")
-        this.print(
-            error.stack
+        //{type:"div",className:"text-danger"}
+        this.print({type:"div",
+            content:[
+                {type:"div",className:"text-danger h4",content:"Something went wrong"},
+            ].concat(
+                error.stack
                 .split('\n')
-                .map((p) => "<span class='text-danger'>" + p + '</span>')
-        )
+                .map((line) => ({type:"div",className:"text-danger",content:line}) )
+            )
+        })
         console.error(error)
     }
 
@@ -61,12 +65,11 @@ class UIModule extends Emitter {
         return out
     }
 
-    print(raw) {
-        const out = this.render(raw)
-
-        if (out === null) return
-
-        this.output = this.output.concat(out)
+    print(content) {
+        if (typeof content === "string") 
+            this.output = this.output.concat({type:"span",content})
+        else 
+            this.output = this.output.concat(content)
 
         this.emit('updatedOutput', this.output)
     }

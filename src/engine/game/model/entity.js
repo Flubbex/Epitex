@@ -86,7 +86,11 @@ class Entity extends Emitter {
     
     look() {
         this.emit("object_viewed",this)
-        return ['<b>' + this.name + '</b>', this.description]
+        return {type:"div",content:[
+            {type:"div",className:"bold h6 mb-0",content:this.name},
+            {type:"div",content:this.description},
+            
+        ]}
     }
 
     tick(){

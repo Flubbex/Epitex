@@ -7,11 +7,11 @@ const sidebarSet = [
 ]
 
 export const Sidebar = ({ route, setRoute }) => (
-    <div className="btn-group w-100 h-100">
+    <div className="btn-group w-100 p-0 m-0 h-100">
         {sidebarSet.map((btn) => (
             <button
                 className={
-                    'btn rounded-0 w-100 ' +
+                    'btn p-0 rounded-0 w-100 h-100 m-0 ' +
                     (route === btn.route ? 'btn-dark' : 'btn-secondary')
                 }
                 key={btn.route}

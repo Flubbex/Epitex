@@ -7,19 +7,13 @@ class Menu extends Room {
     }
 
     look() {
-        super.look()
-        const exitList = []
+        const out = super.look()
+        const exitList = {type:"div",content:[]}
 
         this.content.map((obj) => {
             switch (obj.type) {
                 case 'exit':
-                    exitList.push(
-                        "<a href='#' onClick='game.handle(\"go " +
-                            obj.name +
-                            '",true)\'>' +
-                            obj.name +
-                            '</a>'
-                    )
+                    exitList.content.push({type:"button",className:"btn",content:obj.name,command:`go ${obj.name}`})
                     break
                 default:
                     break
@@ -27,9 +21,8 @@ class Menu extends Room {
             return null
         })
 
-        const output = [this.description].concat(exitList)
-
-        return output.join('\n')
+        console.log ( {...this.description,content:this.description.content.concat(exitList)} )
+        return {...this.description,content:this.description.content.concat(exitList)}
     }
 }
 

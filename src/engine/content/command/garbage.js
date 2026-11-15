@@ -20,41 +20,67 @@ const commandConstructor = (API) => {
         API.print(result)
         return ""
     }
-    const sexypipe = () => {
-        window.setInterval(() => {
-            request('http://pipecigarmen.tumblr.com/random', (result) => {
-                if (result.ok) return result.text()
-                else {
-                    API.print('Failed')
-                    console.log('Res', result.status, result.ok)
-                    return result.code
-                }
-            }).then((e) => {
-                const i = e.indexOf('u-photo')
-                const sub = e.slice(i, i + 200)
-                const x = sub.indexOf('https://')
-                let a =
-                    sub.indexOf('.jpg') ||
-                    sub.indexOf('.gif') ||
-                    sub.indexOf('.png') ||
-                    sub.indexOf('.jpeg')
-                if (a) {
-                    const out = sub.slice(x, a + 4)
-                    API.print("<img src='" + out + "'/>")
-                } else {
-                    let a = sub.indexOf('.mp4') || sub.indexOf('.mpg')
-                    const out = sub.slice(x, a + 4)
-                    API.print(
-                        [
-                            "<video width='720' height='480' autoplay>",
-                            "<source src='" + out + "' type='video/mp4'>",
-                            'Your browser does not support the video tag.',
-                            '</video>',
-                        ].join()
-                    )
-                }
-            })
-        }, 3000)
+
+    async function getRandomTumblrImage(blog,API_KEY) {
+        // Retrieve the blog's total post count
+        const infoResponse = await fetch(
+            `https://api.tumblr.com/v2/blog/${blog}/info?api_key=${API_KEY}`
+        )
+
+        const info = await infoResponse.json()
+        const totalPosts = info.response.blog.posts
+
+        if (!totalPosts) {
+            throw new Error('This blog has no posts.')
+        }
+
+        // Pick a random starting position
+        const offset = Math.floor(Math.random() * totalPosts)
+
+        // Retrieve a photo post from that position
+        const postsResponse = await fetch(
+            `/tumblr-api/v2/blog/${blog}/posts/photo?api_key=${API_KEY}&offset=${offset}&limit=1`
+        )
+
+        const data = await postsResponse.json()
+        const posts = data.response.posts
+
+        if (!posts?.length) {
+            throw new Error('No photo post found.')
+        }
+
+        // Pick a random image (Tumblr posts can contain multiple images)
+        const photos = posts[0].photos
+
+        console.log(posts)
+        const photo = photos[Math.floor(Math.random() * photos.length)]
+
+        return photo.original_size.url
+    }
+
+    const sexypipe = async () => {
+            const API_KEY = 'bM4VMgX9geFTDmFlKSFkVchciOdLKy0qIl23qmIVjnNcKoGzRk'
+
+            const img = await getRandomTumblrImage("pipecigarmen",API_KEY)
+            
+            let a =
+                img.indexOf('.jpg') ||
+                img.indexOf('.gif') ||
+                img.indexOf('.png') ||
+                img.indexOf('.jpeg')
+            if (a) {
+                API.print("<img src='" + img + "'/>")
+            } else {
+                API.print(
+                    [
+                        "<video width='720' height='480' autoplay>",
+                        "<source src='" + img + "' type='video/mp4'>",
+                        'Your browser does not support the video tag.',
+                        '</video>',
+                    ].join()
+                )
+            }
+            
     }
     const sexycigar = () => {
         const url =
@@ -73,7 +99,7 @@ const commandConstructor = (API) => {
         quote,
         sexycigar,
         sexypipe,
-        figlet
+        figlet,
     }
 }
 export default commandConstructor

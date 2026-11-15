@@ -19,8 +19,8 @@ class Room extends Container {
         this.content.map((e) => e.tick && e.tick(API, this))
     }
 
-    buttonify(text, onClick) {
-        return `<button class='btn btn-secondary' onClick='${onClick}'>${text}</button>`
+    buttonify(content, command) {
+        return {type:"button",className:"btn",content,command}
     }
     look() {
         super.look()
@@ -34,20 +34,14 @@ class Room extends Container {
                 case 'key':
                 case 'container':
                     itemList.push(
-                        this.buttonify(
-                            obj.name,
-                            `engine.handle("look ${obj.name}")`
-                        )
+                        this.buttonify(obj.name,`look ${obj.name}`)
                     )
                     break
                 case 'being':
                 case 'npc':
                 case 'mobile':
                     beingList.push(
-                        this.buttonify(
-                            obj.name,
-                            `engine.handle("look ${obj.name}")`
-                        )
+                        this.buttonify(obj.name,`look ${obj.name}`)
                     )
                     break
                 case 'exit':
@@ -55,10 +49,7 @@ class Room extends Container {
                         ? `${obj.name} (locked)`
                         : obj.name
                     exitList.push(
-                        this.buttonify(
-                            lockedName,
-                            `engine.handle("go ${obj.name}")`
-                        )
+                        this.buttonify(lockedName,`go ${obj.name}`)
                     )
                     break
                 case 'spawner':
@@ -75,27 +66,31 @@ class Room extends Container {
             return null
         })
 
-        let output = [
-            "<span class='text-primary h4'>[" + this.name + ']</span>',
-            this.description,
-        ]
+        const output = {
+            type:"div",
+            content:[
+                {type:"div",className:"text-primary h4",content:`[${this.name}]`},
+                {type:"div",content:this.description}
+            ]
+        }
 
         if (itemList.length > 0) {
-            output.push("<b class='text-primary'>Items here:</b>")
-            output.push(itemList.sort().join(''))
+            output.content.push({type:"div",className:"bold mt-1 mb-1",content:"Items here:"})
+            output.content = [...output.content,...itemList.sort()]
         }
 
         if (beingList.length > 0) {
-            output.push("<b class='text-primary'>Beings here:</b>")
-            output = output.concat(beingList.sort())
+            output.content.push({type:"div",className:"bold mt-1 mb-1",content:"Beings here:"})
+            output.content = [...output.content,...beingList.sort()]
         }
 
-        output.push("<b class='text-primary'>Visible Exits:</b>")
+        output.content.push({type:"div",className:"bold mt-1 mb-1",content:"Available exits:"})
+        
         if (exitList.length > 0)
-            output = output.concat(exitList.sort().join(''))
-        else output.push('None')
+            output.content = [...output.content,...exitList.sort()]
+        else output.content.push({type:"div",content:"None"})
 
-        return output.join('\n')
+        return output
     }
 }
 

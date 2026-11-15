@@ -37,10 +37,9 @@ class Container extends Entity {
         let out = super.look()
 
         if (this.content.length > 0)
-            out = [
-                ...out,
-                '<i>Contents:</i>',
-                ...this.content.map((i) => i.name),
+            out.content = [...out.content,
+                {type:"div",className:"bold",content:"Content:"},
+                ...this.content.map((i) => ({type:"div",content:i.name}) ),
             ]
 
         return out

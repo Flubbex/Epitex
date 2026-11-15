@@ -5,4 +5,13 @@ import { defineConfig } from 'vite'
 export default defineConfig({
     plugins: [react()],
     base: '/Epitex/',
+      server: {
+    proxy: {
+      '/tumblr-api': {
+        target: 'https://api.tumblr.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/tumblr-api/, ''),
+      }
+    }
+  }
 })

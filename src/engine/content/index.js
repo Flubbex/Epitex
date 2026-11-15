@@ -2,7 +2,15 @@
 
 import commandConstructor from './command'
 
-const banana = `<img src='img/banana.gif' onClick="game.handle('bananaclicked',true)" width="64" height="64" style="display:inline;hover:cursor;"/>`
+const banana = {
+    type:"img",
+    src:"img/banana.gif",
+    command:'bananaclicked',
+    width:"64",
+    height:"64",
+    style:{display:"inline",cursor:"pointer"}
+}
+
 const epiTextLogo = `                                        
  ▄▄▄▄▄▄▄▄               ██                                  
  ██▀▀▀▀▀▀               ▀▀      ██                         
@@ -14,7 +22,13 @@ const epiTextLogo = `
            ██                                               
 `
 
-const subText = `v0.9                         made by Flubber  ${banana}`
+const subText = {
+    type:"span",
+    content:[
+        {type:"span",content:"    v0.9              Made by Flubber     "},
+        banana
+    ]
+}
 
 /**
  * Sets up base content required by the engine, along with some fun stuff.
@@ -26,10 +40,15 @@ const engineContentConstructor = (API) => {
     const r = (min,max) => Math.random()*max+min
 
     const rainbow = (input) => {
-        return input.split("").map((char)=>{
+        return input.split("").map((content)=>{
             const randomColor = `rgb(${r(64,192)},${r(64,192)},${r(64,192)})`
-            return `<span style="color:${randomColor};">${char}</span>`
-        }).join("")
+            return {type:"span",style:{color:randomColor},content}
+        })
+    }
+
+    const description = {
+        type:"div",
+        content:rainbow(epiTextLogo).concat(subText)
     }
 
     const room = [
@@ -43,7 +62,7 @@ const engineContentConstructor = (API) => {
             id: 'LoaderMenu',
             type: 'menu',
             name: 'Load Screen',
-            description: rainbow(epiTextLogo) + subText,
+            description,
         },
     ]
 
@@ -83,21 +102,18 @@ const engineContentConstructor = (API) => {
             startRoom: 'LoaderMenu',
             script:`
             const printMenu = () => {
-                print("\\n")
-                print('Available adventures:')
-                print("\\n")
+                print({className:"bold",content:'Available adventures:'})
                 const allGames = getAvailableGames()
                 const packSet = Object.keys(allGames).map((e)=>allGames[e].info.name)
-                packSet.map((pack) => {
+                packSet.map((pack) => 
                     print(
-                        \`<button onClick="engine.start('\${pack}')">\${pack}</button>\`
+                        {type:"button",className:"btn",onClick:()=>engine.start(pack),content:pack }
                     )
-                })
+                )
                 print("\\n")
-                print("Or, if you're feeling more adventurous..")
-                print("\\n")
-                print('<button onClick="engine.new()">Create a new game</button>')
-                print('<button onClick="engine.fromFile()">Load a game file</button>')
+                print( {className:"bold",content:"Or if you're feeling a little more adventurous.."})
+                print({type:"button",className:"btn",content:"Create a new game",onClick:()=>engine.new()})
+                print({type:"button",className:"btn",content:"Load a game from a file",onClick:()=>engine.fromFile()})
             }
 
             const clear = () => {

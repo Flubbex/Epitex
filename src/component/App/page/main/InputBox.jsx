@@ -37,10 +37,9 @@ const InputBox = ({ ui }) => {
         <>
             <textarea
                 type="text"
-                className="form-control bg-secondary mono"
+                className="form-control"
                 id="inputarea"
                 placeholder="Enter commands here"
-                style={{ fontSize: '14px' }}
                 value={input}
                 onChange={(v) => setInput(v.target.value)}
                 onKeyDown={(v) => handleKeyDown(v)}

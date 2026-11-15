@@ -122,7 +122,7 @@ export default class InteractionModule extends Emitter {
         if (!silent)
             this.emit(
                 'output',
-                `<span class='text-warning'>${input}</span>`,
+                {type:"span",className:"text-warning",content:input},
                 true
             )
 

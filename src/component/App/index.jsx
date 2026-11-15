@@ -13,7 +13,7 @@ const App = ({ ui }) => {
             <div className="backdrop" id="backdrop_3"></div>
 
             <div className="container-fluid" id="container">
-                <div className="row d-none d-md-block animate__animated animate__fadeIn" id="router">
+                <div className="row d-none d-md-block" id="router">
                     <Sidebar route={route} setRoute={setRoute} />
                 </div>
                  <Switch route={route} ui={ui} />

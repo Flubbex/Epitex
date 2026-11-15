@@ -14,7 +14,7 @@ import APIConstructor from './api'
 import util from '../util'
 
 /**
- * Main engine, needs a store,content and commands.
+ * Main engine
  */
 class Engine extends Emitter {
     tickerId = null
@@ -23,7 +23,6 @@ class Engine extends Emitter {
 
     API = null 
 
-    store   = null 
     combat  = null
     storage = null 
     content = null 
