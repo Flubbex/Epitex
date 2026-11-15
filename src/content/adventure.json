@@ -38,11 +38,6 @@
       "area": 0
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "8M9I3L",
       "name": "In front of the cave",
       "description": "The entrance to the cave is a gaping hole roughly hewed into a wall of thick rock. Strewn about on the ground in front of it are the bones of several small critters, along with bits and pieces of fur and other debris. A path of dried mud leads north into the dungeon.",
@@ -82,11 +77,6 @@
       "area": 0
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "PDQCTQ",
       "name": "Through the forest",
       "description": "Along the canopy of the trees a variety of birds can be heard as the light of the sun beams down through the leaves. The thick grass seems to spread further around the area, only to thin towards the large mountainous wall to the north.",
@@ -126,11 +116,6 @@
       "area": 0
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "N01KBO",
       "name": "Through the forest",
       "description": "Tall trees surround a small, bendy path deeper into the forest. The sunlight cascades upon the thick canopy of leaves surrounding the forest ceiling. Among the sand on the side of the path are several rocks, casually kicked aside by passerby's. ",
@@ -198,11 +183,6 @@
       "area": 0
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "OT2KZN",
       "name": "Outside the village",
       "description": "The path leads to the opening of a large forest adorned with lush, maple trees. The sounds of casual village activity eminate from the south whilst a plethora of birds can be heard from the forest to the north.",
@@ -242,11 +222,6 @@
       "area": 0
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "3J64TI",
       "name": "Village Center",
       "description": "The village center is adorned with a large bonfire, casting a warm light on the surrouding tents. Splayed around the bonfire are several cut logs meant to be sat on. To the east an especially large tent can be seen, adorned with dried skulls and bones.",
@@ -313,14 +288,6 @@
       "area": 0
     },
     {
-      "_events": {
-        "*": [
-          null
-        ],
-        "echo": [
-          null
-        ]
-      },
       "id": "HJWH3N",
       "name": "Village Elder's tent",
       "description": "This tent belongs to Makar. It is decorated with a variety of brightly dyed skulls hanging from from poles. In the back is a small dresser covered with a small collection of burning candles. A large mat with intricate patterns adorns the center of the room.",
@@ -344,6 +311,9 @@
         },
         {
           "_events": {
+            "object_ticked": [
+              null
+            ],
             "*": [
               null
             ]
@@ -354,7 +324,7 @@
           "type": "npc",
           "parent": "HJWH3N",
           "locked": false,
-          "script":"this.on('object_ticked', ()=> API.get(this.room).echo('Makar exhales two fat jets of smoke from his nose') )",
+          "script": "this.on('object_ticked', ()=> API.get(this.room).echo('Makar exhales two fat jets of smoke from his nose') )",
           "room": "HJWH3N",
           "health": 2,
           "attribute": {
@@ -378,17 +348,26 @@
             "glances around",
             "coughs softly",
             "hangs about"
-          ]
+          ],
+          "idleChance": 0.95
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "QQDON4",
+          "name": "dildo",
+          "description": "A nondescript item",
+          "type": "item",
+          "parent": "PLAYER",
+          "locked": false
         }
       ],
       "area": 0
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "82EOEA",
       "name": "Path through a camp",
       "description": "A corner in the small village surrounded by tents. The dusty path is covered with pebbles and other debris.A few buckets and other leftover goods lay stranded aside the path.",
@@ -442,20 +421,17 @@
       "area": 0
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "HYX9OP",
       "name": "Your tent",
       "description": "Central to your tent is a cozy looking bedroll adorned with various types of furry animal hides. From the ceiling hangs a deer skull attached by thick twine. A makeshift table consisting of a tree stump stands in the back adorned with various mugs and plates.",
       "type": "room",
       "parent": "NULLED",
       "locked": false,
-      "action": {
-        "sleep": "playerTentSleep"
-      },
+      "action": [
+        {
+          "sleep": "playerTentSleep"
+        }
+      ],
       "content": [
         {
           "_events": {
@@ -475,11 +451,6 @@
       "area": 0
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "3N6DSO",
       "name": "Western corner of a camp",
       "description": "The path through the camp ends here with more tents surrounding the area.To the south a small center can be seen with a bunch of wooden toys laying about the area, presumably from the kids living in the camp. ",
@@ -533,11 +504,6 @@
       "area": 0
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "VTXQ93",
       "name": "Northwestern end of a camp",
       "description": "A quiet corner of the camp that is well kempt and looking rather new. To the north is a tent that is decorated with twigs and decorative leaves, sewed on rather boldly to the canvas. To the west is a comparatively bland tent with a small stack of dirty bowls piled next to it.",
@@ -591,11 +557,6 @@
       "area": 0
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "W0K521",
       "name": "A tent in the camp",
       "description": "The inside of the canvas is about as well decorated as the outside, with decorated leaves sprewn about in a rather sporadic style. A large pot is brewing on a small fire in the middle of tent. A table with cooking utensils and a few bowls of spices is spread along the eastern side of the tent.",
@@ -629,11 +590,6 @@
           "type": "npc",
           "parent": "QMR50F",
           "locked": false,
-          "event": {
-            "objAdded": [
-              "returnToPlayer"
-            ]
-          },
           "room": "W0K521",
           "health": 2,
           "attribute": {
@@ -662,11 +618,6 @@
       "area": 0
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "9KXOVH",
       "name": "A tent in the camp",
       "description": "A sparsely decorated tent with only a bedroll in the back and a few plates and cutleries sprewn about. A small collection of flies buzzes around, attracted to the myriad of leftover scraps of food sticking to all the kitchenware.The distinct smell of stale food permeates the air. ",
@@ -692,11 +643,6 @@
       "area": 0
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "RD6KJE",
       "name": "Southwestern corner of a camp",
       "description": "The path to the camp ends abruptly with only a single, rather large, tent set up on the west side of the path. A small stack of firewood is neatly stacked to the side of the tent.A few children's toys are laying about, seemingly discarded in the front. ",
@@ -736,11 +682,6 @@
       "area": 0
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "RKJM9O",
       "name": "Front side of a tent",
       "description": "A rather large tent sprawling even further west. To the south side of the tent are two bedrolls, with a smaller bedroll spread out in the north. A pile of clothing is stacked neatly on top of the smaller bedroll. ",
@@ -788,11 +729,6 @@
           "type": "npc",
           "parent": "QMR50F",
           "locked": false,
-          "event": {
-            "objAdded": [
-              "returnToPlayer"
-            ]
-          },
           "room": "RKJM9O",
           "health": 2,
           "attribute": {
@@ -823,11 +759,6 @@
       "area": 0
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "A8KBX2",
       "name": "Back end of a large tent",
       "description": "The tent spreads further back, adorned by a small kitchen table consisting of a few simple planks stacked on top of eachother. A few bowls are set up on the table, as if someone were preparing to serve a meal. From the ceiling of the tent hangs a bushel of rosemary, spreading a pleasant scent through the air.",
@@ -853,11 +784,6 @@
       "area": 0
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "YLKBVN",
       "name": "A small river",
       "description": "From the north stretches a small river, blocking your way further west. It stretches a few more meters south before curving further west. Its water is a clear, pale blue with a moderatedly paced flow. A couple of birds stand on the western bank, taking in the fresh water.",
@@ -883,11 +809,6 @@
       "area": 0
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "BIMY9P",
       "name": "Forest pathway along a camp",
       "description": "The forest continues to expand further eastward alongside a small encampment to the south. The grass is thick with the occasional wild flower poking out from the surrounding shrubbery.",
@@ -927,11 +848,6 @@
       "area": 0
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "6EXUX7",
       "name": "Forest pathway",
       "description": "The forest grow thicker further away from the encampment. A couple of large, felled trees lay sprawling to the north, blocking further passage. The pathway is littered with small pebbles and other forest debris.",
@@ -957,11 +873,6 @@
       "area": 0
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "U165DQ",
       "name": "Pathway into the cave",
       "description": "The cave extends into a long tunnel, the walls of which only a meter or two apart. The path of dried mud beneath you stretches further into the cave. The walls on the west and east are dry and roughly cut. The smell of stale dirt permeates the stoney hallway. A soft breeze rolls in from the south, along with the soft rustling of bushes and leaves.",
@@ -1001,11 +912,6 @@
       "area": 1
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "XOP8PV",
       "name": "Deeper into the tunnel",
       "description": "The wall on the east seems to spread away from the rest of the tunnel. The faint sound of distant bat wings and scurrying paws can be heard from further within the cave. A streak of dried water marks the wall on the right, seemingly leaked down from a crack in the ceiling. The ground is covered in a mixture of dried mud and gravel.",
@@ -1045,11 +951,6 @@
       "area": 1
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "44T8BJ",
       "name": "Gentle Curve",
       "description": "The gravel turns thicker as the path curves towards the east, deeper into the cave. The light eminating from the south reflects on the northern walls, creating a soft relief of shadows among the rocky walls.",
@@ -1089,11 +990,6 @@
       "area": 1
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "BR8YQK",
       "name": "Curved cave tunnel",
       "description": "Rough cavernous walls continue towards the east and the west along a dark tunnel. Further to the west a smidge of light can be seen, seemingly bouncing from an nearby exit to the outside. The tunnel towards the east grows increasingly dim, with the smell of dried bat feces growing stronger. The gravel under your feet shifts slightly as you walk on it.",
@@ -1133,11 +1029,6 @@
       "area": 1
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "ZAM77T",
       "name": "Rough cave tunnel",
       "description": "A threeway of paths here split towards towards different parts of the cave. To the east, the slighest shimmer of outside light can be seen. The paths north and east seem to lead further into the cave, both seemingly bathed in a thick darkness. The occasional bat flies through overhead, seemingly making it ways out of the cave.",
@@ -1191,11 +1082,6 @@
       "area": 1
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "133GIH",
       "name": "Deep inside the cave",
       "description": "The tunnel turns dark as the outside light falls off completely. Several bats skitter among the ceiling making their way in and out of the cave. The walls are covered in a thin layer of goop, presumably from bat excrement. The smell eminating from the cave grows increasingly musk.",
@@ -1235,11 +1121,6 @@
       "area": 1
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "9IA2R6",
       "name": "Dead end in a cave",
       "description": "The tunnel ends here abruptly with a large pile of big rocks stopping any further exploration to the east. A smidge of light casts through the gaps between the rocks revealing what could be a passage further inside.",
@@ -1265,11 +1146,6 @@
       "area": 1
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "OJ8P60",
       "name": "Deep inside the cave",
       "description": "The tunnel leads to a solid wall of rock with paths leading to the west, east and south. The gravelly path underfoot now consists of larger rocks that are splayed every which way. Dusty cobwebs are spread between the ceiling and the walls in every direction.",
@@ -1323,11 +1199,6 @@
       "area": 1
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "317DK6",
       "name": "Deep inside the cave",
       "description": "The sound of bats becomes increasingly noticable with more of them swerving just below the rocky ceiling and throughout the cave. The rocks here are noticable stained, eminating a distasteful smell throughout the area. A few rats scurry alongsides the walls.",
@@ -1367,11 +1238,6 @@
       "area": 1
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "CQ9ZUY",
       "name": "Dead end in a cave",
       "description": "The tunnel further west ends here, closing in on a solid wall smeared with some moldy-looking brown blotches. A collection of inconspicious rocks lay against the wall, seemingly of no interest. ",
@@ -1410,20 +1276,17 @@
       "area": 1
     },
     {
-      "_events": {
-        "*": [
-          null
-        ]
-      },
       "id": "V3TKL7",
       "name": "Bat's nest",
       "description": "The cave opens up in a minor expanse, with the ceiling almost completely covered in shagged-looking bats. The entire place smells absolutely rancid, the smell seemingly eminating from the big piles of brown goop that cover the floor. A couple of dead bats adorn the piles with bits and pieces of bone and fur scattered across the room.",
       "type": "room",
       "parent": "NULLED",
       "locked": false,
-      "action": {
-        "collect": "collectPoop"
-      },
+      "action": [
+        {
+          "collect": "collectPoop"
+        }
+      ],
       "content": [
         {
           "_events": {
@@ -1464,11 +1327,6 @@
               "type": "mobile",
               "parent": "2B624S",
               "locked": false,
-              "event": {
-                "objAdded": [
-                  "returnToPlayer"
-                ]
-              },
               "room": "NULLED",
               "health": 2,
               "attribute": {
@@ -1503,12 +1361,47 @@
       "area": 1
     }
   ],
+  "command": {},
+  "info": {
+    "type": "game",
+    "name": "Example Adventure",
+    "description": "Example adventure",
+    "startRoom": "HJWH3N",
+    "script": "const smokePipe = ()=>{API.print('Makar sucks on his pipe and exhales two jets of smoke from his nostrils')};return {smokePipe}"
+  },
   "zone": [],
-    "info":{
-      "type":"game",
-      "name":"Example Adventure",
-      "description":"Example adventure",
-      "startRoom": "HJWH3N",
-      "script":"const smokePipe = ()=>{API.print('Makar sucks on his pipe and exhales two jets of smoke from his nostrils')};return {smokePipe}"
-    }
+  "player": {
+    "id": "PLAYER",
+    "name": "Player",
+    "description": "This entity has no description",
+    "type": "player",
+    "locked": false,
+    "room": "HJWH3N",
+    "health": 12,
+    "attribute": {
+      "strength": 1,
+      "intelligence": 1,
+      "dexterity": 1,
+      "constitution": 1,
+      "wisdom": 1,
+      "charisma": 1,
+      "luck": 1
+    },
+    "statistic": {
+      "damage": 1,
+      "critChance": 1,
+      "critDamage": 1.5,
+      "maxWeight": 1,
+      "maxHealth": 12,
+      "attSpeed": 2500
+    },
+    "healTick": 0,
+    "maxHealTick": 2,
+    "lockedMessage": "You feel compelled to stay where you are",
+    "home": "NULLED"
+  },
+  "battle": {
+    "target": null
+  },
+  "new": false
 }

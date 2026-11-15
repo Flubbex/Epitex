@@ -7,7 +7,7 @@ const sidebarSet = [
 ]
 
 export const Sidebar = ({ route, setRoute }) => (
-    <div className="btn-group w-100">
+    <div className="btn-group w-100 h-100">
         {sidebarSet.map((btn) => (
             <button
                 className={

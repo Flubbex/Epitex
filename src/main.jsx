@@ -5,13 +5,11 @@ import './debug'
 
 import AppComponent from './component/App'
 
-import contentPackList from './content'
-
 import Engine from './engine'
 
 import './style'
 
-const engine = new Engine(contentPackList)
+const engine = new Engine()
 
 window.engine = engine
 

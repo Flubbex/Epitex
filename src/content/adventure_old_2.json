@@ -1,0 +1,1536 @@
+{
+  "room": [
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "Storage",
+      "name": "Storage Room",
+      "description": "This room holds some tough stuff",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "VillageElderQuest",
+          "name": "QO_VillageElderQuest",
+          "description": "A nondescript item",
+          "type": "item",
+          "parent": "NULLED",
+          "locked": false,
+          "script": {
+            "1": "\n                    const delay = util.delay\n                    const r = room()\n                    const ply = player()\n                    await delay(1000)\n                    r.echo('The village elder looks at you with a sigh of relief.')\n                    await delay(2000)\n                    r.echo(\n                        \"'Good to see you've finally managed to get out of bed' Makar grumbles.\"\n                    )\n                    await delay(2000)\n                    r.echo(\"'I have a particularly special task for you today.'\")\n                    await delay(2000)\n                    r.echo('He points his cane to the north of his tent')\n                    await delay(2500)\n                    r.echo(\n                        \"'North of the village is a large cave, home to a special kind of bat.'\"\n                    )\n                    await delay(2000)\n                    r.echo(\n                        \"'I need you to go over there and collect me a nice, big bowl of their poop.'\"\n                    )\n\n                    await delay(2500)\n                    const bowl = {\n                        type: 'item',\n                        name: 'Wooden bowl',\n                        description:\n                            'An ordinary bowl, bestowed upon you by the village elder,destined to be filled with bat excrement.',\n                    }\n                    ply.add(create(bowl))\n                    r.echo('He hands you a simple wooden bowl')\n\n                    await delay(2000)\n                    const lantern = {\n                        type: 'item',\n                        name: 'Lantern',\n                        description:\n                            'A small lantern made from waxed wood, it emits a fair amount of light.',\n                        tag: ['light'],\n                    }\n                    ply.add(create(lantern))\n                    r.echo(\n                        \"'Be warned that the inside of the cave can be a bit dimly lit around this time, this lantern should come in handy.'\"\n                    )\n\n                    await delay(2000)\n                    r.echo(\n                        'He hands you a small lantern, the candle inside flickers in the wind.'\n                    )\n                    await delay(2500)\n                    r.echo(\n                        \"'Now get to it. If the bats give you any sort of trouble, find a nice big rock and deal with them.'\"\n                    )\n                    await delay(2000)\n                    r.echo(\n                        'Makar continues along his business, leaving you with your thoughts.'\n                    )\n\n                    questFlag('villageElderQuest', 1)\n                    ",
+            "2": "\n                    const delay = util.delay\n                    const r = room()\n                    const ply = player()\n                    await delay(1000)\n                    r.echo(\n                        \"As you enter Makar's tent his smile lights up instantly from the putrid smell eminating from your bowl of bat crap.\"\n                    )\n                    await delay(2000)\n                    r.echo(\n                        \"'Well done! I'll be more than happy to take this off your hands now' Makar says as he happily tugs the bowl from your hands.\"\n                    )\n\n                    ply.remove(ent.get('any', 'Wooden Bowl'))\n                    await delay(2000)\n                    r.echo(\n                        'Makar takes a particularly large helping of bat excrement in his hand and wastes no time munching it down.'\n                    )\n                    await delay(3000)\n                    r.echo(\n                        \"Within minutes, Makar's pupils grow intensely black as he lays down on his bed roll, giggling like a madman.\"\n                    )\n                    await delay(3000)\n                    r.echo(\n                        \"You're not quite sure what to make of the situation but at least you completed your errand.\"\n                    )\n\n                    r.get('any', 'Makar').idleMessage = [\n                        'continues to giggle like a madman',\n                    ]\n                    questFlag('villageElderQuest', 3)\n                    questFlag('main', 2)\n                    ",
+            "1B": "\n                    await util.delay(1000)\n                    room().echo('Makar looks at you with an air of impatience..')\n                    await util.delay(2000)\n                    room().echo(\"'Have you gotten me that bowl of bat poop yet?' he asks. \")\n                    "
+          }
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "mainQuest",
+          "name": "QO_MainQuest",
+          "description": "A nondescript item",
+          "type": "item",
+          "parent": "NULLED",
+          "locked": false,
+          "script": {
+            "yourTentInit": "\n                    const ply = player()\n                    const r = room()\n                    const delay = util.delay\n                    if (API.questFlag('main') > 0) return\n                    ply.locked = true\n                    ply.lockedMessage = 'You need a bit more time to wake up'\n                    await delay(1000)\n                    r.echo(\n                        'You wake up from a turbulent sleep, feeling somewhat groggy.'\n                    )\n                    await delay(2000)\n                    r.echo(\n                        'You peek outside your tent and notice the sun has been up for a while.'\n                    )\n                    await delay(2000)\n                    r.echo(\n                        'A slight moan escapes your mouth as you realize you were supposed to be running errands today and the village elder will have your head for sleeping in late again.'\n                    )\n                    await delay(3000)\n                    r.echo(\n                        'It would probably be best to go see him as soon as possible.'\n                    )\n                    await delay(2000)\n                    r.echo('You throw on some clothes and get ready to leave.')\n                    ply.locked = false\n                    ply.lockedMessage = 'You feel compelled to stay where you are'\n\n                    questFlag('main', 1)\n                    "
+          }
+        }
+      ],
+      "area": 0
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "8M9I3L",
+      "name": "In front of the cave",
+      "description": "The entrance to the cave is a gaping hole roughly hewed into a wall of thick rock. Strewn about on the ground in front of it are the bones of several small critters, along with bits and pieces of fur and other debris. A path of dried mud leads north into the dungeon.",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "4R9TI8",
+          "name": "North",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "8M9I3L",
+          "locked": false,
+          "target": "U165DQ"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "YFMIM6",
+          "name": "South",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "8M9I3L",
+          "locked": false,
+          "target": "PDQCTQ"
+        }
+      ],
+      "area": 0
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "PDQCTQ",
+      "name": "Through the forest",
+      "description": "Along the canopy of the trees a variety of birds can be heard as the light of the sun beams down through the leaves. The thick grass seems to spread further around the area, only to thin towards the large mountainous wall to the north.",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "1SEJNE",
+          "name": "North",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "PDQCTQ",
+          "locked": false,
+          "target": "8M9I3L"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "5R289F",
+          "name": "Southeast",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "PDQCTQ",
+          "locked": false,
+          "target": "N01KBO"
+        }
+      ],
+      "area": 0
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "N01KBO",
+      "name": "Through the forest",
+      "description": "Tall trees surround a small, bendy path deeper into the forest. The sunlight cascades upon the thick canopy of leaves surrounding the forest ceiling. Among the sand on the side of the path are several rocks, casually kicked aside by passerby's. ",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "9O6D3S",
+          "name": "Northwest",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "N01KBO",
+          "locked": false,
+          "target": "PDQCTQ"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "PDOR0K",
+          "name": "South",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "N01KBO",
+          "locked": false,
+          "target": "OT2KZN"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "JLFXAV",
+          "name": "West",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "NULLED",
+          "locked": false,
+          "target": "YLKBVN"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "56H6QP",
+          "name": "East",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "NULLED",
+          "locked": false,
+          "target": "BIMY9P"
+        }
+      ],
+      "area": 0
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "OT2KZN",
+      "name": "Outside the village",
+      "description": "The path leads to the opening of a large forest adorned with lush, maple trees. The sounds of casual village activity eminate from the south whilst a plethora of birds can be heard from the forest to the north.",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "DAYNOT",
+          "name": "North",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "OT2KZN",
+          "locked": false,
+          "target": "N01KBO"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "S7JS7E",
+          "name": "South",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "OT2KZN",
+          "locked": false,
+          "target": "3J64TI"
+        }
+      ],
+      "area": 0
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "3J64TI",
+      "name": "Village Center",
+      "description": "The village center is adorned with a large bonfire, casting a warm light on the surrouding tents. Splayed around the bonfire are several cut logs meant to be sat on. To the east an especially large tent can be seen, adorned with dried skulls and bones.",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "RTSRS6",
+          "name": "North",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "3J64TI",
+          "locked": false,
+          "target": "OT2KZN"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "4SU4S8",
+          "name": "East",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "3J64TI",
+          "locked": false,
+          "target": "HJWH3N"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "FH3RAL",
+          "name": "West",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "3J64TI",
+          "locked": false,
+          "target": "82EOEA"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "HTC4LA",
+          "name": "Bonfire",
+          "description": "A cozy bonfire made out of several large logs, burning intensely with a satisfying crackle.",
+          "type": "item",
+          "parent": "3J64TI",
+          "locked": false
+        }
+      ],
+      "area": 0
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ],
+        "echo": [
+          null
+        ]
+      },
+      "id": "HJWH3N",
+      "name": "Village Elder's tent",
+      "description": "This tent belongs to Makar. It is decorated with a variety of brightly dyed skulls hanging from from poles. In the back is a small dresser covered with a small collection of burning candles. A large mat with intricate patterns adorns the center of the room.",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "script": {
+        "playerEntered": "\n            switch (questFlag('villageElderQuest')) {\n            case null:\n                //API.questFlag('villageElderQuest', 'quest_in_progress')\n                runScript('VillageElderQuest_1')\n                break\n            case 1: //Waiting for the poop bowl\n                runScript('VillageElderQuest_1B')\n                break\n            case 2: //Poop bowl in inventory\n                //API.questFlag('villageElderQuest', 'quest_in_progress')\n                runScript('VillageElderQuest_2')\n                break\n        }"
+      },
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "SI9Y5T",
+          "name": "West",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "HJWH3N",
+          "locked": false,
+          "target": "3J64TI"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "4CYFTB",
+          "name": "Makar, the village elder",
+          "description": "This entity has no description",
+          "type": "npc",
+          "parent": "HJWH3N",
+          "locked": false,
+          "event": {
+            "objAdded": [
+              "returnToPlayer"
+            ]
+          },
+          "room": "HJWH3N",
+          "health": 2,
+          "attribute": {
+            "strength": 1,
+            "intelligence": 1,
+            "dexterity": 1,
+            "constitution": 1,
+            "wisdom": 1,
+            "charisma": 1,
+            "luck": 1
+          },
+          "statistic": {
+            "damage": 1,
+            "critChance": 1,
+            "critDamage": 1.5,
+            "maxWeight": 1,
+            "maxHealth": 2,
+            "attSpeed": 2500
+          },
+          "idleMessage": [
+            "glances around",
+            "coughs softly",
+            "hangs about"
+          ],
+          "idleChance": 0.8
+        }
+      ],
+      "area": 0
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "82EOEA",
+      "name": "Path through a camp",
+      "description": "A corner in the small village surrounded by tents. The dusty path is covered with pebbles and other debris.A few buckets and other leftover goods lay stranded aside the path.",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "BUDHN0",
+          "name": "East",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "82EOEA",
+          "locked": false,
+          "target": "3J64TI"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "TX70YS",
+          "name": "South",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "82EOEA",
+          "locked": false,
+          "target": "HYX9OP"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "0JF7BV",
+          "name": "West",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "NULLED",
+          "locked": false,
+          "target": "3N6DSO"
+        }
+      ],
+      "area": 0
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "HYX9OP",
+      "name": "Your tent",
+      "description": "Central to your tent is a cozy looking bedroll adorned with various types of furry animal hides. From the ceiling hangs a deer skull attached by thick twine. A makeshift table consisting of a tree stump stands in the back adorned with various mugs and plates.",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "action": {
+        "sleep": "playerTentSleep"
+      },
+      "script": {
+        "playerEntered": "runScript('mainQuest_yourTentInit')"
+      },
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "EYJRXP",
+          "name": "North",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "HYX9OP",
+          "locked": false,
+          "target": "82EOEA"
+        }
+      ],
+      "area": 0
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "3N6DSO",
+      "name": "Western corner of a camp",
+      "description": "The path through the camp ends here with more tents surrounding the area.To the south a small center can be seen with a bunch of wooden toys laying about the area, presumably from the kids living in the camp. ",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "XA95C4",
+          "name": "East",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "NULLED",
+          "locked": false,
+          "target": "82EOEA"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "XHE1ER",
+          "name": "North",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "NULLED",
+          "locked": false,
+          "target": "VTXQ93"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "VM2ZTZ",
+          "name": "South",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "NULLED",
+          "locked": false,
+          "target": "RD6KJE"
+        }
+      ],
+      "area": 0
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "VTXQ93",
+      "name": "Northwestern end of a camp",
+      "description": "A quiet corner of the camp that is well kempt and looking rather new. To the north is a tent that is decorated with twigs and decorative leaves, sewed on rather boldly to the canvas. To the west is a comparatively bland tent with a small stack of dirty bowls piled next to it.",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "QQDWEY",
+          "name": "South",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "NULLED",
+          "locked": false,
+          "target": "3N6DSO"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "7W1XCU",
+          "name": "North",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "NULLED",
+          "locked": false,
+          "target": "W0K521"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "1JZGCX",
+          "name": "West",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "NULLED",
+          "locked": false,
+          "target": "9KXOVH"
+        }
+      ],
+      "area": 0
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "W0K521",
+      "name": "A tent in the camp",
+      "description": "The inside of the canvas is about as well decorated as the outside, with decorated leaves sprewn about in a rather sporadic style. A large pot is brewing on a small fire in the middle of tent. A table with cooking utensils and a few bowls of spices is spread along the eastern side of the tent.",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "N8QEE9",
+          "name": "South",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "NULLED",
+          "locked": false,
+          "target": "VTXQ93"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "TFA1HV",
+          "name": "Camilla",
+          "description": "A small humanoid woman, about middle-aged, with long dark hair bound tightly into a messy bun. She is wearing a large, dark apron, seemingly made from the hide of an animal, covered in dried splotches of food residue. Underneath the apron she wears a shagged-looking plaid dress with rough seams and a noticable nicks and cuts along the sleeves. On her feet she wears simple leather sandals.",
+          "type": "npc",
+          "parent": "QMR50F",
+          "locked": false,
+          "event": {
+            "objAdded": [
+              "returnToPlayer"
+            ]
+          },
+          "room": "W0K521",
+          "health": 2,
+          "attribute": {
+            "strength": 1,
+            "intelligence": 1,
+            "dexterity": 1,
+            "constitution": 1,
+            "wisdom": 1,
+            "charisma": 1,
+            "luck": 1
+          },
+          "statistic": {
+            "damage": 1,
+            "critChance": 1,
+            "critDamage": 1.5,
+            "maxWeight": 1,
+            "maxHealth": 2,
+            "attSpeed": 2500
+          },
+          "idleMessage": [
+            "busies herself with preparing some lavish looking meal."
+          ],
+          "idleChance": 0.8
+        }
+      ],
+      "area": 0
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "9KXOVH",
+      "name": "A tent in the camp",
+      "description": "A sparsely decorated tent with only a bedroll in the back and a few plates and cutleries sprewn about. A small collection of flies buzzes around, attracted to the myriad of leftover scraps of food sticking to all the kitchenware.The distinct smell of stale food permeates the air. ",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "DZ6RLT",
+          "name": "East",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "NULLED",
+          "locked": false,
+          "target": "VTXQ93"
+        }
+      ],
+      "area": 0
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "RD6KJE",
+      "name": "Southwestern corner of a camp",
+      "description": "The path to the camp ends abruptly with only a single, rather large, tent set up on the west side of the path. A small stack of firewood is neatly stacked to the side of the tent.A few children's toys are laying about, seemingly discarded in the front. ",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "EBVXNP",
+          "name": "North",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "NULLED",
+          "locked": false,
+          "target": "3N6DSO"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "QAR2LM",
+          "name": "West",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "NULLED",
+          "locked": false,
+          "target": "RKJM9O"
+        }
+      ],
+      "area": 0
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "RKJM9O",
+      "name": "Front side of a tent",
+      "description": "A rather large tent sprawling even further west. To the south side of the tent are two bedrolls, with a smaller bedroll spread out in the north. A pile of clothing is stacked neatly on top of the smaller bedroll. ",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "J3NB57",
+          "name": "East",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "NULLED",
+          "locked": false,
+          "target": "RD6KJE"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "K6M1JC",
+          "name": "West",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "NULLED",
+          "locked": false,
+          "target": "A8KBX2"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "1X2HU1",
+          "name": "Rachida",
+          "description": "A young woman with a dark complexion, dark hair and brown eyes. Her hair extends to about the middle of her back, seemingly well-kempt and neat. She wears a white-yellow top with short, poofy sleeves with a long green skirt underneath. Her shoes are made of brown cloth with a simple lace tie holding them together.",
+          "type": "npc",
+          "parent": "QMR50F",
+          "locked": false,
+          "event": {
+            "objAdded": [
+              "returnToPlayer"
+            ]
+          },
+          "room": "RKJM9O",
+          "health": 2,
+          "attribute": {
+            "strength": 1,
+            "intelligence": 1,
+            "dexterity": 1,
+            "constitution": 1,
+            "wisdom": 1,
+            "charisma": 1,
+            "luck": 1
+          },
+          "statistic": {
+            "damage": 1,
+            "critChance": 1,
+            "critDamage": 1.5,
+            "maxWeight": 1,
+            "maxHealth": 2,
+            "attSpeed": 2500
+          },
+          "idleMessage": [
+            "glances around",
+            "coughs softly",
+            "hangs about"
+          ],
+          "idleChance": 0.8
+        }
+      ],
+      "area": 0
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "A8KBX2",
+      "name": "Back end of a large tent",
+      "description": "The tent spreads further back, adorned by a small kitchen table consisting of a few simple planks stacked on top of eachother. A few bowls are set up on the table, as if someone were preparing to serve a meal. From the ceiling of the tent hangs a bushel of rosemary, spreading a pleasant scent through the air.",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "N670TV",
+          "name": "East",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "NULLED",
+          "locked": false,
+          "target": "RKJM9O"
+        }
+      ],
+      "area": 0
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "YLKBVN",
+      "name": "A small river",
+      "description": "From the north stretches a small river, blocking your way further west. It stretches a few more meters south before curving further west. Its water is a clear, pale blue with a moderatedly paced flow. A couple of birds stand on the western bank, taking in the fresh water.",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "W7CBVU",
+          "name": "East",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "NULLED",
+          "locked": false,
+          "target": "N01KBO"
+        }
+      ],
+      "area": 0
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "BIMY9P",
+      "name": "Forest pathway along a camp",
+      "description": "The forest continues to expand further eastward alongside a small encampment to the south. The grass is thick with the occasional wild flower poking out from the surrounding shrubbery.",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "6DJ7RM",
+          "name": "West",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "NULLED",
+          "locked": false,
+          "target": "N01KBO"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "EG7KYX",
+          "name": "East",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "NULLED",
+          "locked": false,
+          "target": "6EXUX7"
+        }
+      ],
+      "area": 0
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "6EXUX7",
+      "name": "Forest pathway",
+      "description": "The forest grow thicker further away from the encampment. A couple of large, felled trees lay sprawling to the north, blocking further passage. The pathway is littered with small pebbles and other forest debris.",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "7UVV37",
+          "name": "West",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "NULLED",
+          "locked": false,
+          "target": "BIMY9P"
+        }
+      ],
+      "area": 0
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "U165DQ",
+      "name": "Pathway into the cave",
+      "description": "The cave extends into a long tunnel, the walls of which only a meter or two apart. The path of dried mud beneath you stretches further into the cave. The walls on the west and east are dry and roughly cut. The smell of stale dirt permeates the stoney hallway. A soft breeze rolls in from the south, along with the soft rustling of bushes and leaves.",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "KGZYIL",
+          "name": "South",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "U165DQ",
+          "locked": false,
+          "target": "8M9I3L"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "HQO7C2",
+          "name": "North",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "U165DQ",
+          "locked": false,
+          "target": "XOP8PV"
+        }
+      ],
+      "area": 1
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "XOP8PV",
+      "name": "Deeper into the tunnel",
+      "description": "The wall on the east seems to spread away from the rest of the tunnel. The faint sound of distant bat wings and scurrying paws can be heard from further within the cave. A streak of dried water marks the wall on the right, seemingly leaked down from a crack in the ceiling. The ground is covered in a mixture of dried mud and gravel.",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "RF42EW",
+          "name": "South",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "XOP8PV",
+          "locked": false,
+          "target": "U165DQ"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "5WWJ57",
+          "name": "Northeast",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "XOP8PV",
+          "locked": false,
+          "target": "44T8BJ"
+        }
+      ],
+      "area": 1
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "44T8BJ",
+      "name": "Gentle Curve",
+      "description": "The gravel turns thicker as the path curves towards the east, deeper into the cave. The light eminating from the south reflects on the northern walls, creating a soft relief of shadows among the rocky walls.",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "13045Q",
+          "name": "Southwest",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "44T8BJ",
+          "locked": false,
+          "target": "XOP8PV"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "ZWPB7M",
+          "name": "East",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "44T8BJ",
+          "locked": false,
+          "target": "BR8YQK"
+        }
+      ],
+      "area": 1
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "BR8YQK",
+      "name": "Curved cave tunnel",
+      "description": "Rough cavernous walls continue towards the east and the west along a dark tunnel. Further to the west a smidge of light can be seen, seemingly bouncing from an nearby exit to the outside. The tunnel towards the east grows increasingly dim, with the smell of dried bat feces growing stronger. The gravel under your feet shifts slightly as you walk on it.",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "YJ4XGX",
+          "name": "West",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "BR8YQK",
+          "locked": false,
+          "target": "44T8BJ"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "S5WIZ8",
+          "name": "East",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "BR8YQK",
+          "locked": false,
+          "target": "ZAM77T"
+        }
+      ],
+      "area": 1
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "ZAM77T",
+      "name": "Rough cave tunnel",
+      "description": "A threeway of paths here split towards towards different parts of the cave. To the east, the slighest shimmer of outside light can be seen. The paths north and east seem to lead further into the cave, both seemingly bathed in a thick darkness. The occasional bat flies through overhead, seemingly making it ways out of the cave.",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "OZ8GIL",
+          "name": "West",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "ZAM77T",
+          "locked": false,
+          "target": "BR8YQK"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "J5MYJQ",
+          "name": "North",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "ZAM77T",
+          "locked": false,
+          "target": "133GIH"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "NO2TMT",
+          "name": "East",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "ZAM77T",
+          "locked": false,
+          "target": "9IA2R6"
+        }
+      ],
+      "area": 1
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "133GIH",
+      "name": "Deep inside the cave",
+      "description": "The tunnel turns dark as the outside light falls off completely. Several bats skitter among the ceiling making their way in and out of the cave. The walls are covered in a thin layer of goop, presumably from bat excrement. The smell eminating from the cave grows increasingly musk.",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "ZPYXH4",
+          "name": "South",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "133GIH",
+          "locked": false,
+          "target": "ZAM77T"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "DACSKY",
+          "name": "North",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "133GIH",
+          "locked": false,
+          "target": "OJ8P60"
+        }
+      ],
+      "area": 1
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "9IA2R6",
+      "name": "Dead end in a cave",
+      "description": "The tunnel ends here abruptly with a large pile of big rocks stopping any further exploration to the east. A smidge of light casts through the gaps between the rocks revealing what could be a passage further inside.",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "JECY2J",
+          "name": "West",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "9IA2R6",
+          "locked": false,
+          "target": "ZAM77T"
+        }
+      ],
+      "area": 1
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "OJ8P60",
+      "name": "Deep inside the cave",
+      "description": "The tunnel leads to a solid wall of rock with paths leading to the west, east and south. The gravelly path underfoot now consists of larger rocks that are splayed every which way. Dusty cobwebs are spread between the ceiling and the walls in every direction.",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "H3WHQ9",
+          "name": "South",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "OJ8P60",
+          "locked": false,
+          "target": "133GIH"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "7FK5UN",
+          "name": "East",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "OJ8P60",
+          "locked": false,
+          "target": "317DK6"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "FT4FJ1",
+          "name": "West",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "OJ8P60",
+          "locked": false,
+          "target": "CQ9ZUY"
+        }
+      ],
+      "area": 1
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "317DK6",
+      "name": "Deep inside the cave",
+      "description": "The sound of bats becomes increasingly noticable with more of them swerving just below the rocky ceiling and throughout the cave. The rocks here are noticable stained, eminating a distasteful smell throughout the area. A few rats scurry alongsides the walls.",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "24V03C",
+          "name": "West",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "317DK6",
+          "locked": false,
+          "target": "OJ8P60"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "IFXVSS",
+          "name": "North",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "317DK6",
+          "locked": false,
+          "target": "V3TKL7"
+        }
+      ],
+      "area": 1
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "CQ9ZUY",
+      "name": "Dead end in a cave",
+      "description": "The tunnel further west ends here, closing in on a solid wall smeared with some moldy-looking brown blotches. A collection of inconspicious rocks lay against the wall, seemingly of no interest. ",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "U9G7EC",
+          "name": "East",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "CQ9ZUY",
+          "locked": false,
+          "target": "OJ8P60"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "PXN4H5",
+          "name": "Shiny rock",
+          "description": "A peculiar looking rock that reflects the light rather well.",
+          "type": "item",
+          "parent": "CQ9ZUY",
+          "locked": false
+        }
+      ],
+      "area": 1
+    },
+    {
+      "_events": {
+        "*": [
+          null
+        ]
+      },
+      "id": "V3TKL7",
+      "name": "Bat's nest",
+      "description": "The cave opens up in a minor expanse, with the ceiling almost completely covered in shagged-looking bats. The entire place smells absolutely rancid, the smell seemingly eminating from the big piles of brown goop that cover the floor. A couple of dead bats adorn the piles with bits and pieces of bone and fur scattered across the room.",
+      "type": "room",
+      "parent": "NULLED",
+      "locked": false,
+      "action": {
+        "collect": "collectPoop"
+      },
+      "content": [
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "U2HXS1",
+          "name": "South",
+          "description": "A nondescript exit",
+          "type": "exit",
+          "parent": "V3TKL7",
+          "locked": false,
+          "target": "317DK6"
+        },
+        {
+          "_events": {
+            "*": [
+              null
+            ]
+          },
+          "id": "2B624S",
+          "name": "spawner",
+          "description": "This entity has no description",
+          "type": "spawner",
+          "parent": "6MNWGY",
+          "locked": false,
+          "content": [
+            {
+              "_events": {
+                "*": [
+                  null
+                ]
+              },
+              "id": "UNXX8T",
+              "name": "Furry bat",
+              "description": "This entity has no description",
+              "type": "mobile",
+              "parent": "2B624S",
+              "locked": false,
+              "event": {
+                "objAdded": [
+                  "returnToPlayer"
+                ]
+              },
+              "room": "NULLED",
+              "health": 2,
+              "attribute": {
+                "strength": 1,
+                "intelligence": 1,
+                "dexterity": 1,
+                "constitution": 1,
+                "wisdom": 1,
+                "charisma": 1,
+                "luck": 1
+              },
+              "statistic": {
+                "damage": 1,
+                "critChance": 1,
+                "critDamage": 1.5,
+                "maxWeight": 1,
+                "maxHealth": 2,
+                "attSpeed": 2500
+              },
+              "idleMessage": [
+                "flaps around the room"
+              ],
+              "idleChance": 0.8,
+              "moveChance": 0.7,
+              "area": 1
+            }
+          ],
+          "chance": 1,
+          "limit": 3
+        }
+      ],
+      "area": 1
+    }
+  ],
+  "zone": [],
+  "info": {
+    "name": "Adventure",
+    "description": "Save the tribe (Or something)",
+    "startRoom": "HJWH3N"
+  }
+}

@@ -137,6 +137,7 @@ class Game extends Emitter {
 
     save() {
         return {
+            info:this.storedGame.info,
             room: this.world.room,
             player: this.player,
             battle: {

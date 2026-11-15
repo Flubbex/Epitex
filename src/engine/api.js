@@ -316,7 +316,9 @@ const apiConstructor = (engine) => {
      * Import a game pack
      */
     const importPack = (pack) => {
+        console.log(`%cImporting pack ${pack.info.name}`,"color:orange")
         engine.content.loadPack(pack)
+        engine.storage.clear(pack.info.name)
         engine.start(pack.info.name)
     }
 

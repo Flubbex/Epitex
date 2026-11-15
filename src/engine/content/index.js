@@ -14,7 +14,7 @@ const epiTextLogo = `
            ██                                               
 `
 
-const subText = `v0.2                         made by Flubber  ${banana}`
+const subText = `v0.9                         made by Flubber  ${banana}`
 
 /**
  * Sets up base content required by the engine, along with some fun stuff.

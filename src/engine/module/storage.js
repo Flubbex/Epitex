@@ -9,13 +9,17 @@ export default class StorageService {
         window.dbg('StorageService', 'Constructing')
         console.log(localStorage)
         const storedKeySet = localStorage.getItem("keySet")
-        this.keySet = storedKeySet ? storedKeySet.split(",") : this.keySet
+        this.keySet = JSON.parse(storedKeySet) || []
 
+   
         this.keySet.map((key)=>{
             this.stored[key] = this.load(key)
         })
     }
  
+    list(){
+        return this.keySet.map((k) => this.stored[k] )
+    }
     createSaveListener(saveName,store) {
         window.dbg('StorageService',`Creating save listener for ${saveName}`)
 
@@ -68,20 +72,24 @@ export default class StorageService {
     }
 
     save(slot,saveState) {
-        console.log("Saving",slot,saveState)
+        window.dbg("StorageModule",`Saving "${slot}"`)
         localStorage.setItem(slot, JSON.stringify(saveState))
         if (this.keySet.indexOf(slot) === -1) {
             this.keySet.push(slot)
-            localStorage.setItem("keySet",this.keySet.join(","))
+            localStorage.setItem("keySet", JSON.stringify(this.keySet) )
         }
         this.stored[slot] = saveState
     }
 
     clear(slot){
+        window.dbg("StorageModule",`Clearing "${slot}"`)
+
+        delete this.stored[slot]
         localStorage.removeItem(slot)
+        
         if (this.keySet.indexOf(slot) !== -1){
             this.keySet = this.keySet.filter((e) => e === slot)
-            localStorage.setItem("key",this.keySet)
+            localStorage.setItem("keySet", JSON.stringify(this.keySet) )
         }
     }
 
