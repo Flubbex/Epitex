@@ -27,7 +27,8 @@ class Being extends Container {
         charisma: 1,
         luck: 1,
     }
-
+    type = "being"
+    
     constructor(state = {}) {
         super(state)
         this.room = state.room ?? this.room

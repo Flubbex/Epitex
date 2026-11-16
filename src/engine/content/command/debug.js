@@ -5,11 +5,13 @@ const commandConstructor = (API) => {
         console.log(JSON.stringify(API.generateSave()))
     }
 
-    const dump = ([target]) => {
+    const dump = ([targetName]) => {
         const plyRoom = API.room()
-        return target
-            ? plyRoom.get('any', target) || API.player().get('any', target)
+        const  target = targetName
+            ? plyRoom.get('any', targetName) || API.player().get('any', targetName)
             : plyRoom
+        
+        return {type:"div",content:JSON.stringify(target,null,2)}
     }
 
     function objectToCode(obj) {

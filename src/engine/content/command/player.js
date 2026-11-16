@@ -13,7 +13,7 @@ const commandConstructor = (API) => {
         if (exit.tag.indexOf('silent') === -1)
             API.print('You walk towards the ' + exit.name.toLowerCase())
         if (exit.tag.indexOf('clear') !== -1) API.clear()
-        return nextRoom.look()
+        nextRoom.look()
     }
 
     const go = ([direction = '']) => {
@@ -54,7 +54,7 @@ const commandConstructor = (API) => {
                 target.map((e) => e.name)
             )
 
-        return target.look()
+        target.look()
     }
 
     const take = ([target]) => {

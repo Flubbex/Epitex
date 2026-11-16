@@ -3,6 +3,7 @@ import Being from '.'
 class NPC extends Being {
     idleMessage = ['glances around', 'coughs softly', 'hangs about']
     idleChance = 0.95
+    type = "npc"
     
     /*
     TODO: Implement a default "return item to player script and have it run from here"

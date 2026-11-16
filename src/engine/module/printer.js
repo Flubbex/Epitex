@@ -39,12 +39,12 @@ export default class PrinterModule extends Emitter {
         return { type: 'div', content, className }
     }
 
-    h(content, level = 4, className = 'text-primary') {
-        return { type: `h${level}`, content, className }
+    h(content, level = 4, addClassName = 'bold') {
+        return { type: "div", content, className:`h${level} `+addClassName }
     }
 
-    bold(content, className) {
-        return { type: 'strong', content, className }
+    bold(content) {
+        return { type: 'span', content, className:"bold" }
     }
 
     button(content, command, className = 'btn btn-sm btn-outline-primary me-1') {
@@ -76,6 +76,35 @@ export default class PrinterModule extends Emitter {
                 this.div(title, titleClass),
                 ...(Array.isArray(children) ? children : [children]),
             ],
+        }
+    }
+
+    present(object){
+        const name = typeof object.name === "string"  
+                                    ? this.bold(object.name) 
+                                    : object.name
+
+        const description = typeof object.description === "string"  
+                                    ? this.text(object.description) 
+                                    : object.description
+                                   
+        switch (object.type){
+            case "menu":
+                this.print(description)
+                break
+            case "room":
+                const {itemList,beingList,exitList} = object.presentContent()
+                this.print([
+                    this.h(object.name,4),
+                    description,
+                    itemList.length ? this.section("Items here:",itemList) : null,
+                    beingList.length ? this.section("Beings here:",beingList) : null,
+                    this.section("Available Exits:",exitList)
+                    
+                ])
+                break
+            default:
+                this.print([ name,description ])
         }
     }
 }

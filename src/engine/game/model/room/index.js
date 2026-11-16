@@ -22,8 +22,8 @@ class Room extends Container {
     buttonify(content, command) {
         return {type:"button",className:"btn",content,command}
     }
-    look() {
-        super.look()
+
+    presentContent(){
         const exitList = []
         const itemList = []
         const beingList = []
@@ -65,34 +65,10 @@ class Room extends Container {
             }
             return null
         })
-
-        const output = {
-            type:"div",
-            content:[
-                {type:"div",className:"text-primary h4",content:`[${this.name}]`},
-                {type:"div",content:this.description}
-            ]
-        }
-
-        const compareName = (a, b) => String(a.content).localeCompare(String(b.content))
-        if (itemList.length > 0) {
-            output.content.push({type:"div",className:"bold mt-1 mb-1",content:"Items here:"})
-            output.content = [...output.content,...itemList.sort(compareName)]
-        }
-
-        if (beingList.length > 0) {
-            output.content.push({type:"div",className:"bold mt-1 mb-1",content:"Beings here:"})
-            output.content = [...output.content,...beingList.sort(compareName)]
-        }
-
-        output.content.push({type:"div",className:"bold mt-1 mb-1",content:"Available exits:"})
         
-        if (exitList.length > 0)
-            output.content = [...output.content,...exitList.sort(compareName)]
-        else output.content.push({type:"div",content:"None"})
-
-        return output
+        return {exitList,itemList,beingList}
     }
+
 }
 
 export default Room

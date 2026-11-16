@@ -58,6 +58,8 @@ class Engine extends Emitter {
 
         this.game.on("actionOutput",(_target,message) => this.print(message,false) )
 
+        this.game.on("object_viewed", (object) => this.ui.printer.present(object) )
+        
         this.game.start()
 
         this.API.handle("look",true)

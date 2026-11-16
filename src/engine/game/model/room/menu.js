@@ -7,7 +7,7 @@ class Menu extends Room {
     }
 
     look() {
-        const out = super.look()
+        super.look()
         const exitList = {type:"div",content:[]}
 
         this.content.map((obj) => {
@@ -21,7 +21,6 @@ class Menu extends Room {
             return null
         })
 
-        console.log ( {...this.description,content:this.description.content.concat(exitList)} )
         return {...this.description,content:this.description.content.concat(exitList)}
     }
 }
