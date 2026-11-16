@@ -101,7 +101,7 @@ export default class PrinterModule extends Emitter {
                     beingList.length ? this.section("Beings here:",beingList) : null,
                     this.section("Available Exits:",exitList)
                     
-                ])
+                ].filter((e)=> e))
                 break
             default:
                 this.print([ name,description ])
