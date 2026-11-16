@@ -11,6 +11,13 @@ const apiConstructor = (engine) => {
     const game = () => engine.game
 
     /**
+     * Find an object by name in either the room or the player's inventory
+     */
+    const find = (name) => {
+        return room().get("any", name) || player().get("any", name)
+    }
+
+    /**
      * Handle a command
      */
     const handle = (input, silent = false) => {
@@ -21,7 +28,7 @@ const apiConstructor = (engine) => {
      * Print some text
      */
     const print = (...message) => {
-        engine.ui.print(message)
+        return engine.ui.print(message)
     }
 
     /**
@@ -56,28 +63,28 @@ const apiConstructor = (engine) => {
      * Find rooms by filter
      */
     const filterRoom = (filter) => {
-        return engine.store.world.room.filter(filter)
+        return engine.game.world.room.filter(filter)
     }
 
     /**
      * Map a room
      */
     const mapRoom = (mapper) => {
-        return engine.store.world.room.map(mapper)
+        return engine.game.world.room.map(mapper)
     }
 
     /**
      * Find a room
      */
     const findRoom = (filter) => {
-        return engine.store.world.room.find(filter)
+        return engine.game.world.room.find(filter)
     }
 
     /**
      * Override a room
      */
     const overrideRoom = (newRoom) => {
-        engine.store.world.room = newRoom
+        engine.game.world.room = newRoom
     }
 
     /**
@@ -121,7 +128,7 @@ const apiConstructor = (engine) => {
      * Set the current text in the notepad
      */
     const setNotepad = (v) => {
-        engine.ui.setNotepad(v)
+        engine.ui.set("notepad",v)
     }
 
     /**
@@ -345,7 +352,7 @@ const apiConstructor = (engine) => {
      */
     const playMusic = (videoId, startSeconds = 0) => {
         return new Promise((resolve) => {
-            engine.store.ui.setMusic({
+            engine.ui.set("music",{
                 videoId,
                 startSeconds,
                 callBack: resolve,
@@ -358,7 +365,7 @@ const apiConstructor = (engine) => {
      */
 
     const runObjectScript = (object) => {
-        engine.script.loadObjectScript(object)
+        engine.game.script.loadObjectScript(object)
     }
 
     /**
@@ -460,6 +467,7 @@ const apiConstructor = (engine) => {
         importPack,
         start,
         save,
+        find
     }
 }
 

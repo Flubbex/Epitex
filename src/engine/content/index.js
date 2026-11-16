@@ -36,7 +36,7 @@ const subText = {
  * @returns Base content Pack
  */
 const engineContentConstructor = (API) => {
-    const r = (min, max) => Math.random() * max + min
+    const r = (min, max) => Math.random() * (max-min) + min
 
     const rainbow = (input) => {
         return input.split("").map((content) => {
@@ -62,6 +62,20 @@ const engineContentConstructor = (API) => {
             type: "menu",
             name: "Load Screen",
             description,
+            script:`
+                const r = (min, max) => Math.random() * (max-min) + min
+                const randomColor = 
+                this.on("object_presented",async ([msg])=>{
+                    console.log(msg)
+                    for (let i=0;i<25;i++) {
+                        await util.delay(i*5)
+                        msg.content.slice(0,-1).map((span)=>{
+                            const color = \`rgb(\${r(64, 192)},\${r(64, 192)},\${r(64, 192)})\`
+                            span.set("style",{color})
+                        })
+                    }
+                })
+            `
         },
     ]
 
@@ -118,7 +132,6 @@ const engineContentConstructor = (API) => {
             const clear = () => {
                 API.clear()    
             }
-
             connect("LoaderMenu","object_viewed", ()=>window.setTimeout(printMenu,0) )
             `,
         },

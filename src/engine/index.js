@@ -62,9 +62,10 @@ class Engine extends Emitter {
             this.print(message, false)
         )
 
-        this.game.on("object_viewed", (object) =>
-            this.ui.printer.present(object)
-        )
+        this.game.on("object_viewed", (object) =>{
+            const msg = this.ui.printer.present(object)
+            object.emit("object_presented",msg)
+    })
 
         this.game.start()
 
@@ -151,7 +152,7 @@ class Engine extends Emitter {
     }
 
     print(raw, isInput = false) {
-        this.ui.print(raw, isInput)
+        return this.ui.print(raw, isInput)
     }
 
     clear() {

@@ -31,6 +31,8 @@ class ScriptModule {
     loadObjectScript(object) {
         window.dbg("ScriptModule", `Loading object script for ${object.name}`)
 
+        object.removeAllListeners()
+        
         const AsyncFunction = Object.getPrototypeOf(
             async function () {}
         ).constructor

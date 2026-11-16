@@ -24,11 +24,25 @@ export default class PrinterModule extends Emitter {
         return [{ type: "span", content: String(value) }]
     }
 
+    settable(msg){
+        msg.set = (prop,val) => {
+                this.emit("modified",msg,prop,val)
+            }
+        if (Array.isArray(msg.content))
+            msg.content.map((m) => this.settable(m) )
+
+        return msg
+    }
     print(content) {
-        const messages = this.normalizeToMessages(content)
-        if (messages.length === 0) return
+        let messages = this.normalizeToMessages(content)
+        if (messages.length === 0) return null
+
+        //Magic
+        messages.map( (m) => this.settable(m) )
 
         this.emit("printed", messages)
+
+        return messages
     }
 
     text(content, className) {
@@ -139,11 +153,10 @@ export default class PrinterModule extends Emitter {
 
         switch (object.type) {
             case "menu":
-                this.print(description)
-                break
+                return this.print(description)
             case "room":
                 const { itemList, beingList, exitList } = this.presentContent(object)
-                this.print(
+                return this.print(
                     [
                         this.h(object.name, 4,"text-primary"),
                         description,
@@ -156,9 +169,8 @@ export default class PrinterModule extends Emitter {
                         this.section("Available Exits:", exitList),
                     ].filter((e) => e)
                 )
-                break
             default:
-                this.print([name, description])
+                return this.print([name, description])
         }
     }
 }

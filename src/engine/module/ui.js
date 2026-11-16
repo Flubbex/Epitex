@@ -23,6 +23,12 @@ class UIModule extends Emitter {
         this.printer.on("printed", (messageList) =>
             this.add("output", messageList)
         )
+
+        this.printer.on("modified",(message,prop,value) => {
+            message[prop] = value 
+            this.output = [...this.output]
+            this.emit("updated_output",this.output)
+        })
     }
 
     set(property, value) {
@@ -69,7 +75,7 @@ class UIModule extends Emitter {
         this.set("output", [])
     }
     print(content) {
-        this.printer.print(content)
+        return this.printer.print(content)
     }
 
     handle(command) {

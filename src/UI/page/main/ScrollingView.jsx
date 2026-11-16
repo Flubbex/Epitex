@@ -28,6 +28,7 @@ export function MessageRenderer({ message, onCommand }) {
         content,
         command,
         style,
+        set,
         ...rest
     } = message
     const Tag = componentMap[type] || "span"

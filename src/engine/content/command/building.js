@@ -164,27 +164,27 @@ const commandConstructor = (API) => {
     const script = ([targetName, command]) => {
         if (!targetName) return "Script what?"
 
-        const room = API.room()
-        const player = API.player()
-
         let target = null
 
         if (targetName === "game") target = API.game().script
         else if (targetName === "here") target = room
-        else {
-            target =
-                room.get("any", targetName) || player.get("any", targetName)
-        }
+        else target = API.find(targetName)
+        
 
         if (target === null) return "Can't find that"
 
+        if (!target.script)
+            return "Target is unscripted"
+
         //NOTE: Currently game scripts are not exported unless they are run
         switch (command) {
+            case "fpr":
+                target.script = API.notepad()
             case "run":
                 if (targetName === "game") {
-                    API.start(API.game().storedGame.game.name)
+                    API.start(API.game().storedGame.info.name)
                 } else API.runObjectScript(target)
-                break
+                return "Ran script"
             case "frompad":
                 target.script = API.notepad()
                 return "Set target script to content in notepad"
