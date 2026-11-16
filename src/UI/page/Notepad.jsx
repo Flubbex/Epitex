@@ -1,15 +1,17 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const Notepad = ({ ui }) => {
     const [text, setText] = useState(ui.notepad)
 
-    const changeText = (value) => {
+    const notepadChanged = (value) => {
         setText(value)
-        ui.setNotepad(value)
         localStorage.setItem('notepad', value)
     }
 
-    ui.on("updatedNotepad",setText)
+    useEffect(()=>{
+        ui.on("updated_notepad",notepadChanged)
+        return ()=> ui.off("updated_notepad",notepadChanged)
+    },[ui])
     
     return (
         <div className="container" style={{ height: '75vh' }}>
@@ -18,7 +20,7 @@ const Notepad = ({ ui }) => {
                     <textarea
                         className="h-100 w-100 p-3 pt-2"
                         id="notepad"
-                        onChange={(e) => changeText(e.target.value)}
+                        onChange={(e) => ui.set("notepad",e.target.value)}
                         value={text}
                     ></textarea>
                 </div>

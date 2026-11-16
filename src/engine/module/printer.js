@@ -1,0 +1,81 @@
+import Emitter from "../class/emitter"
+
+export default class PrinterModule extends Emitter {
+    normalizeToMessages(value) {
+        if (value == null) return []
+
+        if (typeof value === 'string') {
+            // Preserve newlines as separate messages if desired, or keep as one
+            // Uncomment the split if you want old string.split('\n') behavior
+            // return value.split('\n').filter(Boolean).map(line => ({ type: 'span', content: line }))
+            return [{ type: 'span', content: value }]
+        }
+
+        if (Array.isArray(value)) {
+            return value.flatMap(item => this.normalizeToMessages(item))
+        }
+
+        if (typeof value === 'object' && value.type) {
+            // Already a message descriptor
+            return [value]
+        }
+
+        // Fallback for unexpected objects
+        return [{ type: 'span', content: String(value) }]
+    }
+
+    print(content) {
+        const messages = this.normalizeToMessages(content)
+        if (messages.length === 0) return
+
+        this.emit('printed', messages)
+    }
+
+    text(content, className) {
+        return { type: 'span', content, className }
+    }
+
+    div(content, className) {
+        return { type: 'div', content, className }
+    }
+
+    h(content, level = 4, className = 'text-primary') {
+        return { type: `h${level}`, content, className }
+    }
+
+    bold(content, className) {
+        return { type: 'strong', content, className }
+    }
+
+    button(content, command, className = 'btn btn-sm btn-outline-primary me-1') {
+        return { type: 'button', content, command, className }
+    }
+
+    br() {
+        return { type: 'br' }
+    }
+
+    group(content, className, type = 'div') {
+        return { type, content, className }
+    }
+
+    buttonList(items, commandFn, className) {
+        return items.map(item =>
+            this.button(
+                typeof item === 'string' ? item : item.name,
+                typeof commandFn === 'function' ? commandFn(item) : commandFn,
+                className
+            )
+        )
+    }
+
+    section(title, children, titleClass = 'bold mt-2 mb-1') {
+        return {
+            type: 'div',
+            content: [
+                this.div(title, titleClass),
+                ...(Array.isArray(children) ? children : [children]),
+            ],
+        }
+    }
+}

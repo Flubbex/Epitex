@@ -1,5 +1,7 @@
 import Emitter from '../class/emitter.js'
 
+import PrinterModule from "./printer.js"
+
 /**
  * UI module for managing input,output, notepad,music
  */
@@ -9,22 +11,26 @@ class UIModule extends Emitter {
     input = ''
     music = { videoId: null, callBack: null, startSeconds: 0 }
 
+    printer = new PrinterModule()
+
     constructor(state = {}) {
         super()
         this.notepad = state.notepad ?? this.notepad
         this.output = state.output ?? this.output
         this.input = state.input ?? this.input
         this.music = state.music ?? this.music
+
+        this.printer.on("printed", (messageList) => this.add("output",messageList) )
     }
 
-    setMusic(v) {
-        this.music = v
-        this.emit('updatedMusic', this.music)
+    set(property,value){
+        this[property] = value
+        this.emit("updated_"+property, this[property])
     }
 
-    setNotepad(v) {
-        this.notepad = v
-        this.emit("updatedNotepad",this.notepad)
+    add(property,value){
+        this[property] = this[property].concat(value)
+        this.emit("updated_"+property, this[property])
     }
 
     toJSON() {
@@ -36,7 +42,6 @@ class UIModule extends Emitter {
     }
 
     printError(error) {
-        //{type:"div",className:"text-danger"}
         this.print({type:"div",
             content:[
                 {type:"div",className:"text-danger h4",content:"Something went wrong"},
@@ -50,46 +55,10 @@ class UIModule extends Emitter {
     }
 
     clear() {
-        this.output = []
-        this.emit('updatedOutput', this.output)
+        this.set("output",[])
     }
-
-    /**
-     * Normalize any value into an array of message descriptors.
-     * - string → { type: "span", content }
-     * - message object → [object]
-     * - array → flatten + normalize each item
-     * - null/undefined → []
-     */
-    normalizeToMessages(value) {
-        if (value == null) return []
-
-        if (typeof value === 'string') {
-            // Preserve newlines as separate messages if desired, or keep as one
-            // Uncomment the split if you want old string.split('\n') behavior
-            // return value.split('\n').filter(Boolean).map(line => ({ type: 'span', content: line }))
-            return [{ type: 'span', content: value }]
-        }
-
-        if (Array.isArray(value)) {
-            return value.flatMap(item => this.normalizeToMessages(item))
-        }
-
-        if (typeof value === 'object' && value.type) {
-            // Already a message descriptor
-            return [value]
-        }
-
-        // Fallback for unexpected objects
-        return [{ type: 'span', content: String(value) }]
-    }
-
     print(content) {
-        const messages = this.normalizeToMessages(content)
-        if (messages.length === 0) return
-
-        this.output = this.output.concat(messages)
-        this.emit('updatedOutput', this.output)
+        this.printer.print(content)
     }
 
     handle(command){

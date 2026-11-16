@@ -49,12 +49,13 @@ const ScrollingView = ({ ui }) => {
     const scrollEndRef = useRef(null)
     const scrollViewRef = useRef(null)
 
+     const handleOutput = (v) => setOutput(v)
+
     useEffect(() => {
-        const handleOutput = (v) => setOutput(v)
-        ui.on('updatedOutput', handleOutput)
+        ui.on('updated_output', handleOutput)
 
         return () => {
-            ui.off('updatedOutput', handleOutput)
+            ui.off('updated_output', handleOutput)
         }
     }, [ui])
 

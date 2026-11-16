@@ -41,9 +41,9 @@ const MusicPlayer = ({ ui }) => {
         setMusic(v)
     }
     useEffect(() => {
-        ui.on('updatedMusic', applyMusic)
+        ui.on('updated_music', applyMusic)
         return () => {
-            ui.off('updatedMusic', applyMusic)
+            ui.off('updated_music', applyMusic)
         }
     }, [ui])
 
