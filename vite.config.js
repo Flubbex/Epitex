@@ -6,6 +6,7 @@ export default defineConfig({
     plugins: [react()],
     base: '/Epitex/',
       server: {
+        host: '0.0.0.0',
     proxy: {
       '/tumblr-api': {
         target: 'https://api.tumblr.com',

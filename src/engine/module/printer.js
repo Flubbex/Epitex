@@ -111,7 +111,7 @@ export default class PrinterModule extends Emitter {
                     break
                 default:
                     console.warn(
-                        this.name,
+                        obj.name,
                         "contains an invalid item:",
                         obj.name
                     )

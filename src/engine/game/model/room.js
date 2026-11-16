@@ -19,9 +19,6 @@ class Room extends Container {
         this.content.map((e) => e.tick && e.tick(API, this))
     }
 
-    buttonify(content, command) {
-        return { type: "button", className: "btn", content, command }
-    }
 }
 
 export default Room

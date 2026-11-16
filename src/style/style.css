@@ -94,7 +94,7 @@ body {
     line-break: strict;
     font-family: Jet Mono;
     --animate-duration: 0.5s;
-    font-size: clamp(12px, 1.4vw, 24px);
+    font-size: clamp(10px, 1.4vw, 24px);
 }
 
 .h1 {
