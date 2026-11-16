@@ -50,7 +50,7 @@ export default class PrinterModule extends Emitter {
     button(
         content,
         command,
-        className = "btn btn-sm btn-outline-primary me-1"
+        className = "btn"
     ) {
         return { type: "button", content, command, className }
     }
@@ -83,6 +83,49 @@ export default class PrinterModule extends Emitter {
         }
     }
 
+    presentContent(object) {
+        let exitList = []
+        let itemList = []
+        let beingList = []
+
+        object.content.map((obj) => {
+            switch (obj.type) {
+                case "item":
+                case "key":
+                case "container":
+                    itemList.push(this.button(obj.name, `look ${obj.name}`))
+                    break
+                case "being":
+                case "npc":
+                case "mobile":
+                    beingList.push(this.button(obj.name, `look ${obj.name}`))
+                    break
+                case "exit":
+                    const lockedName = obj.locked
+                        ? `${obj.name} (locked)`
+                        : obj.name
+                    exitList.push(this.button(lockedName, `go ${obj.name}`))
+                    break
+                case "spawner":
+                case "player":
+                    break
+                default:
+                    console.warn(
+                        this.name,
+                        "contains an invalid item:",
+                        obj.name
+                    )
+                    break
+            }
+            return null
+        })
+
+        itemList = itemList.sort((a, b) => String(a.content).localeCompare(String(b.content)))
+        exitList = exitList.sort((a, b) => String(a.content).localeCompare(String(b.content)))
+        beingList = beingList.sort((a, b) => String(a.content).localeCompare(String(b.content)))
+        return { exitList, itemList, beingList }
+    }
+
     present(object) {
         const name =
             typeof object.name === "string"
@@ -99,11 +142,10 @@ export default class PrinterModule extends Emitter {
                 this.print(description)
                 break
             case "room":
-                const { itemList, beingList, exitList } =
-                    object.presentContent()
+                const { itemList, beingList, exitList } = this.presentContent(object)
                 this.print(
                     [
-                        this.h(object.name, 4),
+                        this.h(object.name, 4,"text-primary"),
                         description,
                         itemList.length
                             ? this.section("Items here:", itemList)
