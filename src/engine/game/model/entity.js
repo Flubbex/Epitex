@@ -1,4 +1,4 @@
-import Emitter from '../../class/emitter.js'
+import Emitter from "../../class/emitter.js"
 
 const cleanObject = (o) => {
     // Check if it's an array or an object and clean recursively
@@ -6,14 +6,14 @@ const cleanObject = (o) => {
         return o
             .map(cleanObject) // Recursively clean elements
             .filter((item) => item !== undefined) // Remove undefined entries (empty ones)
-    } else if (typeof o === 'object' && o !== null) {
+    } else if (typeof o === "object" && o !== null) {
         const cleanedObj = {}
         for (const key in o) {
             const value = cleanObject(o[key]) // Recursively clean the value
             if (
                 value !== undefined &&
                 !(Array.isArray(value) && value.length === 0) &&
-                !(typeof value === 'object' && Object.keys(value).length === 0)
+                !(typeof value === "object" && Object.keys(value).length === 0)
             ) {
                 cleanedObj[key] = value // Only add non-empty values
             }
@@ -26,9 +26,9 @@ const cleanObject = (o) => {
 
 class Entity extends Emitter {
     id = null
-    name = 'Nameless Entity'
-    description = 'This entity has no description'
-    type = 'entity'
+    name = "Nameless Entity"
+    description = "This entity has no description"
+    type = "entity"
     parent = null
     locked = false
 
@@ -50,7 +50,9 @@ class Entity extends Emitter {
         this.locked = state.locked ?? this.locked
 
         this.tag = state.tag ? [...state.tag] : this.tag
-        this.action = state.action ? this.action.concat(state.action) : this.action
+        this.action = state.action
+            ? this.action.concat(state.action)
+            : this.action
 
         this.script = state.script ?? this.script
 
@@ -59,7 +61,7 @@ class Entity extends Emitter {
     }
 
     toJSON() {
-        let out = Object.assign({}, this, { _events:null })
+        let out = Object.assign({}, this, { _events: null })
         out = this.cleanObject(out)
         return out
     }
@@ -69,8 +71,8 @@ class Entity extends Emitter {
     }
 
     unid() {
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-        let result = ''
+        const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        let result = ""
 
         for (let i = 0; i < 6; i++) {
             const randomIndex = Math.floor(Math.random() * characters.length)
@@ -79,22 +81,17 @@ class Entity extends Emitter {
 
         return result
     }
-    
-    use(){
-        this.emit("object_used",this)
-    }
-    
-    look() {
-        this.emit("object_viewed",this)
-        return {type:"div",content:[
-            {type:"div",className:"bold h6 mb-0",content:this.name},
-            {type:"div",content:this.description},
-            
-        ]}
+
+    use() {
+        this.emit("object_used", this)
     }
 
-    tick(){
-        this.emit("object_ticked",this)
+    look() {
+        this.emit("object_viewed", this)
+    }
+
+    tick() {
+        this.emit("object_ticked", this)
     }
 }
 

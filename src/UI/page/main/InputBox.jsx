@@ -1,14 +1,14 @@
-import { useState } from 'react'
+import { useState } from "react"
 
 const InputBox = ({ ui }) => {
     const [input, setInput] = useState(
-        localStorage.getItem('dbg_lastInput') || ''
+        localStorage.getItem("dbg_lastInput") || ""
     )
     const [history, setHistory] = useState([])
     const [historyKey, setHistoryKey] = useState(0)
 
     const handleKeyDown = (ev) => {
-        if (ev.key === 'ArrowUp' && historyKey > 0) {
+        if (ev.key === "ArrowUp" && historyKey > 0) {
             setHistoryKey(historyKey - 1)
             setInput(history[historyKey - 1])
             ev.preventDefault()
@@ -16,18 +16,18 @@ const InputBox = ({ ui }) => {
             return
         }
 
-        if (ev.key !== 'Enter' || ev.shiftKey || !input) return
+        if (ev.key !== "Enter" || ev.shiftKey || !input) return
 
         if (!input.trim()) {
-            setInput('')
+            setInput("")
             return
         }
 
-        localStorage.setItem('dbg_lastInput', input)
+        localStorage.setItem("dbg_lastInput", input)
         ui.handle(input)
         setHistory(history.concat(input))
         setHistoryKey(history.length + 1)
-        setInput('')
+        setInput("")
 
         ev.preventDefault()
         ev.stopPropagation()

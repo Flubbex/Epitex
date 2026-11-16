@@ -1,9 +1,9 @@
 const sidebarSet = [
-    { route: 'main', label: 'Main' },
-    { route: 'editor', label: 'Editor' },
-    { route: 'notepad', label: 'Notepad' },
-    { route: 'settings', label: 'Settings' },
-    { route: 'music', label: 'Music' },
+    { route: "main", label: "Main" },
+    { route: "editor", label: "Editor" },
+    { route: "notepad", label: "Notepad" },
+    { route: "settings", label: "Settings" },
+    { route: "music", label: "Music" },
 ]
 
 export const Sidebar = ({ route, setRoute }) => (
@@ -11,8 +11,8 @@ export const Sidebar = ({ route, setRoute }) => (
         {sidebarSet.map((btn) => (
             <button
                 className={
-                    'btn p-0 rounded-0 w-100 h-100 m-0 ' +
-                    (route === btn.route ? 'btn-dark' : 'btn-secondary')
+                    "btn p-0 rounded-0 w-100 h-100 m-0 " +
+                    (route === btn.route ? "btn-dark" : "btn-secondary")
                 }
                 key={btn.route}
                 aria-pressed="true"

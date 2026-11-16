@@ -1,4 +1,4 @@
-import { delay } from '../util'
+import { delay } from "../util"
 
 /**
  * I seem to have completely forgotten what this module is for
@@ -10,8 +10,8 @@ import { delay } from '../util'
  */
 export default class DialogModule {
     constructor() {
-        window.dbg('DialogModule', 'Constructing')
-        delay(() => window.dbg('DialogModule', 'Test call succesful'), 500)
+        window.dbg("DialogModule", "Constructing")
+        delay(() => window.dbg("DialogModule", "Test call succesful"), 500)
     }
     /*
     startDialog(...dialogSet){

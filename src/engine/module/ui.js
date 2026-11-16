@@ -1,4 +1,4 @@
-import Emitter from '../class/emitter.js'
+import Emitter from "../class/emitter.js"
 
 import PrinterModule from "./printer.js"
 
@@ -6,9 +6,9 @@ import PrinterModule from "./printer.js"
  * UI module for managing input,output, notepad,music
  */
 class UIModule extends Emitter {
-    notepad = localStorage.getItem('notepad') ?? ''
+    notepad = localStorage.getItem("notepad") ?? ""
     output = []
-    input = ''
+    input = ""
     music = { videoId: null, callBack: null, startSeconds: 0 }
 
     printer = new PrinterModule()
@@ -20,17 +20,19 @@ class UIModule extends Emitter {
         this.input = state.input ?? this.input
         this.music = state.music ?? this.music
 
-        this.printer.on("printed", (messageList) => this.add("output",messageList) )
+        this.printer.on("printed", (messageList) =>
+            this.add("output", messageList)
+        )
     }
 
-    set(property,value){
+    set(property, value) {
         this[property] = value
-        this.emit("updated_"+property, this[property])
+        this.emit("updated_" + property, this[property])
     }
 
-    add(property,value){
+    add(property, value) {
         this[property] = this[property].concat(value)
-        this.emit("updated_"+property, this[property])
+        this.emit("updated_" + property, this[property])
     }
 
     toJSON() {
@@ -42,27 +44,36 @@ class UIModule extends Emitter {
     }
 
     printError(error) {
-        this.print({type:"div",
-            content:[
-                {type:"div",className:"text-danger h4",content:"Something went wrong"},
+        this.print({
+            type: "div",
+            content: [
+                {
+                    type: "div",
+                    className: "text-danger h4",
+                    content: "Something went wrong",
+                },
             ].concat(
                 error.stack
-                .split('\n')
-                .map((line) => ({type:"div",className:"text-danger",content:line}) )
-            )
+                    .split("\n")
+                    .map((line) => ({
+                        type: "div",
+                        className: "text-danger",
+                        content: line,
+                    }))
+            ),
         })
         console.error(error)
     }
 
     clear() {
-        this.set("output",[])
+        this.set("output", [])
     }
     print(content) {
         this.printer.print(content)
     }
 
-    handle(command){
-        this.emit("commandHandled",command)
+    handle(command) {
+        this.emit("commandHandled", command)
     }
 }
 

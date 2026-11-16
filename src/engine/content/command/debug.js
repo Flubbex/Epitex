@@ -7,16 +7,17 @@ const commandConstructor = (API) => {
 
     const dump = ([targetName]) => {
         const plyRoom = API.room()
-        const  target = targetName
-            ? plyRoom.get('any', targetName) || API.player().get('any', targetName)
+        const target = targetName
+            ? plyRoom.get("any", targetName) ||
+              API.player().get("any", targetName)
             : plyRoom
-        
-        return {type:"div",content:JSON.stringify(target,null,2)}
+
+        return { type: "div", content: JSON.stringify(target, null, 2) }
     }
 
     function objectToCode(obj) {
         return JSON.stringify(obj, null, 2)
-            .replace(/"([^"]+)":/g, '$1:') // Remove quotes from property names
+            .replace(/"([^"]+)":/g, "$1:") // Remove quotes from property names
             .replace(/"([^"]*)"/g, '"$1"') // Replace double quotes with single quotes
     }
 
@@ -30,7 +31,7 @@ const commandConstructor = (API) => {
             return "Warning: This will delete everything. If you're sure, reset again."
         }
         API.reset()
-        return 'Refreshing..'
+        return "Refreshing.."
     }
 
     const sync = () => {
@@ -43,11 +44,11 @@ const commandConstructor = (API) => {
             API.mapRoom((e) => (e.id === plyRoom.id ? fromData : e))
         )
 
-        return 'Synced room #' + plyRoom.id + ' with original from content'
+        return "Synced room #" + plyRoom.id + " with original from content"
     }
 
     const question = () => {
-        API.print('What is your name?')
+        API.print("What is your name?")
         API.inputPrompt((input) => {
             API.player().name = input
             API.inputPrompt(null)

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef } from "react"
 
 const Player = ({ videoId, startSeconds = 0, callBack }) => {
     const containerRef = useRef(null)
@@ -41,14 +41,14 @@ const MusicPlayer = ({ ui }) => {
         setMusic(v)
     }
     useEffect(() => {
-        ui.on('updated_music', applyMusic)
+        ui.on("updated_music", applyMusic)
         return () => {
-            ui.off('updated_music', applyMusic)
+            ui.off("updated_music", applyMusic)
         }
     }, [ui])
 
     return (
-        <div className="container p-0 bg-dark" style={{ height: '75vh' }}>
+        <div className="container p-0 bg-dark" style={{ height: "75vh" }}>
             <div className="row h-100">
                 <div className="col h-100">
                     {music.videoId && (

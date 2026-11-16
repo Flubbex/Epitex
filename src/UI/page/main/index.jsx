@@ -1,6 +1,6 @@
 //import { useEffect, useState } from "react"
-import ScrollingView from './ScrollingView'
-import InputBox from './InputBox'
+import ScrollingView from "./ScrollingView"
+import InputBox from "./InputBox"
 
 /*
 const ControlPanel = ({ game }) => {

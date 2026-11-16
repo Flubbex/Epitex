@@ -1,14 +1,14 @@
-import Emitter from '../class/emitter'
+import Emitter from "../class/emitter"
 
 const cardinalExit = {
-    n: 'north',
-    w: 'west',
-    e: 'east',
-    s: 'south',
-    ne: 'northeast',
-    nw: 'northwest',
-    se: 'southeast',
-    sw: 'southwest',
+    n: "north",
+    w: "west",
+    e: "east",
+    s: "south",
+    ne: "northeast",
+    nw: "northwest",
+    se: "southeast",
+    sw: "southwest",
 }
 
 /*
@@ -33,13 +33,12 @@ const cardinalMoveWare = (API) => {
 export default class InteractionModule extends Emitter {
     API = null
     request = null
-    
+
     command = {}
     ware = []
-    
 
     constructor(API) {
-        window.dbg("InteractionModule","Constructing")
+        window.dbg("InteractionModule", "Constructing")
         super()
         this.API = API
 
@@ -53,10 +52,10 @@ export default class InteractionModule extends Emitter {
 
     load(command) {
         window.dbg(
-            'InteractionModule',
-            'Loading ',
+            "InteractionModule",
+            "Loading ",
             Object.keys(command).length,
-            'commands'
+            "commands"
         )
         this.command = command
     }
@@ -91,25 +90,27 @@ export default class InteractionModule extends Emitter {
     runHandle(clean, arg) {
         if (this.command[clean]) return this.command[clean](arg)
 
-
         const room = this.API.room()
-        if (room.action?.map((e)=>e.toLowerCase()).includes(clean)) {
+        if (room.action?.map((e) => e.toLowerCase()).includes(clean)) {
             room.emit("action_" + clean, room, arg)
             return
         }
 
-        const roomItem = room.content.find(e => e.action?.map((e)=>e.toLowerCase()).includes(clean))
+        const roomItem = room.content.find((e) =>
+            e.action?.map((e) => e.toLowerCase()).includes(clean)
+        )
         if (roomItem) {
             roomItem.emit("action_" + clean, roomItem, arg)
             return
         }
 
-        const invItem = this.API.player().content.find(e => e.action?.map((e)=>e.toLowerCase()).includes(clean))
+        const invItem = this.API.player().content.find((e) =>
+            e.action?.map((e) => e.toLowerCase()).includes(clean)
+        )
         if (invItem) {
             invItem.emit("action_" + clean, invItem, arg)
             return
         }
-        
 
         return this.error(clean)
     }
@@ -121,33 +122,31 @@ export default class InteractionModule extends Emitter {
 
         if (!silent)
             this.emit(
-                'output',
-                {type:"span",className:"text-warning",content:input},
+                "output",
+                { type: "span", className: "text-warning", content: input },
                 true
             )
 
-        if (this.API.game()){
+        if (this.API.game()) {
             const wareResult = this.ware
-            .map((ware) => ware(clean, arg))
-            .filter((e) => e)
+                .map((ware) => ware(clean, arg))
+                .filter((e) => e)
 
             if (wareResult.length) return wareResult
         }
-        
+
         const output = this.runHandle(clean, arg)
-        
-        this.emit('output', output)
+
+        this.emit("output", output)
 
         return output
     }
 
     handle(input, silent) {
-        const splitInput = input.split(';') 
+        const splitInput = input.split(";")
         if (this.request) {
             const result = this.request(splitInput)
-            this.emit('output',result)
-        }
-        else 
-            return splitInput.map((p) => this.doHandle(p, silent))
+            this.emit("output", result)
+        } else return splitInput.map((p) => this.doHandle(p, silent))
     }
 }

@@ -1,23 +1,25 @@
-import Emitter from '../class/emitter.js'
+import Emitter from "../class/emitter.js"
 
-import Room from './model/room/index.js'
-import Exit from './model/room/exit.js'
-import Menu from './model/room/menu.js'
+import Room from "./model/room.js"
+import Exit from "./model/exit.js"
+import Menu from "./model/menu.js"
 
-import Item from './model/item/index.js'
-import Key from './model/item/key.js'
+import Item from "./model/item.js"
+import Key from "./model/key.js"
 
-import Container from './model/container.js'
-import Spawner from './model/spawner.js'
+import Container from "./model/container.js"
+import Spawner from "./model/spawner.js"
 
-import NPC from './model/being/npc.js'
-import Mobile from './model/being/mobile.js'
+import Being from "./model/being.js"
+import NPC from "./model/npc.js"
+import Mobile from "./model/mobile.js"
 
 const typeTable = {
     room: Room,
     exit: Exit,
     item: Item,
     npc: NPC,
+    being: Being,
     container: Container,
     mobile: Mobile,
     spawner: Spawner,
@@ -27,8 +29,8 @@ const typeTable = {
 
 class Factory extends Emitter {
     unid() {
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-        let result = ''
+        const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        let result = ""
 
         for (let i = 0; i < 6; i++) {
             const randomIndex = Math.floor(Math.random() * characters.length)
@@ -51,7 +53,7 @@ class Factory extends Emitter {
                 `World tried to instantiate unknown '${type}' type`,
                 state
             )
-            return new Item({ name: 'Error' })
+            return new Item({ name: "Error" })
         }
 
         const validatedState = this.validate(state)
@@ -62,16 +64,15 @@ class Factory extends Emitter {
         if (out.content)
             out.content = out.content.map((object) => this.instance(object))
 
-        if (!out.parent) out.parent = 'NULLED'
+        if (!out.parent) out.parent = "NULLED"
 
-
-        this.emit("instanced",out)
+        this.emit("instanced", out)
         return out
     }
 
     instance(stateOrType, state = {}) {
         let result = null
-        if (typeof stateOrType === 'string')
+        if (typeof stateOrType === "string")
             result = this.doInstance(stateOrType, state)
         else result = this.doInstance(stateOrType.type, stateOrType)
 

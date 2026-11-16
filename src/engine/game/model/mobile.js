@@ -1,4 +1,4 @@
-import NPC from './npc.js'
+import NPC from "./npc.js"
 
 class Mobile extends NPC {
     moveChance = 0.05
@@ -15,7 +15,7 @@ class Mobile extends NPC {
         super.tick(API, room)
         if (this.health <= 0) {
             const parent = API.get(this.parent)
-            if (parent.type === 'spawner') {
+            if (parent.type === "spawner") {
                 parent.eject(this.id)
             }
             return
@@ -31,7 +31,7 @@ class Mobile extends NPC {
     moveRandom(API, room) {
         let attemptLeft = 3
         let next = null
-        const exitOrList = room.get('exit')
+        const exitOrList = room.get("exit")
 
         if (!exitOrList) return
 
@@ -44,8 +44,8 @@ class Mobile extends NPC {
 
         if (next === null) return
 
-        room.echo(this.name + ' moves towards the ' + next.name.toLowerCase())
-        API.get(next.target).echo(this.name + ' walks in')
+        room.echo(this.name + " moves towards the " + next.name.toLowerCase())
+        API.get(next.target).echo(this.name + " walks in")
 
         this.move(API.get(next.target), room)
 

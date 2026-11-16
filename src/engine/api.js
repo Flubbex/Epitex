@@ -8,7 +8,7 @@ const apiConstructor = (engine) => {
     /**
      * Get current game
      */
-    const game = () =>  engine.game
+    const game = () => engine.game
 
     /**
      * Handle a command
@@ -173,7 +173,7 @@ const apiConstructor = (engine) => {
             data = JSON.parse(jsonString)
         } catch (e) {
             console.warn(e)
-            return 'Malformed JSON string'
+            return "Malformed JSON string"
         }
 
         const room = engine.store.patch(data)
@@ -185,9 +185,9 @@ const apiConstructor = (engine) => {
      * Run an action
      */
     const runAction = (name, ...args) => {
-        const action = engine.content.get('action', name)
+        const action = engine.content.get("action", name)
         if (!action)
-            return console.warn('Tried running an unimplemented action:', name)
+            return console.warn("Tried running an unimplemented action:", name)
 
         return action(...args)
     }
@@ -196,7 +196,7 @@ const apiConstructor = (engine) => {
      * Return the key if the player has a key that targets the id
      */
     const playerGetKey = (id) => {
-        const allKey = player().get('key')
+        const allKey = player().get("key")
 
         if (allKey === null) return false
 
@@ -229,7 +229,7 @@ const apiConstructor = (engine) => {
      * Start a file download
      */
     const createDownload = (data, type, filename) => {
-        const a = document.createElement('a')
+        const a = document.createElement("a")
         const file = new Blob([data], { type: type })
 
         if (window.navigator.msSaveOrOpenBlob)
@@ -253,18 +253,18 @@ const apiConstructor = (engine) => {
      * Start a file upload
      */
 
-    const createUpload =  () => {
+    const createUpload = () => {
         const promise = window.showOpenFilePicker({
-        types: [
-            {
-            description: "JSON file",
-            accept: {
-                "application/json": [".json"],
-            },
-            },
-        ],
-        excludeAcceptAllOption: true,
-        multiple: false,
+            types: [
+                {
+                    description: "JSON file",
+                    accept: {
+                        "application/json": [".json"],
+                    },
+                },
+            ],
+            excludeAcceptAllOption: true,
+            multiple: false,
         })
         return promise
     }
@@ -286,28 +286,32 @@ const apiConstructor = (engine) => {
     /**
      * Create a new pack
      */
-    const createPack = (name="New Pack",description="This is an entirely new pack",startRoom="init_room") => {
+    const createPack = (
+        name = "New Pack",
+        description = "This is an entirely new pack",
+        startRoom = "init_room"
+    ) => {
         const info = {
-            name,
-            description,
-            startRoom
-        },
-        room = [
-            {
-                id:"init_room",
-                type:"room",
-                name:"New Room",
-                description:"Exciting!"
-            }
-        ]
-        return {info,room}
+                name,
+                description,
+                startRoom,
+            },
+            room = [
+                {
+                    id: "init_room",
+                    type: "room",
+                    name: "New Room",
+                    description: "Exciting!",
+                },
+            ]
+        return { info, room }
     }
 
     /**
      * Load a game
      */
     const loadGamePack = (name) => {
-        window.dbg('--------------', 'Loading Pack')
+        window.dbg("--------------", "Loading Pack")
         engine.ui.clear()
         engine.start(name)
     }
@@ -316,7 +320,7 @@ const apiConstructor = (engine) => {
      * Import a game pack
      */
     const importPack = (pack) => {
-        console.log(`%cImporting pack ${pack.info.name}`,"color:orange")
+        console.log(`%cImporting pack ${pack.info.name}`, "color:orange")
         engine.content.loadPack(pack)
         engine.storage.clear(pack.info.name)
         engine.start(pack.info.name)
@@ -340,11 +344,13 @@ const apiConstructor = (engine) => {
      * Play a song
      */
     const playMusic = (videoId, startSeconds = 0) => {
-        return new Promise((resolve)=>
-            {
-                engine.store.ui.setMusic({ videoId, startSeconds, callBack:resolve })
-            }
-        )
+        return new Promise((resolve) => {
+            engine.store.ui.setMusic({
+                videoId,
+                startSeconds,
+                callBack: resolve,
+            })
+        })
     }
 
     /**
@@ -358,50 +364,58 @@ const apiConstructor = (engine) => {
     /**
      * Export to content pack
      */
-    const exportPack = (filename="export") => {
-        const pack = {...getCurrentPack(), ...{room:engine.game.world.room}}
+    const exportPack = (filename = "export") => {
+        const pack = {
+            ...getCurrentPack(),
+            ...{ room: engine.game.world.room },
+        }
 
         pack.info.script = engine.game.script.script
-        
-        createDownload(JSON.stringify(pack,null,2),"application/json",filename)
+
+        createDownload(
+            JSON.stringify(pack, null, 2),
+            "application/json",
+            filename
+        )
     }
 
     /**
-     * Connect a call to an event on an object 
+     * Connect a call to an event on an object
      * prevents hooking up the same event multiple times
      */
-    const connect = (objectOrId,event,call) => {
-        let target 
-        if (typeof objectOrId === "string")
-            target = get(objectOrId)
-        else 
-            target = objectOrId
+    const connect = (objectOrId, event, call) => {
+        let target
+        if (typeof objectOrId === "string") target = get(objectOrId)
+        else target = objectOrId
 
         if (!target)
-            throw new Error("API.connect called with invalid object or id:",objectOrId)
+            throw new Error(
+                "API.connect called with invalid object or id:",
+                objectOrId
+            )
 
-        target.off(event,call)
-        target.on(event,call)
+        target.off(event, call)
+        target.on(event, call)
     }
 
     /**
-     * Connect a call to an event on an object once 
+     * Connect a call to an event on an object once
      * prevents hooking up the same event multiple times
      */
-    const connectOnce = (objectOrId,event,call) => {
-        let target 
-        if (typeof objectOrId === "string")
-            target = get(objectOrId)
-        else 
-            target = objectOrId
+    const connectOnce = (objectOrId, event, call) => {
+        let target
+        if (typeof objectOrId === "string") target = get(objectOrId)
+        else target = objectOrId
 
         if (!target)
-            throw new Error("API.connect called with invalid object or id:",objectOrId)
+            throw new Error(
+                "API.connect called with invalid object or id:",
+                objectOrId
+            )
 
-        target.off(event,call)
-        target.once(event,call)
+        target.off(event, call)
+        target.once(event, call)
     }
-
 
     return {
         util,
@@ -445,7 +459,7 @@ const apiConstructor = (engine) => {
         connectOnce,
         importPack,
         start,
-        save
+        save,
     }
 }
 

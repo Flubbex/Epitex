@@ -1,4 +1,4 @@
-import Container from './container'
+import Container from "./container"
 
 class Spawner extends Container {
     chance = 1
@@ -30,7 +30,7 @@ class Spawner extends Container {
         const newEnemy = API.create({ ...this.randomItem(), ...{ id: null } })
         this.entities.push(newEnemy.id)
         room.add(newEnemy)
-        room.echo('A ' + newEnemy.name + ' enters the room')
+        room.echo("A " + newEnemy.name + " enters the room")
     }
 }
 

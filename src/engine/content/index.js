@@ -1,14 +1,14 @@
 //Bomb-ass logo generated using https://patorjk.com/software/taag/
 
-import commandConstructor from './command'
+import commandConstructor from "./command"
 
 const banana = {
-    type:"img",
-    src:"img/banana.gif",
-    command:'bananaclicked',
-    width:"64",
-    height:"64",
-    style:{display:"inline",cursor:"pointer"}
+    type: "img",
+    src: "img/banana.gif",
+    command: "bananaclicked",
+    width: "64",
+    height: "64",
+    style: { display: "inline", cursor: "pointer" },
 }
 
 const epiTextLogo = `                                        
@@ -23,11 +23,11 @@ const epiTextLogo = `
 `
 
 const subText = {
-    type:"span",
-    content:[
-        {type:"span",content:"    v0.9              Made by Flubber     "},
-        banana
-    ]
+    type: "span",
+    content: [
+        { type: "span", content: "    v0.9              Made by Flubber     " },
+        banana,
+    ],
 }
 
 /**
@@ -36,42 +36,41 @@ const subText = {
  * @returns Base content Pack
  */
 const engineContentConstructor = (API) => {
-
-    const r = (min,max) => Math.random()*max+min
+    const r = (min, max) => Math.random() * max + min
 
     const rainbow = (input) => {
-        return input.split("").map((content)=>{
-            const randomColor = `rgb(${r(64,192)},${r(64,192)},${r(64,192)})`
-            return {type:"span",style:{color:randomColor},content}
+        return input.split("").map((content) => {
+            const randomColor = `rgb(${r(64, 192)},${r(64, 192)},${r(64, 192)})`
+            return { type: "span", style: { color: randomColor }, content }
         })
     }
 
     const description = {
-        type:"div",
-        content:rainbow(epiTextLogo).concat(subText)
+        type: "div",
+        content: rainbow(epiTextLogo).concat(subText),
     }
 
     const room = [
         {
-            id: 'NULLED',
-            type: 'room',
-            name: 'Null Room',
-            description: 'You find yourself in a place beyond space and time.',
+            id: "NULLED",
+            type: "room",
+            name: "Null Room",
+            description: "You find yourself in a place beyond space and time.",
         },
         {
-            id: 'LoaderMenu',
-            type: 'menu',
-            name: 'Load Screen',
+            id: "LoaderMenu",
+            type: "menu",
+            name: "Load Screen",
             description,
         },
     ]
 
     const bananaClicked = () => {
-        API.print('Why you touching my banana bro?')
+        API.print("Why you touching my banana bro?")
     }
 
     const loadGame = (gameSplit) => {
-        const game = gameSplit.join(' ')
+        const game = gameSplit.join(" ")
         API.loadGamePack(game)
     }
 
@@ -85,7 +84,7 @@ const engineContentConstructor = (API) => {
         API.player().add(item)
     }
     */
-   
+
     const command = {
         ...commandConstructor(API),
         ...{ loadgame: loadGame, bananaclicked: bananaClicked },
@@ -94,13 +93,13 @@ const engineContentConstructor = (API) => {
     return {
         room,
         command,
-        info:{
-            type:"game",
-            version:1,
-            name:"Base",
-            description:"Base content + A main menu",
-            startRoom: 'LoaderMenu',
-            script:`
+        info: {
+            type: "game",
+            version: 1,
+            name: "Base",
+            description: "Base content + A main menu",
+            startRoom: "LoaderMenu",
+            script: `
             const printMenu = () => {
                 print({type:"span",className:"bold",content:'Available adventures:'})
                 const allGames = getAvailableGames()
@@ -121,8 +120,8 @@ const engineContentConstructor = (API) => {
             }
 
             connect("LoaderMenu","object_viewed", ()=>window.setTimeout(printMenu,0) )
-            `
-        }
+            `,
+        },
     }
 }
 export default engineContentConstructor

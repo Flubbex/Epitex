@@ -1,4 +1,4 @@
-import Container from '../container'
+import Container from "./container"
 
 const attrSet = {
     strength: 0,
@@ -16,7 +16,7 @@ const attrSet = {
  * @param {any} state - The current state of the being
  */
 class Being extends Container {
-    room = 'NULLED'
+    room = "NULLED"
     health = null
     attribute = {
         strength: 1,
@@ -28,7 +28,7 @@ class Being extends Container {
         luck: 1,
     }
     type = "being"
-    
+
     constructor(state = {}) {
         super(state)
         this.room = state.room ?? this.room
@@ -45,30 +45,29 @@ class Being extends Container {
         this.room = nextRoom.id
         nextRoom.add(this)
         currentRoom.remove(this)
-        this.emit('moved', this,nextRoom, currentRoom)
+        this.emit("moved", this, nextRoom, currentRoom)
     }
 
-    decompose(API,room){
+    decompose(API, room) {
         this.health--
 
         if (this.health <= -5) {
-            room.echo(this.name + ' has wasted away')
+            room.echo(this.name + " has wasted away")
             API.get(this.room).remove(this)
         } else if (this.health == -2) {
-            room.echo(this.name + ' has turned to a corpse')
-            this.name = 'Corpse of ' + this.name
+            room.echo(this.name + " has turned to a corpse")
+            this.name = "Corpse of " + this.name
         }
     }
     tick(API, room) {
-        super.tick(API,room)
-        if (this.health <= 0)
-            this.decompose(API,room)
+        super.tick(API, room)
+        if (this.health <= 0) this.decompose(API, room)
     }
 
     die() {
-        this.type = 'item'
-        this.name = this.name + ' (deceased)'
-        this.emit('died', this)
+        this.type = "item"
+        this.name = this.name + " (deceased)"
+        this.emit("died", this)
     }
 
     damage() {
@@ -79,7 +78,7 @@ class Being extends Container {
     hurt(amount, inflictor) {
         this.health = this.health - amount < 0 ? 0 : this.health - amount
         if (this.health <= 0) this.die()
-        this.emit('hurt', this,amount, inflictor)
+        this.emit("hurt", this, amount, inflictor)
     }
 
     calculateStatistic(_modifier = {}) {
@@ -106,23 +105,23 @@ class Being extends Container {
     }
 
     spaced(name, value, dist) {
-        const spacer = ' '.repeat(dist - name.length)
+        const spacer = " ".repeat(dist - name.length)
         return name + spacer + value
     }
 
     score() {
         const out = [
             this.spaced(
-                'health',
-                this.health + '/' + this.statistic.maxHealth,
+                "health",
+                this.health + "/" + this.statistic.maxHealth,
                 15
             ),
         ]
-        out.push('------')
+        out.push("------")
         Object.keys(this.attribute).map((k) =>
             out.push(this.spaced(k, this.attribute[k], 15))
         )
-        out.push('------')
+        out.push("------")
         Object.keys(this.statistic).map((k) =>
             out.push(this.spaced(k, this.statistic[k], 15))
         )

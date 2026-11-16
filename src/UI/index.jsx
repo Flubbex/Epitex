@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useState } from "react"
 
-import Sidebar from './Sidebar'
-import Switch from './Switch'
+import Sidebar from "./Sidebar"
+import Switch from "./Switch"
 
 const App = ({ ui }) => {
-    const [route, setRoute] = useState('main')
+    const [route, setRoute] = useState("main")
 
     return (
         <>
@@ -16,7 +16,7 @@ const App = ({ ui }) => {
                 <div className="row d-none d-md-block" id="router">
                     <Sidebar route={route} setRoute={setRoute} />
                 </div>
-                 <Switch route={route} ui={ui} />
+                <Switch route={route} ui={ui} />
             </div>
         </>
     )

@@ -1,45 +1,54 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from "react"
 
 const componentMap = {
-  span: 'span',
-  div: 'div',
-  p: 'p',
-  h1: 'h1',
-  h2: 'h2',
-  h3: 'h3',
-  h4: 'h4',
-  strong: 'strong',
-  em: 'em',
-  br: 'br',
-  button: 'button',
-  ul: 'ul',
-  li: 'li',
-  img: 'img'
-  // add more as needed
+    span: "span",
+    div: "div",
+    p: "p",
+    h1: "h1",
+    h2: "h2",
+    h3: "h3",
+    h4: "h4",
+    strong: "strong",
+    em: "em",
+    br: "br",
+    button: "button",
+    ul: "ul",
+    li: "li",
+    img: "img",
+    // add more as needed
 }
 
 export function MessageRenderer({ message, onCommand }) {
-  if (!message) return null
-  if (typeof message === 'string') return <>{message}</>
+    if (!message) return null
+    if (typeof message === "string") return <>{message}</>
 
-  const { type = 'span', className, content, command, style, ...rest } = message
-  const Tag = componentMap[type] || 'span'
+    const {
+        type = "span",
+        className,
+        content,
+        command,
+        style,
+        ...rest
+    } = message
+    const Tag = componentMap[type] || "span"
 
-  const children = Array.isArray(content)
-    ? content.map((c, i) => <MessageRenderer key={i} message={c} onCommand={onCommand} />)
-    : content
+    const children = Array.isArray(content)
+        ? content.map((c, i) => (
+              <MessageRenderer key={i} message={c} onCommand={onCommand} />
+          ))
+        : content
 
-  const props = {
-    className,
-    style,
-    ...rest,
-    onClick: command ? () => onCommand(command) : message.onClick,
-  }
+    const props = {
+        className,
+        style,
+        ...rest,
+        onClick: command ? () => onCommand(command) : message.onClick,
+    }
 
-  // Self-closing tags
-  if (type === 'br') return <Tag {...props} />
+    // Self-closing tags
+    if (type === "br") return <Tag {...props} />
 
-  return <Tag {...props}>{children}</Tag>
+    return <Tag {...props}>{children}</Tag>
 }
 
 const ScrollingView = ({ ui }) => {
@@ -49,18 +58,18 @@ const ScrollingView = ({ ui }) => {
     const scrollEndRef = useRef(null)
     const scrollViewRef = useRef(null)
 
-     const handleOutput = (v) => setOutput(v)
+    const handleOutput = (v) => setOutput(v)
 
     useEffect(() => {
-        ui.on('updated_output', handleOutput)
+        ui.on("updated_output", handleOutput)
 
         return () => {
-            ui.off('updated_output', handleOutput)
+            ui.off("updated_output", handleOutput)
         }
     }, [ui])
 
     useEffect(() => {
-        if (locked) scrollEndRef.current.scrollIntoView({ behavior: 'instant' })
+        if (locked) scrollEndRef.current.scrollIntoView({ behavior: "instant" })
     }, [output, locked])
 
     const isVisible = (ele, container) => {
@@ -77,20 +86,26 @@ const ScrollingView = ({ ui }) => {
 
     return (
         <div
-            className={'col ' + (locked ? 'locked' : 'unlocked')}
+            className={"col " + (locked ? "locked" : "unlocked")}
             id="scrollview"
             ref={scrollViewRef}
             onScroll={(ev) => onScroll(ev)}
         >
             {output.map((msg, i) => (
-                <div key={i} className="message animate__animated animate__fadeIn">
-                    <MessageRenderer message={msg} onCommand={(cmd) => ui.handle(cmd,true)} />
+                <div
+                    key={i}
+                    className="message animate__animated animate__fadeIn"
+                >
+                    <MessageRenderer
+                        message={msg}
+                        onCommand={(cmd) => ui.handle(cmd, true)}
+                    />
                 </div>
             ))}
 
             <div
                 id="scrollend"
-                style={{ color: 'rgba(0,0,0,0)' }}
+                style={{ color: "rgba(0,0,0,0)" }}
                 ref={scrollEndRef}
             >
                 You're not supposed to see this

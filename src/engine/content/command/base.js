@@ -1,44 +1,43 @@
 const commandConstructor = (API) => {
-
     const clear = (arg) => {
         API.clear()
-        if ('silent' in arg === false) API.print('Output cleared')
+        if ("silent" in arg === false) API.print("Output cleared")
     }
     const echo = (args) => {
-        return args.join(' ')
+        return args.join(" ")
     }
 
     const put = ([item, sub, target]) => {
-        if (!item || !sub || !target) return 'What do you want to put in where?'
+        if (!item || !sub || !target) return "What do you want to put in where?"
 
         const ply = API.player()
         const plyRoom = API.room()
 
-        let itemSource = 'player'
-        let plyItem = ply.get('any', item)
+        let itemSource = "player"
+        let plyItem = ply.get("any", item)
 
         if (!plyItem) {
-            itemSource = 'room'
-            plyItem = plyRoom.get('any', item)
+            itemSource = "room"
+            plyItem = plyRoom.get("any", item)
         }
 
-        let plyTarget = ply.get('any', target)
+        let plyTarget = ply.get("any", target)
 
         if (!plyTarget) {
-            plyTarget = plyRoom.get('any', target)
+            plyTarget = plyRoom.get("any", target)
         }
 
-        if (!plyItem) return 'What do you want to put into something else?'
+        if (!plyItem) return "What do you want to put into something else?"
         if (plyItem.length)
             return [
-                'The item you want to put into something else is ambigious, did you mean any of these?',
+                "The item you want to put into something else is ambigious, did you mean any of these?",
             ].concat(plyItem.map((i) => i.name))
 
         if (!plyTarget)
-            return 'Where do you want to put the ' + plyItem.name + '?'
+            return "Where do you want to put the " + plyItem.name + "?"
         if (plyTarget.length)
             return [
-                'The item you want to put something in is ambigious, did you mean any of these?',
+                "The item you want to put something in is ambigious, did you mean any of these?",
             ].concat(plyTarget.map((i) => i.name))
 
         if (!plyTarget.content)
@@ -46,10 +45,10 @@ const commandConstructor = (API) => {
 
         plyTarget.add(plyItem)
 
-        if (itemSource === 'player') ply.remove(plyItem)
+        if (itemSource === "player") ply.remove(plyItem)
         else plyRoom.remove(plyItem)
 
-        return 'Put the ' + plyItem.name + ' into the ' + plyTarget.name
+        return "Put the " + plyItem.name + " into the " + plyTarget.name
     }
 
     const give = ([item, sub, target]) => {
@@ -57,7 +56,7 @@ const commandConstructor = (API) => {
     }
 
     const doCrawl = (room, area, map = {}) => {
-        let exitSet = room.get('exit')
+        let exitSet = room.get("exit")
         if (!exitSet) return map
         if (!exitSet.length) exitSet = [exitSet]
 
@@ -103,31 +102,31 @@ const commandConstructor = (API) => {
                 let nx = x
                 let ny = y
                 switch (dir) {
-                    case 'North':
+                    case "North":
                         ny -= 1
                         break
-                    case 'South':
+                    case "South":
                         ny += 1
                         break
-                    case 'West':
+                    case "West":
                         nx -= 1
                         break
-                    case 'East':
+                    case "East":
                         nx += 1
                         break
-                    case 'Northeast':
+                    case "Northeast":
                         nx += 1
                         ny -= 1
                         break
-                    case 'Northwest':
+                    case "Northwest":
                         nx -= 1
                         ny -= 1
                         break
-                    case 'Southeast':
+                    case "Southeast":
                         nx += 1
                         ny += 1
                         break
-                    case 'Southwest':
+                    case "Southwest":
                         nx -= 1
                         ny += 1
                         break
@@ -141,7 +140,7 @@ const commandConstructor = (API) => {
         placeRoom(curRoom.id, 0, 0)
 
         if (minX === Infinity) {
-            API.print('No rooms to map.')
+            API.print("No rooms to map.")
             return
         }
 
@@ -151,25 +150,24 @@ const commandConstructor = (API) => {
         minY -= pad
         maxY += pad
 
-        const lines = [
-        ]
+        const lines = []
         for (let y = minY + 1; y <= maxY; y++) {
-            let row = ''
+            let row = ""
             for (let x = minX; x <= maxX; x++) {
                 const id = cells[`${x},${y}`]
                 if (!id) {
-                    row += '▮'
+                    row += "▮"
                 } else if (id === curRoom.id) {
                     // current room — different color
                     row += "⋆"
                 } else {
-                    row += '▯'
+                    row += "▯"
                 }
             }
             lines.push(row)
         }
 
-        const output = lines.map((content) => ({type:"span",content}) )
+        const output = lines.map((content) => ({ type: "span", content }))
         API.print(output)
     }
 
@@ -178,18 +176,18 @@ const commandConstructor = (API) => {
     }
 
     const playmusic = ([videoId, startSeconds = 0]) => {
-        if (!videoId) return 'Play what?'
+        if (!videoId) return "Play what?"
         API.playMusic(videoId, startSeconds, () => {
-            API.print('Playing!')
+            API.print("Playing!")
         })
-        return 'Loading music..'
+        return "Loading music.."
     }
 
     const use = ([targetName]) => {
-        if (!targetName) return 'Use what?'
+        if (!targetName) return "Use what?"
         const curRoom = API.room()
 
-        const roomItem = curRoom.get('any', targetName)
+        const roomItem = curRoom.get("any", targetName)
 
         if (roomItem) {
             roomItem.use()
@@ -197,7 +195,7 @@ const commandConstructor = (API) => {
         }
 
         const player = API.player()
-        const playerItem = player.get('any', targetName)
+        const playerItem = player.get("any", targetName)
 
         if (playerItem) {
             playerItem.use()

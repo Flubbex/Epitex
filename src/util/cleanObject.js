@@ -4,14 +4,14 @@ function cleanObject(o) {
         return o
             .map(cleanObject) // Recursively clean elements
             .filter((item) => item !== undefined) // Remove undefined entries (empty ones)
-    } else if (typeof o === 'object' && o !== null) {
+    } else if (typeof o === "object" && o !== null) {
         const cleanedObj = {}
         for (const key in o) {
             const value = cleanObject(o[key]) // Recursively clean the value
             if (
                 value !== undefined &&
                 !(Array.isArray(value) && value.length === 0) &&
-                !(typeof value === 'object' && Object.keys(value).length === 0)
+                !(typeof value === "object" && Object.keys(value).length === 0)
             ) {
                 cleanedObj[key] = value // Only add non-empty values
             }

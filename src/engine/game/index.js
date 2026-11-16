@@ -1,13 +1,13 @@
-import Emitter from '../class/emitter.js'
+import Emitter from "../class/emitter.js"
 
-import Player from './model/player.js'
-import World from './model/world.js'
-import Battle from './model/battle.js'
+import Player from "./model/player.js"
+import World from "./model/world.js"
+import Battle from "./model/battle.js"
 
-import ScriptModule from './script.js'
+import ScriptModule from "./script.js"
 import InteractionModule from "./interaction.js"
 
-import Factory from './factory.js'
+import Factory from "./factory.js"
 
 class Game extends Emitter {
     player = null
@@ -16,7 +16,7 @@ class Game extends Emitter {
 
     factory = null
 
-    script = null 
+    script = null
     action = null
 
     new = true
@@ -25,35 +25,36 @@ class Game extends Emitter {
 
     storedGame = null
 
-    gamePackInfo = null 
+    gamePackInfo = null
 
-    constructor(API,saveData) {
+    constructor(API, saveData) {
         super()
-        window.dbg('Game', 'Constructing')
+        window.dbg("Game", "Constructing")
 
         this.factory = new Factory()
-        
+
         this.script = new ScriptModule(API)
         this.action = new InteractionModule(API)
 
         this.action.load(saveData.command)
-        this.factory.on('instanced', this.register.bind(this))
+        this.factory.on("instanced", this.register.bind(this))
 
         this.storedGame = saveData
 
         this.world = new World()
-        
-        if (saveData.room)
-            saveData.room.map((room) => this.create(room))
+
+        if (saveData.room) saveData.room.map((room) => this.create(room))
 
         this.battle = new Battle(saveData.battle)
         this.player = new Player(saveData.player)
 
         this.player.content = this.player.content.map((obj) => this.create(obj))
 
-        this.new = 'new' in saveData ? false : true
+        this.new = "new" in saveData ? false : true
 
-        this.action.on("output",(...arg) => this.emit("actionOutput",this,...arg))
+        this.action.on("output", (...arg) =>
+            this.emit("actionOutput", this, ...arg)
+        )
 
         if (this.new)
             if (saveData.info.startRoom)
@@ -64,7 +65,7 @@ class Game extends Emitter {
                 )
     }
 
-    start(){
+    start() {
         if (this.storedGame.info.script)
             this.script.load(this.storedGame.info.script)
     }
@@ -77,21 +78,22 @@ class Game extends Emitter {
         return foundObject
     }
 
-    handle(input,silent=false){
-        return this.action.handle(input,silent)
+    handle(input, silent = false) {
+        return this.action.handle(input, silent)
     }
 
     register(object) {
         //window.dbg("StoreModule",`Registering ${object.name}`)
         this.byId[object.id] = object
 
-        if (object.type === 'room') this.world.room.push(object)
+        if (object.type === "room") this.world.room.push(object)
 
-        if (object.script)
-            this.script.loadObjectScript(object)
+        if (object.script) this.script.loadObjectScript(object)
 
         //Bubble any event from objects upward
-        object.on("*",(event,target,...args) => this.emit(event,target,...args))
+        object.on("*", (event, target, ...args) =>
+            this.emit(event, target, ...args)
+        )
     }
 
     create(objectState) {
@@ -102,13 +104,13 @@ class Game extends Emitter {
         }
 
         const newObject = this.factory.instance(objectState)
-        
+
         return newObject
     }
 
     //TODO: Lifted this from room, fix it
     patch(data) {
-        window.dbg('StoreModule', 'Patching load data')
+        window.dbg("StoreModule", "Patching load data")
         const patchedId = {}
         const prePatchedRoom = data.room.map((room) => {
             const id = this.factory.unid()
@@ -116,11 +118,11 @@ class Game extends Emitter {
             console.log(`Stored room id #${room.id} as room id #${id}`)
             return { ...room, ...{ id } }
         })
-        console.log('pre', prePatchedRoom)
+        console.log("pre", prePatchedRoom)
 
         const patchedRoom = prePatchedRoom.map((room) => {
             const patchedContent = room.content.map((exit) => {
-                if (exit.type !== 'exit') return exit
+                if (exit.type !== "exit") return exit
                 console.log(
                     `Patching exit "${exit.name}" with target #${exit.target} to #${patchedId[exit.target]}`
                 )
@@ -128,7 +130,7 @@ class Game extends Emitter {
             })
             return { ...room, ...{ content: patchedContent } }
         })
-        console.log('patched:', patchedRoom)
+        console.log("patched:", patchedRoom)
         const instancedRoom = patchedRoom.map((r) => this.create(r))
         console.log(`Done, patched in ${patchedRoom.length} rooms:`)
         patchedRoom.map((room) => console.log(`#${room.id}:${room.name}`))
@@ -137,7 +139,7 @@ class Game extends Emitter {
 
     save() {
         return {
-            info:this.storedGame.info,
+            info: this.storedGame.info,
             room: this.world.room,
             player: this.player,
             battle: {

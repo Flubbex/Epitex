@@ -1,9 +1,9 @@
-import Item from '.'
+import Item from "./item"
 
 class Key extends Item {
-    name = 'Key'
-    description = 'A nondescript key'
-    type = 'key'
+    name = "Key"
+    description = "A nondescript key"
+    type = "key"
     target = null
 
     constructor(state = {}) {

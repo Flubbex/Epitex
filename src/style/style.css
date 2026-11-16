@@ -13,8 +13,8 @@
 }
 
 @font-face {
-    font-family: 'Rage';
-    src: url('/font/Road_Rage.otf') format('opentype');
+    font-family: "Rage";
+    src: url("/font/Road_Rage.otf") format("opentype");
 }
 
 body {
@@ -38,7 +38,7 @@ body {
 }
 #backdrop_3 {
     opacity: 0.2;
-    background-image: url('/img/spikes.webp');
+    background-image: url("/img/spikes.webp");
     size: 25%;
 }
 
@@ -52,10 +52,9 @@ body {
     height: 80vh;
 }
 
-@media screen and (max-width : 768px)
-{
+@media screen and (max-width: 768px) {
     #scrollview {
-    height: 85vh;
+        height: 85vh;
     }
 }
 
@@ -82,10 +81,10 @@ body {
     resize: none;
     height: 15vh;
     box-shadow: inset 0px 0px 15px 15px rgba(0, 0, 0, 0.2);
-    background-color: rgba(50,50,50,0.5);
+    background-color: rgba(50, 50, 50, 0.5);
     font-family: monospace;
     font-size: 2vw;
-    color:whitesmoke;
+    color: whitesmoke;
     padding-left: 1vw;
 }
 
@@ -95,15 +94,27 @@ body {
     line-break: strict;
     font-family: Jet Mono;
     --animate-duration: 0.5s;
-     font-size: clamp(12px, 1.4vw, 24px);
+    font-size: clamp(12px, 1.4vw, 24px);
 }
 
-.h1 { font-size: clamp(30px, 3.6vw, 44px); }
-.h2 { font-size: clamp(27px, 3.2vw, 39px); }
-.h3 { font-size: clamp(24px, 2.8vw, 34px); }
-.h4 { font-size: clamp(21px, 2.5vw, 30px); }
-.h5 { font-size: clamp(18px, 2.2vw, 27px); }
-.h6 { font-size: clamp(16px, 2.05vw, 25px); }
+.h1 {
+    font-size: clamp(30px, 3.6vw, 44px);
+}
+.h2 {
+    font-size: clamp(27px, 3.2vw, 39px);
+}
+.h3 {
+    font-size: clamp(24px, 2.8vw, 34px);
+}
+.h4 {
+    font-size: clamp(21px, 2.5vw, 30px);
+}
+.h5 {
+    font-size: clamp(18px, 2.2vw, 27px);
+}
+.h6 {
+    font-size: clamp(16px, 2.05vw, 25px);
+}
 
 #inputarea::placeholder {
     color: white;
@@ -117,5 +128,5 @@ body {
 #scrollview .btn {
     margin: 0.2vw;
     border: 1px solid black;
-    border-radius:0px;
+    border-radius: 0px;
 }

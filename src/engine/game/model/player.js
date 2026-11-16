@@ -1,16 +1,16 @@
-import Being from './being'
+import Being from "./being"
 
 class Player extends Being {
     name = "Player"
-    type = 'player'
+    type = "player"
     id = "PLAYER"
     healTick = 0
     maxHealTick = 2
-    room = 'NULLED'
+    room = "NULLED"
     locked = false
-    lockedMessage = 'You feel compelled to stay where you are'
+    lockedMessage = "You feel compelled to stay where you are"
     quest = {}
-    home = 'NULLED'
+    home = "NULLED"
 
     constructor(state = {}) {
         super(state)
@@ -22,21 +22,21 @@ class Player extends Being {
 
     move(nextRoom, currentRoom) {
         this.room = nextRoom.id
-        
-        currentRoom.emit('player_left',this,currentRoom,nextRoom)
-        nextRoom.emit('player_entered',this,nextRoom,currentRoom)
 
-        this.emit('moved', this, nextRoom, currentRoom)
+        currentRoom.emit("player_left", this, currentRoom, nextRoom)
+        nextRoom.emit("player_entered", this, nextRoom, currentRoom)
+
+        this.emit("moved", this, nextRoom, currentRoom)
     }
 
     tick(API) {
         if (this.health <= 0) {
-            API.print('Having lost the last of your health, you pass out..')
+            API.print("Having lost the last of your health, you pass out..")
             const home = API.get(this.home)
             const room = API.get(this.room)
             this.move(home, room)
             this.health = this.statistic.maxHealth
-            API.handle('look', true)
+            API.handle("look", true)
         }
         if (this.health < this.statistic.maxHealth) {
             this.healTick++

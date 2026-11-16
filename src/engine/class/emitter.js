@@ -9,8 +9,8 @@ class Emitter {
      * Returns an unsubscribe function.
      */
     on(event, fn) {
-        if (typeof fn !== 'function')
-            throw new TypeError('Emitter.on: listener must be a function')
+        if (typeof fn !== "function")
+            throw new TypeError("Emitter.on: listener must be a function")
 
         let list = this._events[event]
         if (!list) {
@@ -49,7 +49,7 @@ class Emitter {
             delete this._events[event]
             return this
         }
-        
+
         this._events[event] = list.filter((f) => f !== fn && f._original !== fn)
         if (this._events[event].length === 0) delete this._events[event]
 
@@ -77,8 +77,8 @@ class Emitter {
             }
         }
 
-        run(this._events['*'], true)
-        if (event !== '*') run(this._events[event], false)
+        run(this._events["*"], true)
+        if (event !== "*") run(this._events[event], false)
 
         return this
     }

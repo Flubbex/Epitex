@@ -1,4 +1,4 @@
-import Emitter from '../class/emitter'
+import Emitter from "../class/emitter"
 
 export default class CombatModule extends Emitter {
     API = null
@@ -9,21 +9,21 @@ export default class CombatModule extends Emitter {
 
     constructor(API) {
         super()
-        window.dbg('CombatModule', 'Constructing')
+        window.dbg("CombatModule", "Constructing")
         this.API = API
     }
 
     attemptResume(battle) {
         if (battle.target) {
-            window.dbg('CombatModule', 'Continuing fight')
+            window.dbg("CombatModule", "Continuing fight")
             const target = this.API.get(battle.target)
-            this.API.print('The fight resumes!')
+            this.API.print("The fight resumes!")
             this.fight(target)
-        } else window.dbg('CombatModule', 'No fight to continue')
+        } else window.dbg("CombatModule", "No fight to continue")
     }
 
     endFight() {
-        window.dbg('CombatModule', 'Ending fight')
+        window.dbg("CombatModule", "Ending fight")
         window.clearTimeout(this.playerTimeout)
         window.clearTimeout(this.enemyTimeout)
         this.battle.target = null
@@ -58,7 +58,7 @@ export default class CombatModule extends Emitter {
         defender.hurt(damage, fighter)
 
         if (defender.health <= 0) {
-            if (fighter.type === 'player') {
+            if (fighter.type === "player") {
                 this.API.print(`You've slain the ${defender.name}`)
             } else this.API.print(`You've been slain by the ${fighter.name}`)
 
