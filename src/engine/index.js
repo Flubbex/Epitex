@@ -59,6 +59,7 @@ class Engine extends Emitter {
             console.warn(`Tried loading in valid game: "${gameName}"`)
             return
         }
+
         const game = this.content.createGame(gameName)
         const savedGame = this.storage.get("save",game.id)
 
@@ -67,7 +68,7 @@ class Engine extends Emitter {
         console.log("With")
         console.log(savedGame)
 
-        const restoredGame = { ...game, ...savedGame }
+        const restoredGame = savedGame ? { ...game, ...savedGame } : game
         this.game = new Game(this.API, restoredGame)
 
         this.game.on("actionOutput", (_target, message) =>
@@ -134,7 +135,7 @@ class Engine extends Emitter {
         }
 
         const newGame = {
-            id: Math.floor(Math.random()*1000),
+            id: crypto.randomUUID(),
             content:{
                     room: [
                     {

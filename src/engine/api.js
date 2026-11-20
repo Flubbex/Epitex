@@ -318,7 +318,7 @@ const apiConstructor = (engine) => {
      * Load a game
      */
     const loadGamePack = (name) => {
-        window.dbg("--------------", "Loading Pack")
+        console.log(`%Loading pack ${pack.info.name}`, "color:purple")
         engine.ui.clear()
         engine.start(name)
     }
@@ -329,7 +329,6 @@ const apiConstructor = (engine) => {
     const importPack = (pack) => {
         console.log(`%cImporting pack ${pack.info.name}`, "color:orange")
         engine.content.loadPack(pack)
-        engine.storage.clear(pack.info.name)
         engine.start(pack.info.name)
     }
 
