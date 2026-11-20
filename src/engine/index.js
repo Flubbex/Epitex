@@ -49,7 +49,7 @@ class Engine extends Emitter {
         this.start()
     }
 
-    start(gameName = "Base") {
+    start(gameName = "Base",state=null) {
         console.log(`%cEngine starting ${gameName}`, "color:yellow;")
         this.ui.clear()
 
@@ -61,12 +61,7 @@ class Engine extends Emitter {
         }
 
         const game = this.content.createGame(gameName)
-        const savedGame = this.storage.get("save",game.id)
-
-        console.log("Overriding")
-        console.log(game)
-        console.log("With")
-        console.log(savedGame)
+        const savedGame = state ? state : this.storage.get("save",game.id)
 
         const restoredGame = savedGame ? { ...game, ...savedGame } : game
         this.game = new Game(this.API, restoredGame)
@@ -125,10 +120,10 @@ class Engine extends Emitter {
         console.log("%cCreating new game","color:orange")
         let realName = name
 
-        if (this.content.game[realName]) {
+        if (this.content.gameExists(realName)) {
             let next = 1
             realName = `${name} (${next})`
-            while (this.content.game[realName]) {
+            while (this.content.gameExists(realName)) {
                 next++
                 realName = `${name} (${next})`
             }
@@ -161,7 +156,7 @@ class Engine extends Emitter {
 
     save() {
         const state = this.game.save()
-        this.storage.save(this.game.id, state)
+        this.storage.save("save",state)
         return state
     }
 

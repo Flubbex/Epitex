@@ -41,7 +41,7 @@ export default class ContentModule extends Emitter {
     }
 
     exists(nameOrId){
-        return this.get(nameOrId) === null
+        return this.get(nameOrId) !== null
     }
 
     libraryExists(nameOrId){

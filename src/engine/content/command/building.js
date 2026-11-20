@@ -258,7 +258,18 @@ const commandConstructor = (API) => {
         return `Deleted the ${name}`
     }
 
+    const savesnap = ([slot=1]) => {
+        return API.createSnapshot(slot)
+    }
+
+    const loadsnap = ([slot=1]) => {
+        return API.loadSnapshot(slot)
+    }
+    
+
     return {
+        savesnap,
+        loadsnap,
         edit,
         dig,
         tunnel,

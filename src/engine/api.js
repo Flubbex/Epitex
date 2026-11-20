@@ -442,8 +442,29 @@ const apiConstructor = (engine) => {
         engine.storage.save("game", engine.storage.stored.game[engine.game.id])
     }
 
+    /**
+     * Create a snapshot
+     */
+    const createSnapshot = (slot=1) =>{
+        engine.storage.saveSnapshot(engine.game,slot)
+        return `Saved snapshot #${slot}`
+    }
+
+    
+    /**
+     * Load a snapshot
+     */
+    const loadSnapshot = (slot=1) =>{
+        const snappedState = engine.storage.getSnapshot(engine.game.id,slot)
+
+        engine.start(engine.game.storedGame.info.name, snappedState)
+        return `Loaded state from snapshot #${slot}`
+    }
+
     return {
         util,
+        createSnapshot,
+        loadSnapshot,
         modifyCurrentGame,
         game,
         handle,

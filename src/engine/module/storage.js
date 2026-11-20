@@ -1,8 +1,7 @@
 const typePrefix = {
     game:"GAME_",
     library:"LIB_",
-    save:"SAVE_",
-    snapshot:"SNAP_"
+    save:"SAVE_"
 }
 export default class StorageService {
     disableSaving = false
@@ -21,7 +20,7 @@ export default class StorageService {
         .filter((key) => key.startsWith("GAME_") || key.startsWith("LIB_") || key.startsWith("SAVE_") || key.startsWith("SNAP_") )
         .map((slot) => this.load(slot,true))
 
-        defaultContent.map((content)=> this.stored[content.info.type][content.info.name] = content)
+        defaultContent.map((content)=> this.stored[content.info.type][content.id] = content)
     }
 
     list(type) {
@@ -100,6 +99,17 @@ export default class StorageService {
         this.stored[type][saveState.id] = saveState
     }
 
+    saveSnapshot(saveState,slot=1){
+        const slotName = `SNAP#${slot}_${saveState.id}`
+        window.dbg("StorageModule", `Snapshotting to "${slotName}"`)
+        localStorage.setItem(slotName, JSON.stringify(saveState))
+        this.stored.snapshot[slotName] = saveState
+    }
+
+    getSnapshot(id,slot=1){
+        const slotName = `SNAP#${slot}_${id}`
+        return this.stored.snapshot[slotName]
+    }
     clear(type,id) {
         const slotName = typePrefix[type]+id
         window.dbg("StorageModule", `Clearing "${slotName}"`)

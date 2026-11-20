@@ -1,4 +1,12 @@
 {
+    "info": {
+        "type": "game",
+        "name": "Example Adventure",
+        "description": "Example adventure",
+        "startRoom": "HJWH3N",
+        "script": "const smokePipe = ()=>{API.print('Makar sucks on his pipe and exhales two jets of smoke from his nostrils')};return {smokePipe}"
+    },
+    "content":{
     "room": [
         {
             "id": "Storage",
@@ -1226,46 +1234,6 @@
         }
     ],
     "command": {},
-    "info": {
-        "type": "game",
-        "name": "Example Adventure",
-        "description": "Example adventure",
-        "startRoom": "HJWH3N",
-        "script": "const smokePipe = ()=>{API.print('Makar sucks on his pipe and exhales two jets of smoke from his nostrils')};return {smokePipe}"
-    },
-    "zone": [],
-    "player": {
-        "id": "PLAYER",
-        "name": "Player",
-        "description": "This entity has no description",
-        "type": "player",
-        "locked": false,
-        "room": "HJWH3N",
-        "health": 12,
-        "attribute": {
-            "strength": 1,
-            "intelligence": 1,
-            "dexterity": 1,
-            "constitution": 1,
-            "wisdom": 1,
-            "charisma": 1,
-            "luck": 1
-        },
-        "statistic": {
-            "damage": 1,
-            "critChance": 1,
-            "critDamage": 1.5,
-            "maxWeight": 1,
-            "maxHealth": 12,
-            "attSpeed": 2500
-        },
-        "healTick": 0,
-        "maxHealTick": 2,
-        "lockedMessage": "You feel compelled to stay where you are",
-        "home": "NULLED"
-    },
-    "battle": {
-        "target": null
-    },
-    "new": false
+    "zone": []
+    }
 }
