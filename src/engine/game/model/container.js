@@ -23,6 +23,7 @@ class Container extends Entity {
     }
 
     remove(item) {
+        console.log("RR",item)
         const c = this.content.length
         this.content = this.content.filter((i) => i.id !== item.id)
         if (this.content.length === c)

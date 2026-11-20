@@ -1,31 +1,41 @@
+const typePrefix = {
+    game:"GAME_",
+    library:"LIB_",
+    save:"SAVE_",
+    snapshot:"SNAP_"
+}
 export default class StorageService {
     disableSaving = false
     autoSaveCall = null
 
-    keySet = []
-    stored = {}
+    stored = {
+        game:{},
+        library:{},
+        save:{},
+        snapshot:{}
+    }
 
-    constructor() {
+    constructor(defaultContent) {
         window.dbg("StorageService", "Constructing")
-        console.log(localStorage)
-        const storedKeySet = localStorage.getItem("keySet")
-        this.keySet = JSON.parse(storedKeySet) || []
+        Object.keys(localStorage)
+        .filter((key) => key.startsWith("GAME_") || key.startsWith("LIB_") || key.startsWith("SAVE_") || key.startsWith("SNAP_") )
+        .map((slot) => this.load(slot,true))
 
-        this.keySet.map((key) => {
-            this.stored[key] = this.load(key)
-        })
+        defaultContent.map((content)=> this.stored[content.info.type][content.info.name] = content)
     }
 
-    list() {
-        return this.keySet.map((k) => this.stored[k])
+    list(type) {
+        return Object.keys(this.stored[type]).map((k) => this.stored[type][k])
     }
-    createSaveListener(saveName, store) {
-        window.dbg("StorageService", `Creating save listener for ${saveName}`)
+
+    createSaveListener(type, store) {
+        const slotName = typePrefix[type]+store.id
+        window.dbg("StorageService", `Creating save listener for ${slotName}`)
 
         if (this.autoSaveCall)
             window.removeEventListener("visibilitychange", this.autoSaveCall)
 
-        this.autoSaveCall = () => this.save(saveName, store.save())
+        this.autoSaveCall = () => this.save(type, store.save())
 
         window.addEventListener("visibilitychange", this.autoSaveCall)
     }
@@ -35,10 +45,16 @@ export default class StorageService {
             window.removeEventListener("visibilitychange", this.autoSaveCall)
     }
 
-    load(slot) {
+    
+    updateSlot(slot){
+        window.dbg("StorageService",`Updating slot "${slot}" `)
+        console.log(this.game[slot])
+    }
+
+    load(slot,save=false) {
         window.dbg(
             "StorageService",
-            `Attempting to load saved state from "${slot}" `
+            `Attempting to load data from "${slot}" `
         )
 
         const storedDataString = window.localStorage.getItem(slot)
@@ -61,36 +77,39 @@ export default class StorageService {
             window.dbg("StorageService", "Data loaded succesfully")
         }
 
+        if (save){
+            if (slot.startsWith("GAME_"))
+                this.stored.game[saveData.id] = saveData
+            else if (slot.startsWith("SAVE_"))
+                this.stored.save[saveData.id] = saveData
+            else if (slot.startsWith("SNAP_"))
+                this.stored.snap[saveData.id] = saveData
+        }
+
         return saveData
     }
 
-    get(slot) {
-        return this.stored[slot]
+    get(type,id) {
+        return this.stored[type][id]
     }
 
-    save(slot, saveState) {
-        window.dbg("StorageModule", `Saving "${slot}"`)
-        localStorage.setItem(slot, JSON.stringify(saveState))
-        if (this.keySet.indexOf(slot) === -1) {
-            this.keySet.push(slot)
-            localStorage.setItem("keySet", JSON.stringify(this.keySet))
-        }
-        this.stored[slot] = saveState
+    save(type,saveState) {
+        const slotName = typePrefix[type]+saveState.id
+        window.dbg("StorageModule", `Saving "${slotName}"`)
+        localStorage.setItem(slotName, JSON.stringify(saveState))
+        this.stored[type][saveState.id] = saveState
     }
 
-    clear(slot) {
-        window.dbg("StorageModule", `Clearing "${slot}"`)
+    clear(type,id) {
+        const slotName = typePrefix[type]+saveState.id
+        window.dbg("StorageModule", `Clearing "${slotName}"`)
 
-        delete this.stored[slot]
-        localStorage.removeItem(slot)
-
-        if (this.keySet.indexOf(slot) !== -1) {
-            this.keySet = this.keySet.filter((e) => e === slot)
-            localStorage.setItem("keySet", JSON.stringify(this.keySet))
-        }
+         delete this.stored[type][id]
+   
+        localStorage.removeItem(slotName)
     }
 
     nuke() {
-        localStorage.removeItem(this.storedSave.gamePackInfo.name)
+        localStorage.clear()
     }
 }

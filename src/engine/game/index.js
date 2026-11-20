@@ -10,6 +10,8 @@ import InteractionModule from "./interaction.js"
 import Factory from "./factory.js"
 
 class Game extends Emitter {
+    saveId = null 
+
     player = null
     world = null
     battle = null
@@ -25,12 +27,12 @@ class Game extends Emitter {
 
     storedGame = null
 
-    gamePackInfo = null
-
     constructor(API, saveData) {
         super()
         window.dbg("Game", "Constructing")
 
+        this.id = saveData.id
+        
         this.factory = new Factory()
 
         this.script = new ScriptModule(API)
@@ -139,6 +141,7 @@ class Game extends Emitter {
 
     save() {
         return {
+            id:this.id,
             info: this.storedGame.info,
             room: this.world.room,
             player: this.player,

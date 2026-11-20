@@ -104,18 +104,19 @@ const commandConstructor = (API) => {
     }
 
     const edit = ([name, prop, _val]) => {
-        if (!name || !prop || !_val)
-            return "You entered an invalid amount of arguments (edit [THING|HERE|SELF] [PROPERTY] [VALUE])"
+        if (!name || !prop)
+            return "You entered an invalid amount of arguments (edit [THING|HERE|SELF|GAME] [PROPERTY] [VALUE])"
         let val = _val
 
         const player = API.player()
         const room = API.room()
-
-        if (parseFloat(val).toString() !== "NaN") val = parseFloat(val)
-
+        const game = API.getCurrentPack().info
         let target = null
 
         switch (name) {
+            case "game":
+                target = game
+                break
             case "here":
                 target = room
                 break
@@ -123,7 +124,7 @@ const commandConstructor = (API) => {
                 target = player
                 break
             default:
-                target = room.get("any", name) || player.get("any", name)
+                target = API.find(name)
         }
         if (!target) return "You entered an invalid target"
         if (Array.isArray(target))
@@ -132,9 +133,41 @@ const commandConstructor = (API) => {
                 ...target.map((o) => o.name),
             ]
 
+        if (prop === "topad") {
+            API.setNotepad(JSON.stringify(target,null,2))
+            return "Sent object bones to notepad"
+        }
+        else if (prop === "frompad") {
+            let propSet
+            try {
+                propSet = JSON.parse(API.notepad())
+            } catch (err){
+                return "Malformed JSON in notepad"
+            }
+
+            for (var k in propSet)
+                target[k] = propSet[k]
+
+            return "Loaded bones from notepad"
+        }
+
+        if (parseFloat(val).toString() !== "NaN") val = parseFloat(val)
+
+        try {
+            val = JSON.parse(_val)
+        } catch(err){
+
+        }
+
         target[prop] = val
 
-        return target.look()
+        if (name === "game")
+            API.modifyCurrentGame(target)
+
+        if (target.look)
+            return target.look()
+        else 
+            return "Modification succesful"
     }
 
     const runpad = () => {
@@ -215,6 +248,16 @@ const commandConstructor = (API) => {
         }
     }
 
+    const del = ([name]) => {
+        const item = API.find(name)
+        if (!item)
+            return "Delete what?"
+
+        API.del(item)
+        
+        return `Deleted the ${name}`
+    }
+
     return {
         edit,
         dig,
@@ -226,6 +269,7 @@ const commandConstructor = (API) => {
         gexp,
         gimp,
         script,
+        del
     }
 }
 

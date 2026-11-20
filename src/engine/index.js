@@ -37,12 +37,12 @@ class Engine extends Emitter {
         this.API.util = util
 
         this.ui = new UIModule()
-        this.storage = new StorageModule()
-        this.combat = new CombatModule(this.API)
+        this.storage = new StorageModule( [baseContentConstructor(this.API)] )
 
-        this.content = new ContentModule(
-            this.storage.list().concat([baseContentConstructor(this.API)])
-        )
+        const allContent = this.storage.list("game").concat(this.storage.list("library"))
+        this.content = new ContentModule(allContent)
+
+        this.combat = new CombatModule(this.API)
 
         this.ui.on("commandHandled", (e) => this.handle(e))
 
@@ -53,8 +53,20 @@ class Engine extends Emitter {
         console.log(`%cEngine starting ${gameName}`, "color:yellow;")
         this.ui.clear()
 
+        if (!this.content.gameExists(gameName)){
+            this.start("Base")
+            this.ui.print({type:"div",className:"bold text-danger p-4",content:`Tried loading an invalid game '${gameName}' `})
+            console.warn(`Tried loading in valid game: "${gameName}"`)
+            return
+        }
         const game = this.content.createGame(gameName)
-        const savedGame = this.storage.get(gameName)
+        const savedGame = this.storage.get("save",game.id)
+
+        console.log("Overriding")
+        console.log(game)
+        console.log("With")
+        console.log(savedGame)
+
         const restoredGame = { ...game, ...savedGame }
         this.game = new Game(this.API, restoredGame)
 
@@ -65,7 +77,7 @@ class Engine extends Emitter {
         this.game.on("object_viewed", (object) =>{
             const msg = this.ui.printer.present(object)
             object.emit("object_presented",msg)
-    })
+        })
 
         this.game.start()
 
@@ -91,7 +103,7 @@ class Engine extends Emitter {
         this.storage.removeSaveListener()
 
         if (gameName !== "Base") {
-            this.storage.createSaveListener(gameName, this.game)
+            this.storage.createSaveListener("save", this.game)
         }
 
         //Cancel any fight when the player dies
@@ -109,6 +121,7 @@ class Engine extends Emitter {
     }
 
     new(name = "New Game") {
+        console.log("%cCreating new game","color:orange")
         let realName = name
 
         if (this.content.game[realName]) {
@@ -121,14 +134,17 @@ class Engine extends Emitter {
         }
 
         const newGame = {
-            room: [
-                {
-                    id: "InitRoom",
-                    type: "room",
-                    name: "Empty Room",
-                    description: "Empty Room",
-                },
-            ],
+            id: Math.floor(Math.random()*1000),
+            content:{
+                    room: [
+                    {
+                        id: "InitRoom",
+                        type: "room",
+                        name: "Empty Room",
+                        description: "Empty Room",
+                    },
+                    ]
+            },
             info: {
                 type: "game",
                 name: realName,
@@ -137,13 +153,14 @@ class Engine extends Emitter {
             },
         }
 
+        this.storage.save("game",newGame)
         this.content.loadPack(newGame)
         this.start(realName)
     }
 
     save() {
         const state = this.game.save()
-        this.storage.save(this.game.storedGame.info.name, state)
+        this.storage.save(this.game.id, state)
         return state
     }
 

@@ -424,8 +424,28 @@ const apiConstructor = (engine) => {
         target.once(event, call)
     }
 
+    /**
+     * Delete an object from the game
+     */
+    const del = (item) => {
+        console.log("DD",item)
+        if (item.room)
+            get(item.room).remove(item)
+        delete engine.game.byId[item.id]
+    }
+
+    /**
+     * Modify the current game
+     */
+    const modifyCurrentGame = (info) => {
+        console.log(info)
+        engine.storage.stored.game[engine.game.id].info = info 
+        engine.storage.save("game", engine.storage.stored.game[engine.game.id])
+    }
+
     return {
         util,
+        modifyCurrentGame,
         game,
         handle,
         print,
@@ -467,7 +487,8 @@ const apiConstructor = (engine) => {
         importPack,
         start,
         save,
-        find
+        find,
+        del
     }
 }
 

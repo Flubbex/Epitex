@@ -73,6 +73,8 @@ body {
     background: rgba(0, 0, 0, 0.25);
     backdrop-filter: blur(15px);
     color: whitesmoke;
+    font-size: 18px;
+    font-family: Jet Mono;
 }
 
 #inputarea {
@@ -82,8 +84,8 @@ body {
     height: 15vh;
     box-shadow: inset 0px 0px 15px 15px rgba(0, 0, 0, 0.2);
     background-color: rgba(50, 50, 50, 0.5);
-    font-family: monospace;
-    font-size: 2vw;
+    font-family: Jet Mono;
+    font-size: clamp(10px, 1.8vw, 24px);
     color: whitesmoke;
     padding-left: 1vw;
 }

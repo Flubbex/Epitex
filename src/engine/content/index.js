@@ -66,8 +66,7 @@ const engineContentConstructor = (API) => {
                 const r = (min, max) => Math.random() * (max-min) + min
                 const randomColor = 
                 this.on("object_presented",async ([msg])=>{
-                    console.log(msg)
-                    for (let i=0;i<25;i++) {
+                    for (let i=0;i<10;i++) {
                         await util.delay(i*5)
                         msg.content.slice(0,-1).map((span)=>{
                             const color = \`rgb(\${r(64, 192)},\${r(64, 192)},\${r(64, 192)})\`
@@ -105,8 +104,10 @@ const engineContentConstructor = (API) => {
     }
 
     return {
-        room,
-        command,
+        content:{
+            room,
+            command,
+        },
         info: {
             type: "game",
             version: 1,

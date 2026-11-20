@@ -32,6 +32,10 @@ export default class ContentModule extends Emitter {
         else window.dbg("ContentModule", `Loading dependency '${name}'`)
         return depInfo
     }
+
+    gameExists(name){
+        return this.game.hasOwnProperty(name)
+    }
     createGame(name) {
         window.dbg("ContentModule", `Creating game "${name}"`)
         const game = this.game[name]
@@ -43,25 +47,34 @@ export default class ContentModule extends Emitter {
             game.info.depend?.map((depName) => this.loadDependency(depName)) ||
             []
 
+        //Always load base content first
+        dependencies.push(this.loadDependency("Base"))
+
+        //If we're not constructing base content, load the pack as its own dependency
         if (name !== "Base") dependencies.push(game)
 
-        //Always load base content first
-        const newGame = { ...this.game["Base"] }
+        const newGame = {  }
 
         dependencies.map((dep) => {
-            const contentKey = Object.keys(dep).filter(
-                (e) => ["info"].indexOf(e) === -1
-            )
+            const contentKey = Object.keys(dep.content)
             contentKey.map((key) => {
-                if (!newGame[key]) newGame[key] = dep[key]
+                const contentPart = dep.content[key]
+                if (!newGame[key]) 
+                    newGame[key] = contentPart
+
                 else if (Array.isArray(newGame[key]))
-                    newGame[key] = newGame[key].concat(dep[key])
-                else newGame[key] = { ...newGame[key], ...dep[key] }
+                    newGame[key] = newGame[key].concat( contentPart )
+
+                else newGame[key] = { ...newGame[key], ...contentPart }
             })
         })
 
-        console.log(newGame)
         newGame.info = game.info
+
+        newGame.id = game.id || Math.floor(Math.random() * 1000)
+
+        console.log(newGame)
+
         return newGame
     }
 }
