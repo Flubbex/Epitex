@@ -83,7 +83,7 @@ export default class StorageService {
             else if (slot.startsWith("SAVE_"))
                 this.stored.save[saveData.id] = saveData
             else if (slot.startsWith("SNAP_"))
-                this.stored.snap[saveData.id] = saveData
+                this.stored.snapshot[saveData.id] = saveData
         }
 
         return saveData
@@ -101,7 +101,7 @@ export default class StorageService {
     }
 
     clear(type,id) {
-        const slotName = typePrefix[type]+saveState.id
+        const slotName = typePrefix[type]+id
         window.dbg("StorageModule", `Clearing "${slotName}"`)
 
          delete this.stored[type][id]
