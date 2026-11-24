@@ -1,49 +1,43 @@
-class ScriptModule {
+import Emitter from "../class/emitter"
+
+class ScriptModule extends Emitter {
     API = null
 
-    script = null
+    source = null
 
-    constructor(API) {
+    constructor(API,source) {
+        super()
         this.API = API
+        this.source = source ?? null 
     }
 
-    load(script, override = true) {
-        window.dbg("ScriptModule", `Loading script (override=${override})`)
-
-        const next = script || ""
-        this.script =
-            override || !this.script ? next : this.script + "\n" + next
-
-        const AsyncFunction = Object.getPrototypeOf(
-            async function () {}
-        ).constructor
-
-        let call
-
-        try {
-            call = new AsyncFunction("API", `with (API) {${this.script}}`)
-        } catch (err) {
-            throw new Error(err)
-        }
-        call(this.API)
-    }
-
-    loadObjectScript(object) {
-        window.dbg("ScriptModule", `Loading object script for ${object.name}`)
-
-        object.removeAllListeners()
+     runScript(script,parent=null) {
+        if (parent)
+            parent.removeAllListeners()
         
         const AsyncFunction = Object.getPrototypeOf(
             async function () {}
         ).constructor
-        let call
-        try {
-            call = new AsyncFunction("API", `with (API) {${object.script}}`)
-        } catch (err) {
-            throw new Error(err)
-        }
+        const call = new AsyncFunction("API", `with (API) {
+            try { 
+            ${script} 
+            }catch(err){
+            game().script.emit("errored",err)
+            } 
+            
+            }`)
+        call.apply(parent, [this.API])
+ 
+    }
 
-        call.apply(object, [this.API])
+    runObjectScript(object){
+        window.dbg("ScriptModule", `Running object script for ${object.name}`)
+        this.runScript(object.script,object)
+    }
+    start() {
+        window.dbg("ScriptModule", `Running main script`)
+        if (this.source)
+            this.runScript(this.source)
     }
 
     reset() {

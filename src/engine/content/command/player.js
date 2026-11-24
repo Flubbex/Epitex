@@ -65,6 +65,9 @@ const commandConstructor = (API) => {
             return ["Ambigous item name, did you mean any of these?"].concat(
                 item.map((i, k) => k + 1 + ". " + i.name)
             )
+        if (item.locked)
+            return item.lockedMessage || "You can't take that"
+        
         API.player().add(item)
         plyRoom.remove(item)
         return "You pick up the " + item.name

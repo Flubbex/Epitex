@@ -1,40 +1,33 @@
-const typePrefix = {
-    game:"GAME_",
-    library:"LIB_",
-    save:"SAVE_"
-}
+
 export default class StorageService {
     disableSaving = false
     autoSaveCall = null
 
+    ignoreSlot = ["dbg_lastInput"]
     stored = {
-        game:{},
-        library:{},
-        save:{},
-        snapshot:{}
+        byId:{}
     }
 
     constructor(defaultContent) {
         window.dbg("StorageService", "Constructing")
         Object.keys(localStorage)
-        .filter((key) => key.startsWith("GAME_") || key.startsWith("LIB_") || key.startsWith("SAVE_") || key.startsWith("SNAP_") )
+        .filter((slot) => this.ignoreSlot.indexOf(slot) === -1 )
         .map((slot) => this.load(slot,true))
 
-        defaultContent.map((content)=> this.stored[content.info.type][content.id] = content)
+        defaultContent.map((content)=> this.import(content,true) )
     }
 
     list(type) {
         return Object.keys(this.stored[type]).map((k) => this.stored[type][k])
     }
 
-    createSaveListener(type, store) {
-        const slotName = typePrefix[type]+store.id
-        window.dbg("StorageService", `Creating save listener for ${slotName}`)
+    createSaveListener(store) {
+        window.dbg("StorageService", `Creating save listener for ${store.id}`)
 
         if (this.autoSaveCall)
             window.removeEventListener("visibilitychange", this.autoSaveCall)
 
-        this.autoSaveCall = () => this.save(type, store.save())
+        this.autoSaveCall = () => this.save(store.save())
 
         window.addEventListener("visibilitychange", this.autoSaveCall)
     }
@@ -50,12 +43,26 @@ export default class StorageService {
         console.log(this.game[slot])
     }
 
+    import(saveData,skipSave=false){
+        window.dbg("Storage",`Importing ${saveData.type} "${saveData.id}"`)
+        const type = saveData.type 
+
+        if (!this.stored[saveData.type])
+            this.stored[saveData.type] = {[saveData.id]:saveData}
+        else
+            this.stored[saveData.type][saveData.id] = saveData
+
+        this.stored.byId[saveData.id] = saveData
+
+        if (!skipSave)
+            this.save(saveData,true)
+    }
+
     load(slot,save=false) {
         window.dbg(
             "StorageService",
             `Attempting to load data from "${slot}" `
         )
-
         const storedDataString = window.localStorage.getItem(slot)
 
         if (!storedDataString) {
@@ -76,47 +83,34 @@ export default class StorageService {
             window.dbg("StorageService", "Data loaded succesfully")
         }
 
-        if (save){
-            if (slot.startsWith("GAME_"))
-                this.stored.game[saveData.id] = saveData
-            else if (slot.startsWith("SAVE_"))
-                this.stored.save[saveData.id] = saveData
-            else if (slot.startsWith("SNAP_"))
-                this.stored.snapshot[saveData.id] = saveData
-        }
+        if (save) this.import(saveData,true)
 
         return saveData
     }
 
-    get(type,id) {
-        return this.stored[type][id]
+    get(id) {
+        return this.stored.byId[id]
     }
 
-    save(type,saveState) {
-        const slotName = typePrefix[type]+saveState.id
-        window.dbg("StorageModule", `Saving "${slotName}"`)
-        localStorage.setItem(slotName, JSON.stringify(saveState))
-        this.stored[type][saveState.id] = saveState
+    save(saveData,skipImport = false) {
+        if (this.disableSaving)
+            return 
+        window.dbg("StorageModule", `Saving "${saveData.id}"`)
+        localStorage.setItem(saveData.id, JSON.stringify(saveData))
+        
+        if (!skipImport)
+            this.import(saveData,true)
+
+        return saveData.id
     }
 
-    saveSnapshot(saveState,slot=1){
-        const slotName = `SNAP#${slot}_${saveState.id}`
-        window.dbg("StorageModule", `Snapshotting to "${slotName}"`)
-        localStorage.setItem(slotName, JSON.stringify(saveState))
-        this.stored.snapshot[slotName] = saveState
-    }
+    clear(id) {
+        window.dbg("StorageModule", `Clearing "${id}"`)
 
-    getSnapshot(id,slot=1){
-        const slotName = `SNAP#${slot}_${id}`
-        return this.stored.snapshot[slotName]
-    }
-    clear(type,id) {
-        const slotName = typePrefix[type]+id
-        window.dbg("StorageModule", `Clearing "${slotName}"`)
-
-         delete this.stored[type][id]
-   
-        localStorage.removeItem(slotName)
+        const type = this.stored.byId[id].type 
+        delete this.stored[type][id]
+        delete this.stored.byId[id]
+        localStorage.removeItem(id)
     }
 
     nuke() {

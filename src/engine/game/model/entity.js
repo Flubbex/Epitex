@@ -30,7 +30,9 @@ class Entity extends Emitter {
     description = "This entity has no description"
     type = "entity"
     parent = null
+    
     locked = false
+    lockedMessage = null 
 
     tag = []
     action = []
@@ -47,7 +49,9 @@ class Entity extends Emitter {
         this.description = state.description ?? this.description
         this.type = state.type ?? this.type
         this.parent = state.parent ?? this.parent
+        
         this.locked = state.locked ?? this.locked
+        this.lockedMessage = state.lockedMessage ?? this.lockedMessage
 
         this.tag = state.tag ? [...state.tag] : this.tag
         this.action = state.action

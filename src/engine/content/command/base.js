@@ -168,7 +168,7 @@ const commandConstructor = (API) => {
         }
 
         const output = lines.map((content) => ({ type: "span", content }))
-        API.print(output)
+        return output
     }
 
     const quit = () => {
@@ -204,6 +204,22 @@ const commandConstructor = (API) => {
 
         return "Can't find that"
     }
+
+const help = ([command]) => {
+    if (command) {
+        return [
+            {type:"span",className:"bold",content:command},
+            {type:"span",content:command.help || "No help defined"}
+        ]
+    }
+    const comSet = API.game().action.command
+    const list = Object.keys(comSet)
+
+    return list.sort().map( (commandName) => (`${commandName} - ${comSet[commandName]?.short || "No short help defined"}`) )
+}
+
+help.short = "List all commands available"
+
     return {
         clear,
         echo,
@@ -213,6 +229,7 @@ const commandConstructor = (API) => {
         quit,
         playmusic,
         use,
+        help
     }
 }
 

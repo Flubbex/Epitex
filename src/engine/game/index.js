@@ -1,8 +1,8 @@
 import Emitter from "../class/emitter.js"
 
 import Player from "./model/player.js"
-import World from "./model/world.js"
 import Battle from "./model/battle.js"
+import Room from "./model/room.js"
 
 import ScriptModule from "./script.js"
 import InteractionModule from "./interaction.js"
@@ -10,10 +10,16 @@ import InteractionModule from "./interaction.js"
 import Factory from "./factory.js"
 
 class Game extends Emitter {
-    saveId = null 
+    id = null 
+    name = "Unnamed Game"
+    description = "A game with no description"
+    version = 0
+    startRoom = "NULL"
+    room = [
+        new Room( {id:"NULL",type:"room",name:"NULL Room",description:"NULL Room"} )
+    ]
 
     player = null
-    world = null
     battle = null
 
     factory = null
@@ -23,29 +29,40 @@ class Game extends Emitter {
 
     new = true
 
-    byId = {}
+    byId = {
+            NULL:this.room[0]
+    }
 
-    storedGame = null
+    storedState = null
 
     constructor(API, saveData) {
         super()
         window.dbg("Game", "Constructing")
 
-        this.id = saveData.id
-        
+        this.storedState = saveData
+
         this.factory = new Factory()
-
-        this.script = new ScriptModule(API)
-        this.action = new InteractionModule(API)
-
-        this.action.load(saveData.command)
         this.factory.on("instanced", this.register.bind(this))
 
-        this.storedGame = saveData
+        this.id = saveData.id || crypto.randomUUID()
 
-        this.world = new World()
+        this.name = saveData.name ?? this.name
+        this.description = saveData.description ?? this.description
+        this.version = saveData.version ?? this.version
+        this.startRoom = saveData.startRoom ?? this.startRoom
 
-        if (saveData.room) saveData.room.map((room) => this.create(room))
+        this.script = new ScriptModule(API,saveData.script)
+        this.script.on("errored", (msg) => this.emit("errored",msg))
+
+        //Needs to run after scriptmodule in case objects are scripted
+        saveData.content.room.map((room) => this.create(room)) 
+
+        this.action = new InteractionModule(API)
+        this.action.load(saveData.content.command)
+         this.action.on("output", (...arg) =>
+            this.emit("actionOutput", this, ...arg)
+        )
+
 
         this.battle = new Battle(saveData.battle)
         this.player = new Player(saveData.player)
@@ -54,22 +71,12 @@ class Game extends Emitter {
 
         this.new = "new" in saveData ? false : true
 
-        this.action.on("output", (...arg) =>
-            this.emit("actionOutput", this, ...arg)
-        )
-
         if (this.new)
-            if (saveData.info.startRoom)
-                this.player.room = saveData.info.startRoom
-            else
-                console.warn(
-                    "Store doesn't know where to start player on a new game"
-                )
+            this.player.room = this.startRoom
     }
 
     start() {
-        if (this.storedGame.info.script)
-            this.script.load(this.storedGame.info.script)
+        this.script.start()
     }
 
     get(id) {
@@ -88,9 +95,9 @@ class Game extends Emitter {
         //window.dbg("StoreModule",`Registering ${object.name}`)
         this.byId[object.id] = object
 
-        if (object.type === "room") this.world.room.push(object)
+        if (object.type === "room") this.room.push(object)
 
-        if (object.script) this.script.loadObjectScript(object)
+        if (object.script) this.script.runObjectScript(object)
 
         //Bubble any event from objects upward
         object.on("*", (event, target, ...args) =>
@@ -140,16 +147,24 @@ class Game extends Emitter {
     }
 
     save() {
-        return {
+        const out = {
             id:this.id,
-            info: this.storedGame.info,
-            room: this.world.room,
+            type:"game",
+            name:this.name,
+            description:this.description,
+            startRoom:this.startRoom,
+            script:this.script.source,
             player: this.player,
+            content:{
+                room: this.room.filter((e) => e.id !== "NULL"),
+            },
             battle: {
                 target: this.battle.target ? this.battle.target.id : null,
             },
             new: false,
         }
+
+        return out
     }
 }
 

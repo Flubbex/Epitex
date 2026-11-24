@@ -2,7 +2,6 @@ import Emitter from "./class/emitter"
 import Game from "./game"
 
 import StorageModule from "./module/storage"
-import ContentModule from "./module/content"
 import CombatModule from "./module/combat"
 
 import UIModule from "./module/ui"
@@ -25,7 +24,6 @@ class Engine extends Emitter {
 
     combat = null
     storage = null
-    content = null
 
     game = null
 
@@ -39,36 +37,37 @@ class Engine extends Emitter {
         this.ui = new UIModule()
         this.storage = new StorageModule( [baseContentConstructor(this.API)] )
 
-        const allContent = this.storage.list("game").concat(this.storage.list("library"))
-        this.content = new ContentModule(allContent)
-
         this.combat = new CombatModule(this.API)
 
-        this.ui.on("commandHandled", (e) => this.handle(e))
+        this.ui.on("commandHandled", (command,silent) => this.handle(command,silent) )
 
         this.start()
     }
 
-    start(gameName = "Base",state=null) {
-        console.log(`%cEngine starting ${gameName}`, "color:yellow;")
+    start(id = "BASE",state=null) {
+        window.dbg("Engine",`starting ${id}`)
         this.ui.clear()
 
-        if (!this.content.gameExists(gameName)){
-            this.start("Base")
-            this.ui.print({type:"div",className:"bold text-danger p-4",content:`Tried loading an invalid game '${gameName}' `})
-            console.warn(`Tried loading in valid game: "${gameName}"`)
+        const defaultGameState = this.storage.get(id)
+
+        if (!defaultGameState){
+            this.start("BASE")
+            this.ui.print({type:"div",className:"bold text-danger p-4",content:`Tried loading an invalid game '${id}' `})
+            console.warn(`Tried loading in valid game: "${id}"`)
             return
         }
 
-        const game = this.content.createGame(gameName)
-        const savedGame = state ? state : this.storage.get("save",game.id)
+        const newGame = this.createGame(defaultGameState)
+        const savedGame = state ? state : this.storage.get(newGame.id)
+        const restoredGame = savedGame ? { ...newGame, ...savedGame } : newGame
 
-        const restoredGame = savedGame ? { ...game, ...savedGame } : game
         this.game = new Game(this.API, restoredGame)
 
         this.game.on("actionOutput", (_target, message) =>
             this.print(message, false)
         )
+
+        this.game.on("errored",(msg) => this.printScriptError(msg) )
 
         this.game.on("object_viewed", (object) =>{
             const msg = this.ui.printer.present(object)
@@ -98,8 +97,8 @@ class Engine extends Emitter {
 
         this.storage.removeSaveListener()
 
-        if (gameName !== "Base") {
-            this.storage.createSaveListener("save", this.game)
+        if (id !== "BASE") {
+            this.storage.createSaveListener(this.game)
         }
 
         //Cancel any fight when the player dies
@@ -110,25 +109,11 @@ class Engine extends Emitter {
         this.tickerId = window.setInterval(() => this.tick(), 5000)
     }
 
-    createContent(contentPackList) {
-        return contentPackList.map((e) =>
-            typeof e === "function" ? e(this.API) : e
-        )
-    }
 
     new(name = "New Game") {
-        console.log("%cCreating new game","color:orange")
+        window.dbg("Engine","!!! Creating new game")
         let realName = name
-
-        if (this.content.gameExists(realName)) {
-            let next = 1
-            realName = `${name} (${next})`
-            while (this.content.gameExists(realName)) {
-                next++
-                realName = `${name} (${next})`
-            }
-        }
-
+    
         const newGame = {
             id: crypto.randomUUID(),
             content:{
@@ -141,22 +126,40 @@ class Engine extends Emitter {
                     },
                     ]
             },
-            info: {
-                type: "game",
-                name: realName,
-                description: name + " Pack",
-                startRoom: "InitRoom",
-            },
+
+            type: "game",
+            name: realName,
+            description: name + " Pack",
+            version:0,
+            startRoom: "InitRoom",
+            script:"API.print('Hello World!')"
         }
 
-        this.storage.save("game",newGame)
-        this.content.loadPack(newGame)
-        this.start(realName)
+        this.storage.import(newGame)
+        this.start(newGame.id)
+
+        window.game = game
+    }
+
+    createGame(defaultGameState) {
+        window.dbg("Engine",`Creating game "${defaultGameState.id}"`)
+        const base = this.storage.get("BASE")
+    
+        const newGame = {...defaultGameState}
+
+        newGame.content.command = {...base.content.command,...newGame.content.command}
+
+
+        if (!newGame.id)
+            newGame.id = crypto.randomUUID()
+
+        console.log(newGame)
+        return newGame
     }
 
     save() {
         const state = this.game.save()
-        this.storage.save("save",state)
+        this.storage.save(state)
         return state
     }
 
@@ -178,6 +181,11 @@ class Engine extends Emitter {
         window.location.reload()
     }
 
+    printScriptError(err){
+        this.ui.print({type:"span",className:"bold",content:"Script error:"})
+        this.ui.print({type:"span",className:"bold text-danger",content:err.stack})
+        this.ui.print({type:"span",content:this.game.script.script})
+    }
     printError(err) {
         this.ui.printError(err)
     }
@@ -193,13 +201,9 @@ class Engine extends Emitter {
         return false
     }
 
-    fromFile() {
-        this.API.handle("gimp", true)
-    }
-
     tick() {
         try {
-            this.game.world.room.map((room) => room.tick(this.API))
+            this.game.room.map((room) => room.tick(this.API))
             this.game.player.tick(this.API)
         } catch (error) {
             this.printError(error)

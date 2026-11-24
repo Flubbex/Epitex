@@ -11,7 +11,7 @@ const cardinalExit = {
     sw: "southwest",
 }
 
-/*
+
 const cardinalMoveWare = (API) => {
     return (_target) => {
         const target =
@@ -28,7 +28,7 @@ const cardinalMoveWare = (API) => {
         return API.handle('go ' + exit.name, true)
     }
 }
-*/
+
 
 export default class InteractionModule extends Emitter {
     API = null
@@ -42,7 +42,7 @@ export default class InteractionModule extends Emitter {
         super()
         this.API = API
 
-        //this.createWare(cardinalMoveWare)
+        this.createWare(cardinalMoveWare)
     }
 
     reset() {
@@ -53,9 +53,9 @@ export default class InteractionModule extends Emitter {
     load(command) {
         window.dbg(
             "InteractionModule",
-            "Loading ",
-            Object.keys(command).length,
-            "commands"
+            "Loading "+
+            Object.keys(command).length+
+            " commands"
         )
         this.command = command
     }

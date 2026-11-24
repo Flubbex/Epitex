@@ -12,7 +12,9 @@ import "./style"
 const engine = new Engine()
 
 window.engine = engine
-
+window.api = engine.API 
+window.game = engine.game 
+ 
 const root = ReactDOM.createRoot(document.getElementById("root"))
 
 root.render(

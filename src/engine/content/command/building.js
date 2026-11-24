@@ -110,7 +110,7 @@ const commandConstructor = (API) => {
 
         const player = API.player()
         const room = API.room()
-        const game = API.getCurrentPack().info
+        const game = API.game()
         let target = null
 
         switch (name) {
@@ -162,7 +162,7 @@ const commandConstructor = (API) => {
         target[prop] = val
 
         if (name === "game")
-            API.modifyCurrentGame(target)
+            API.save()
 
         if (target.look)
             return target.look()
@@ -183,6 +183,11 @@ const commandConstructor = (API) => {
     const gexp = ([filename]) => {
         API.exportPack(filename)
         return "Exported game"
+    }
+
+    const gexpn = () => {
+        API.setNotepad( API.exportPack(null,false) )
+        return "Exported game to notepad"
     }
 
     const gimp = async () => {
@@ -207,44 +212,27 @@ const commandConstructor = (API) => {
         if (target === null) return "Can't find that"
 
         if (!target.script)
-            return "Target is unscripted"
+            target.script = ""
 
-        //NOTE: Currently game scripts are not exported unless they are run
-        switch (command) {
-            case "fpr":
-                target.script = API.notepad()
-            case "run":
-                if (targetName === "game") {
-                    API.start(API.game().storedGame.info.name)
-                } else API.runObjectScript(target)
-                return "Ran script"
-            case "frompad":
-                target.script = API.notepad()
-                return "Set target script to content in notepad"
-            case "edit":
-                API.setNotepad(target.script)
-                return "Sent script to notepad, do 'script [target] frompad' to save"
-            case "write":
-                target.script = ""
-                API.inputPrompt((splitInput) => {
-                    const input = splitInput.join("\n")
-
-                    console.log("Got input", input)
-
-                    if (input && input !== ".") {
-                        target.script += input
-                    } else {
-                        API.inputPrompt(null)
-                        return "finished"
-                    }
-                    return input
-                })
-                break
-            default:
-                return target.script
+        if (!command)
+            return target.script
                     .split("\n")
                     .map((e, n) => `${n + 1}\t${e}`)
                     .join("\n")
+        
+        else if (command === "edit"){
+            API.setNotepad(target.script)
+            return "Sent script to notepad"
+        }
+        else if (command = "load"){
+            target.script = API.notepad()
+            if (targetName !== "game")
+                API.runObjectScript(target)
+            else {
+                API.save()
+                API.start(API.game().info.name)
+            }
+            return "Loaded content from notepad as script"
         }
     }
 
@@ -259,11 +247,15 @@ const commandConstructor = (API) => {
     }
 
     const savesnap = ([slot=1]) => {
-        return API.createSnapshot(slot)
+        const snapshot = API.game().save()
+        snapshot.type = "snapshot"
+        snapshot.id += `#${slot}`
+
+        return API.save(snapshot)
     }
 
     const loadsnap = ([slot=1]) => {
-        return API.loadSnapshot(slot)
+        return API.start(API.game().id+"#"+slot)
     }
     
 
@@ -278,6 +270,7 @@ const commandConstructor = (API) => {
         runpad,
         patch,
         gexp,
+        gexpn,
         gimp,
         script,
         del

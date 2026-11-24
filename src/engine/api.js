@@ -63,28 +63,28 @@ const apiConstructor = (engine) => {
      * Find rooms by filter
      */
     const filterRoom = (filter) => {
-        return engine.game.world.room.filter(filter)
+        return engine.game.room.filter(filter)
     }
 
     /**
      * Map a room
      */
     const mapRoom = (mapper) => {
-        return engine.game.world.room.map(mapper)
+        return engine.game.room.map(mapper)
     }
 
     /**
      * Find a room
      */
     const findRoom = (filter) => {
-        return engine.game.world.room.find(filter)
+        return engine.game.room.find(filter)
     }
 
     /**
      * Override a room
      */
     const overrideRoom = (newRoom) => {
-        engine.game.world.room = newRoom
+        engine.game.room = newRoom
     }
 
     /**
@@ -189,17 +189,6 @@ const apiConstructor = (engine) => {
     }
 
     /**
-     * Run an action
-     */
-    const runAction = (name, ...args) => {
-        const action = engine.content.get("action", name)
-        if (!action)
-            return console.warn("Tried running an unimplemented action:", name)
-
-        return action(...args)
-    }
-
-    /**
      * Return the key if the player has a key that targets the id
      */
     const playerGetKey = (id) => {
@@ -228,8 +217,11 @@ const apiConstructor = (engine) => {
     /**
      * Perform a save
      */
-    const save = () => {
-        return engine.save()
+    const save = (custom) => {
+        if (custom)
+            engine.storage.save(custom)
+        else 
+            return engine.save()
     }
 
     /**
@@ -280,14 +272,7 @@ const apiConstructor = (engine) => {
      * Return available games
      */
     const getAvailableGames = () => {
-        return engine.content.game
-    }
-
-    /**
-     * Return the current content pack
-     */
-    const getCurrentPack = () => {
-        return engine.game.storedGame
+            return engine.storage.stored.game
     }
 
     /**
@@ -370,19 +355,20 @@ const apiConstructor = (engine) => {
     /**
      * Export to content pack
      */
-    const exportPack = (filename = "export") => {
-        const pack = {
-            ...getCurrentPack(),
-            ...{ room: engine.game.world.room },
-        }
+    const exportPack = (filename = "export", download=true) => {
+        const pack = game().save()
+        
+        delete pack.battle 
+        delete pack.player 
 
-        pack.info.script = engine.game.script.script
+        if (download)
+            createDownload(
+                JSON.stringify(pack, null, 2),
+                "application/json",
+                filename
+            )
 
-        createDownload(
-            JSON.stringify(pack, null, 2),
-            "application/json",
-            filename
-        )
+        return pack
     }
 
     /**
@@ -434,15 +420,6 @@ const apiConstructor = (engine) => {
     }
 
     /**
-     * Modify the current game
-     */
-    const modifyCurrentGame = (info) => {
-        console.log(info)
-        engine.storage.stored.game[engine.game.id].info = info 
-        engine.storage.save("game", engine.storage.stored.game[engine.game.id])
-    }
-
-    /**
      * Create a snapshot
      */
     const createSnapshot = (slot=1) =>{
@@ -461,11 +438,17 @@ const apiConstructor = (engine) => {
         return `Loaded state from snapshot #${slot}`
     }
 
+    /**
+     * Create a command
+     */
+    const createCommand = (command,call) => {
+        game().action.command[command] = call 
+        return game().command[command]
+    }
     return {
         util,
         createSnapshot,
         loadSnapshot,
-        modifyCurrentGame,
         game,
         handle,
         print,
@@ -489,7 +472,6 @@ const apiConstructor = (engine) => {
         getBattle,
         setBattle,
         patch,
-        runAction,
         playerGetKey,
         createDownload,
         createUpload,
@@ -501,14 +483,14 @@ const apiConstructor = (engine) => {
         playMusic,
         exportPack,
         runObjectScript,
-        getCurrentPack,
         connect,
         connectOnce,
         importPack,
         start,
         save,
         find,
-        del
+        del,
+        createCommand
     }
 }
 

@@ -78,8 +78,8 @@ class UIModule extends Emitter {
         return this.printer.print(content)
     }
 
-    handle(command) {
-        this.emit("commandHandled", command)
+    handle(command,silent) {
+        this.emit("commandHandled", command,silent)
     }
 }
 

@@ -67,6 +67,10 @@ const commandConstructor = (API) => {
         }
     }
 
+    const expt = () => {
+        console.log( API.exportPack(API.game().storedGame.info.name,false) )
+    }
+
     return {
         dumpsave,
         dump,
@@ -75,6 +79,7 @@ const commandConstructor = (API) => {
         sync,
         question,
         flag,
+        expt
     }
 }
 

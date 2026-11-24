@@ -108,34 +108,37 @@ const engineContentConstructor = (API) => {
             room,
             command,
         },
-        info: {
-            type: "game",
-            version: 1,
-            name: "Base",
-            description: "Base content + A main menu",
-            startRoom: "LoaderMenu",
-            script: `
-            const printMenu = () => {
-                print({type:"span",className:"bold",content:'Available adventures:'})
-                const allGames = getAvailableGames()
-                const packSet = Object.keys(allGames).map((e)=>allGames[e].info.name)
-                packSet.map((pack) => 
-                    print(
-                        {type:"button",className:"btn",onClick:()=>engine.start(pack),content:pack }
-                    )
+        id:"BASE",
+        type: "game",
+        version: 1,
+        name: "Base",
+        description: "Base content + A main menu",
+        startRoom: "LoaderMenu",
+        script: `
+        const printMenu = () => {
+            print({type:"span",className:"bold",content:'Available adventures:'})
+            const allGames = getAvailableGames()
+            const packSet = Object.keys(allGames).map((e)=>allGames[e])
+            packSet.map((pack) => 
+                print(
+                    {type:"button",className:"btn",onClick:()=>engine.start(pack.id),content:pack.name }
                 )
-                print("\\n")
-                print( {type:"span",className:"bold",content:"Or if you're feeling a little more adventurous.."})
-                print({type:"button",className:"btn",content:"Create a new game",onClick:()=>engine.new()})
-                print({type:"button",className:"btn",content:"Load a game from a file",onClick:()=>engine.fromFile()})
-            }
+            )
+            print("\\n")
+            print( {type:"span",className:"bold",content:"Or if you're feeling a little more adventurous.."})
+            print({type:"button",className:"btn",content:"Create a new game",onClick:()=>engine.new()})
+            print({type:"button",className:"btn",content:"Load a game from a file",command:"gimp"})
+            print("\\n")
+            print( {type:"span",className:"bold",content:"Developer tools:"})
+            print({type:"button",className:"btn",content:"Reset engine",command:"reset"})
+        }
 
-            const clear = () => {
-                API.clear()    
-            }
-            connect("LoaderMenu","object_viewed", ()=>window.setTimeout(printMenu,0) )
-            `,
-        },
+        const clear = () => {
+            API.clear()    
+        }
+        connect("LoaderMenu","object_viewed", ()=>window.setTimeout(printMenu,0) )
+        `,
+        
     }
 }
 export default engineContentConstructor
