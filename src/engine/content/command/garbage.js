@@ -15,18 +15,18 @@ const commandConstructor = (API) => {
     quote.short = "Print a random quote"
 
     const figlet = async (...string) => {
-        const url = `https://asciified.thelicato.io/api/v2/ascii?text=${escape(string.join(" "))}`
+        const url = `/figlet/ascii?text=${escape(string.join(" "))}`
         const rq = await request(url)
         const result = await rq.text()
         API.print(result)
-        return ""
+
     }
     figlet.short = "Render text as ASCII art"
 
     async function getRandomTumblrImage(blog, API_KEY) {
         // Retrieve the blog's total post count
         const infoResponse = await fetch(
-            `https://api.tumblr.com/v2/blog/${blog}/info?api_key=${API_KEY}`
+            `/tumblr-api/v2/blog/${blog}/info?api_key=${API_KEY}`
         )
 
         const info = await infoResponse.json()
@@ -71,7 +71,7 @@ const commandConstructor = (API) => {
             img.indexOf(".png") ||
             img.indexOf(".jpeg")
         if (a) {
-            API.print("<img src='" + img + "'/>")
+            API.print({type:"img",src:img})
         } else {
             API.print(
                 [

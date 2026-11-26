@@ -8,6 +8,11 @@ export default defineConfig({
       server: {
         host: '0.0.0.0',
     proxy: {
+      '/figlet':{
+        target:"https://asciified.thelicato.io/api/v2",
+        changeOrigin:true,
+        rewrite: (path) => path.replace(/^\/figlet/, ''),
+      },
       '/tumblr-api': {
         target: 'https://api.tumblr.com',
         changeOrigin: true,
