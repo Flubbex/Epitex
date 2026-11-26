@@ -4,8 +4,9 @@ const commandConstructor = (API) => {
     const dumpsave = () => {
         console.log(JSON.stringify(API.generateSave()))
     }
+    dumpsave.short = "Dump the current save data to the console"
 
-    const dump = ([targetName]) => {
+    const dump = (targetName) => {
         const plyRoom = API.room()
         const target = targetName
             ? plyRoom.get("any", targetName) ||
@@ -14,6 +15,7 @@ const commandConstructor = (API) => {
 
         return { type: "div", content: JSON.stringify(target, null, 2) }
     }
+    dump.short = "Dump an object's data as JSON"
 
     function objectToCode(obj) {
         return JSON.stringify(obj, null, 2)
@@ -24,6 +26,7 @@ const commandConstructor = (API) => {
     const save = () => {
         API.save()
     }
+    save.short = "Save the current game"
 
     const reset = () => {
         if (!API.resetLock) {
@@ -33,6 +36,7 @@ const commandConstructor = (API) => {
         API.reset()
         return "Refreshing.."
     }
+    reset.short = "Reset all saved data (requires confirmation)"
 
     const sync = () => {
         const plyRoom = API.room()
@@ -46,6 +50,7 @@ const commandConstructor = (API) => {
 
         return "Synced room #" + plyRoom.id + " with original from content"
     }
+    sync.short = "Resync the current room from original content"
 
     const question = () => {
         API.print("What is your name?")
@@ -55,8 +60,9 @@ const commandConstructor = (API) => {
             return "Alright, set your name to '" + input + "'"
         })
     }
+    question.short = "Prompt for and set the player's name"
 
-    const flag = ([target, state]) => {
+    const flag = (target, state) => {
         if (!target) return API.questFlag()
         else if (!state) {
             API.questFlag(target, null)
@@ -66,10 +72,12 @@ const commandConstructor = (API) => {
             return "Set flag '" + target + "' to " + state
         }
     }
+    flag.short = "Get or set a quest flag"
 
     const expt = () => {
         console.log( API.exportPack(API.game().storedGame.info.name,false) )
     }
+    expt.short = "Export the current pack to the console"
 
     return {
         dumpsave,

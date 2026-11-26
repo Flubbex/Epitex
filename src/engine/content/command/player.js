@@ -16,7 +16,7 @@ const commandConstructor = (API) => {
         nextRoom.look()
     }
 
-    const go = ([direction = ""]) => {
+    const go = (direction = "") => {
         const player = API.player()
         if (player.locked) return player.lockedMessage
 
@@ -37,8 +37,9 @@ const commandConstructor = (API) => {
 
         return warp(exitList)
     }
+    go.short = "Move in a direction or through an exit"
 
-    const look = ([targetName]) => {
+    const look = (targetName) => {
         const room = API.room()
         let target = room
 
@@ -56,8 +57,9 @@ const commandConstructor = (API) => {
 
         target.look()
     }
+    look.short = "Look at the room or a specific thing"
 
-    const take = ([target]) => {
+    const take = (target) => {
         const plyRoom = API.room()
         const item = plyRoom.get("any", target)
         if (!item) return "What do you want to take?"
@@ -72,8 +74,9 @@ const commandConstructor = (API) => {
         plyRoom.remove(item)
         return "You pick up the " + item.name
     }
+    take.short = "Pick up an item from the room"
 
-    const drop = ([target]) => {
+    const drop = (target) => {
         const plyRoom = API.room()
         const item = API.player().get("any", target)
         if (!item) return "What do you want to drop?"
@@ -85,22 +88,26 @@ const commandConstructor = (API) => {
         API.player().remove(item)
         return "You dropped the " + item.name
     }
+    drop.short = "Drop an item from your inventory"
 
     const inventory = () => {
         const output = ["You are currently carrying:"]
         const item = API.player().content.map((i) => i.name)
         return [].concat(output, item.length > 0 ? item : "Nothing")
     }
+    inventory.short = "List the items you are carrying"
 
-    const say = (message) => {
+    const say = (...message) => {
         return "You say: '" + message.join(" ") + "'"
     }
+    say.short = "Say something out loud"
 
     const score = () => {
         return API.player().score()
     }
+    score.short = "Show your character stats"
 
-    const attack = ([target]) => {
+    const attack = (target) => {
         const plyRoom = API.room()
         const being = plyRoom.get("any", target)
 
@@ -113,17 +120,20 @@ const commandConstructor = (API) => {
 
         API.fight(being)
     }
+    attack.short = "Attack a being in the room"
 
     const recall = () => {
         API.player().room = "NULLED"
         API.handle("look", true)
     }
+    recall.short = "Return to your home location"
 
     const sleep = () => {
         return "You sleep, like a fatass."
     }
+    sleep.short = "Take a nap"
 
-    const unlock = ([target]) => {
+    const unlock = (target) => {
         if (!target) return "Unlock what?"
 
         const room = API.room()
@@ -142,6 +152,8 @@ const commandConstructor = (API) => {
 
         return `You unlock the ${targetItem.name} using the ${key.name}`
     }
+    unlock.short = "Unlock something with the matching key"
+
     return {
         look,
         l: look,

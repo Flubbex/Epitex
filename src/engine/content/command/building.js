@@ -1,8 +1,8 @@
 const commandConstructor = (API) => {
-    const create = (arg) => {
+    const create = (...arg) => {
         const player = API.player()
 
-        if (!arg) return "What would you like to create?"
+        if (!arg.length) return "What would you like to create?"
         let data = null
         try {
             data = JSON.parse(arg.join(" "))
@@ -21,14 +21,16 @@ const commandConstructor = (API) => {
             ")"
         )
     }
+    create.short = "Create an object from JSON and add it to inventory"
 
-    const remove = ([target]) => {
+    const remove = (target) => {
         const plyRoom = API.room()
         plyRoom.remove(
             plyRoom.get("any", target) || API.player().get("any", target)
         )
         return "Removed " + target
     }
+    remove.short = "Remove an object from the room or inventory"
 
     const cardinalOpposite = {
         north: "South",
@@ -43,7 +45,7 @@ const commandConstructor = (API) => {
         down: "Up",
     }
 
-    const tunnel = ([direction = "", id = 0]) => {
+    const tunnel = (direction = "", id = 0) => {
         if (!direction || !cardinalOpposite[direction.toLowerCase()])
             return "Please enter at least a proper cardinal direction"
 
@@ -72,8 +74,9 @@ const commandConstructor = (API) => {
                 otherRoom.id
         )
     }
+    tunnel.short = "Dig a two-way exit to a new or existing room"
 
-    const dig = ([direction = "", id, from]) => {
+    const dig = (direction = "", id, from) => {
         const playerRoom = from ? API.get(from) : API.room()
         if (direction === "") return "Dig to where?"
         if (playerRoom.get("exit", direction)) return "That exit already exists"
@@ -102,8 +105,9 @@ const commandConstructor = (API) => {
             } else return "No such room to link"
         }
     }
+    dig.short = "Create an exit in a direction, optionally linking to a room"
 
-    const edit = ([name, prop, _val]) => {
+    const edit = (name, prop, _val) => {
         if (!name || !prop)
             return "You entered an invalid amount of arguments (edit [THING|HERE|SELF|GAME] [PROPERTY] [VALUE])"
         let val = _val
@@ -169,26 +173,31 @@ const commandConstructor = (API) => {
         else 
             return "Modification succesful"
     }
+    edit.short = "Edit a property on an object, room, player, or the game"
 
     const runpad = () => {
         API.print("Running notepad as script..")
         API.handle(API.notepad())
     }
+    runpad.short = "Run the notepad contents as a command"
 
-    const patch = (jsonStringSet) => {
+    const patch = (...jsonStringSet) => {
         const fullString = jsonStringSet.join(" ")
         return API.patch(fullString)
     }
+    patch.short = "Patch rooms into the world from JSON"
 
-    const gexp = ([filename]) => {
+    const gexp = (filename) => {
         API.exportPack(filename)
         return "Exported game"
     }
+    gexp.short = "Export the current game pack to a file"
 
     const gexpn = () => {
         API.setNotepad( API.exportPack(null,false) )
         return "Exported game to notepad"
     }
+    gexpn.short = "Export the current game pack to the notepad"
 
     const gimp = async () => {
         const [handle] = await API.createUpload()
@@ -198,45 +207,51 @@ const commandConstructor = (API) => {
 
         API.importPack(data)
     }
+    gimp.short = "Import a game pack from a file"
 
-    const script = ([targetName, command]) => {
+    const script = (targetName, command) => {
         if (!targetName) return "Script what?"
 
         let target = null
 
         if (targetName === "game") target = API.game().script
+
         else if (targetName === "here") target = room
+
         else target = API.find(targetName)
         
 
         if (target === null) return "Can't find that"
 
-        if (!target.script)
+        if (targetName !== "game" && !target.script)
             target.script = ""
 
         if (!command)
-            return target.script
+            return (targetName === "game" ? target.source : target.script)
                     .split("\n")
                     .map((e, n) => `${n + 1}\t${e}`)
                     .join("\n")
         
         else if (command === "edit"){
-            API.setNotepad(target.script)
+            API.setNotepad(targetName === "game" ? target.source : target.script)
             return "Sent script to notepad"
         }
         else if (command = "load"){
-            target.script = API.notepad()
-            if (targetName !== "game")
+            if (targetName !== "game") {
+                target.script = API.notepad()
                 API.runObjectScript(target)
+            }
             else {
+                target.source = API.notepad()
                 API.save()
-                API.start(API.game().info.name)
+                API.start(API.game().id)
             }
             return "Loaded content from notepad as script"
         }
     }
+    script.short = "View, edit, or load a script on an object or the game"
 
-    const del = ([name]) => {
+    const del = (name) => {
         const item = API.find(name)
         if (!item)
             return "Delete what?"
@@ -245,19 +260,21 @@ const commandConstructor = (API) => {
         
         return `Deleted the ${name}`
     }
+    del.short = "Delete an object by name"
 
-    const savesnap = ([slot=1]) => {
+    const savesnap = (slot = 1) => {
         const snapshot = API.game().save()
         snapshot.type = "snapshot"
         snapshot.id += `#${slot}`
 
         return API.save(snapshot)
     }
+    savesnap.short = "Save a snapshot of the current game"
 
-    const loadsnap = ([slot=1]) => {
+    const loadsnap = (slot = 1) => {
         return API.start(API.game().id+"#"+slot)
     }
-    
+    loadsnap.short = "Load a previously saved snapshot"
 
     return {
         savesnap,

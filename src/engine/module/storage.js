@@ -3,7 +3,7 @@ export default class StorageService {
     disableSaving = false
     autoSaveCall = null
 
-    ignoreSlot = ["dbg_lastInput"]
+    ignoreSlot = ["dbg_lastInput","notepad"]
     stored = {
         byId:{}
     }
@@ -76,8 +76,9 @@ export default class StorageService {
             saveData = JSON.parse(storedDataString)
         } catch (error) {
             console.warn("StorageService: Savedata is malformed")
+            console.log(slot)
             console.warn(error)
-            window.localStorage.removeItem(slot)
+            //window.localStorage.removeItem(slot)
             return null
         } finally {
             window.dbg("StorageService", "Data loaded succesfully")

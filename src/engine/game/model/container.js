@@ -23,7 +23,6 @@ class Container extends Entity {
     }
 
     remove(item) {
-        console.log("RR",item)
         const c = this.content.length
         this.content = this.content.filter((i) => i.id !== item.id)
         if (this.content.length === c)
@@ -35,6 +34,7 @@ class Container extends Entity {
     }
 
     get(type, name = "") {
+
         const obj = this.content
             .filter((i) => (type === "any" ? true : i.type === type))
             .filter((i, k) => {

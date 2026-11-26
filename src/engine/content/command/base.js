@@ -1,13 +1,16 @@
 const commandConstructor = (API) => {
-    const clear = (arg) => {
+    const clear = (...args) => {
         API.clear()
-        if ("silent" in arg === false) API.print("Output cleared")
+        if (!args.includes("silent")) API.print("Output cleared")
     }
-    const echo = (args) => {
+    clear.short = "Clear the output buffer"
+
+    const echo = (...args) => {
         return args.join(" ")
     }
+    echo.short = "Print the given text back"
 
-    const put = ([item, sub, target]) => {
+    const put = (item, sub, target) => {
         if (!item || !sub || !target) return "What do you want to put in where?"
 
         const ply = API.player()
@@ -50,10 +53,12 @@ const commandConstructor = (API) => {
 
         return "Put the " + plyItem.name + " into the " + plyTarget.name
     }
+    put.short = "Put an item into a container"
 
-    const give = ([item, sub, target]) => {
-        return put([item, sub, target])
+    const give = (item, sub, target) => {
+        return put(item, sub, target)
     }
+    give.short = "Give an item to a target (alias for put)"
 
     const doCrawl = (room, area, map = {}) => {
         let exitSet = room.get("exit")
@@ -170,20 +175,23 @@ const commandConstructor = (API) => {
         const output = lines.map((content) => ({ type: "span", content }))
         return output
     }
+    map.short = "Show a simple map of the current area"
 
     const quit = () => {
         API.quit()
     }
+    quit.short = "Quit the current game"
 
-    const playmusic = ([videoId, startSeconds = 0]) => {
+    const playmusic = (videoId, startSeconds = 0) => {
         if (!videoId) return "Play what?"
         API.playMusic(videoId, startSeconds, () => {
             API.print("Playing!")
         })
         return "Loading music.."
     }
+    playmusic.short = "Play a YouTube video by ID"
 
-    const use = ([targetName]) => {
+    const use = (targetName) => {
         if (!targetName) return "Use what?"
         const curRoom = API.room()
 
@@ -204,21 +212,21 @@ const commandConstructor = (API) => {
 
         return "Can't find that"
     }
+    use.short = "Use an item in the room or inventory"
 
-const help = ([command]) => {
-    if (command) {
-        return [
-            {type:"span",className:"bold",content:command},
-            {type:"span",content:command.help || "No help defined"}
-        ]
+    const help = (command) => {
+        if (command) {
+            return [
+                {type:"span",className:"bold",content:command},
+                {type:"span",content:command.help || "No help defined"}
+            ]
+        }
+        const comSet = API.game().action.command
+        const list = Object.keys(comSet)
+
+        return list.sort().map( (commandName) => (`${commandName} - ${comSet[commandName]?.short || "No short help defined"}`) )
     }
-    const comSet = API.game().action.command
-    const list = Object.keys(comSet)
-
-    return list.sort().map( (commandName) => (`${commandName} - ${comSet[commandName]?.short || "No short help defined"}`) )
-}
-
-help.short = "List all commands available"
+    help.short = "List all commands available"
 
     return {
         clear,

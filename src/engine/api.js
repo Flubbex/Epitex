@@ -193,7 +193,6 @@ const apiConstructor = (engine) => {
      */
     const playerGetKey = (id) => {
         const allKey = player().get("key")
-
         if (allKey === null) return false
 
         if (!Array.isArray(allKey)) {
@@ -269,10 +268,12 @@ const apiConstructor = (engine) => {
     }
 
     /**
-     * Return available games
+     * Return available games, returning only active ones if
      */
     const getAvailableGames = () => {
-            return engine.storage.stored.game
+        const allGame = engine.storage.stored.game
+        const gameKey = Object.keys(allGame)
+        return gameKey.filter((key) => key.endsWith("#A") ).map((activeKey) => allGame[activeKey] )
     }
 
     /**
@@ -349,7 +350,7 @@ const apiConstructor = (engine) => {
      */
 
     const runObjectScript = (object) => {
-        engine.game.script.loadObjectScript(object)
+        engine.game.script.runObjectScript(object)
     }
 
     /**
@@ -443,7 +444,7 @@ const apiConstructor = (engine) => {
      */
     const createCommand = (command,call) => {
         game().action.command[command] = call 
-        return game().command[command]
+        return game().action.command[command]
     }
     return {
         util,

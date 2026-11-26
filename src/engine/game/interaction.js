@@ -88,7 +88,7 @@ export default class InteractionModule extends Emitter {
     }
 
     runHandle(clean, arg) {
-        if (this.command[clean]) return this.command[clean](arg)
+        if (this.command[clean]) return this.command[clean].apply(this,arg)
 
         const room = this.API.room()
         if (room.action?.map((e) => e.toLowerCase()).includes(clean)) {

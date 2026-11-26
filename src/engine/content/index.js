@@ -118,8 +118,7 @@ const engineContentConstructor = (API) => {
         const printMenu = () => {
             print({type:"span",className:"bold",content:'Available adventures:'})
             const allGames = getAvailableGames()
-            const packSet = Object.keys(allGames).map((e)=>allGames[e])
-            packSet.map((pack) => 
+            allGames.map((pack) => 
                 print(
                     {type:"button",className:"btn",onClick:()=>engine.start(pack.id),content:pack.name }
                 )

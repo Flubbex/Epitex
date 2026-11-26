@@ -57,11 +57,13 @@ class Engine extends Emitter {
             return
         }
 
-        const newGame = this.createGame(defaultGameState)
-        const savedGame = state ? state : this.storage.get(newGame.id)
-        const restoredGame = savedGame ? { ...newGame, ...savedGame } : newGame
+        const activeId = id.endsWith("#A") ? id : id+"#A"
+        const newGameState = this.createGame(defaultGameState,activeId)
 
-        this.game = new Game(this.API, restoredGame)
+        this.game = new Game(this.API, newGameState)
+        
+        if (id !== "BASE")
+            this.storage.save(this.game.save(),true)
 
         this.game.on("actionOutput", (_target, message) =>
             this.print(message, false)
@@ -112,8 +114,7 @@ class Engine extends Emitter {
 
     new(name = "New Game") {
         window.dbg("Engine","!!! Creating new game")
-        let realName = name
-    
+
         const newGame = {
             id: crypto.randomUUID(),
             content:{
@@ -128,7 +129,7 @@ class Engine extends Emitter {
             },
 
             type: "game",
-            name: realName,
+            name,
             description: name + " Pack",
             version:0,
             startRoom: "InitRoom",
@@ -137,11 +138,10 @@ class Engine extends Emitter {
 
         this.storage.import(newGame)
         this.start(newGame.id)
-
-        window.game = game
+        return newGame
     }
 
-    createGame(defaultGameState) {
+    createGame(defaultGameState,id=null) {
         window.dbg("Engine",`Creating game "${defaultGameState.id}"`)
         const base = this.storage.get("BASE")
     
@@ -150,8 +150,8 @@ class Engine extends Emitter {
         newGame.content.command = {...base.content.command,...newGame.content.command}
 
 
-        if (!newGame.id)
-            newGame.id = crypto.randomUUID()
+        if (id)
+            newGame.id = id
 
         console.log(newGame)
         return newGame
@@ -184,7 +184,7 @@ class Engine extends Emitter {
     printScriptError(err){
         this.ui.print({type:"span",className:"bold",content:"Script error:"})
         this.ui.print({type:"span",className:"bold text-danger",content:err.stack})
-        this.ui.print({type:"span",content:this.game.script.script})
+        this.ui.print({type:"span",content:this.game.script.source})
     }
     printError(err) {
         this.ui.printError(err)
